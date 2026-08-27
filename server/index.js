@@ -4,6 +4,7 @@ const QRCode = require('qrcode');
 const db = require('./db');
 
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
