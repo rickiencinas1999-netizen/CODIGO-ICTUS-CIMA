@@ -1,0 +1,2224 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Código Ictus</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#F5F9F8;
+    --surface:#FFFFFF;
+    --surface-2:#EAF2F0;
+    --surface-3:#DCEAE7;
+    --border:#D7E3E0;
+    --text:#16232A;
+    --text-muted:#52666B;
+    --brand:#008375;
+    --brand-strong:#00594F;
+    --brand-tint:#DCF0EC;
+    --on-brand:#FFFFFF;
+    --navy:#303E48;
+    --navy-tint:#E7EBED;
+    --success:#1F8A5F;
+    --success-tint:#DFF3E8;
+    --warning:#9A6B14;
+    --warning-tint:#FCEEC7;
+    --critical:#B23A2E;
+    --critical-tint:#FBE1DD;
+    --shadow: 0 1px 2px rgba(20,40,38,0.06), 0 6px 20px -8px rgba(20,40,38,0.12);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1517;
+      --surface:#161F21;
+      --surface-2:#1C2729;
+      --surface-3:#233030;
+      --border:#2B3A3A;
+      --text:#E8F2EF;
+      --text-muted:#9FB6B1;
+      --brand:#3FC7AE;
+      --brand-strong:#8FE0CE;
+      --brand-tint:#193532;
+      --on-brand:#0B1416;
+      --navy:#B9C7CC;
+      --navy-tint:#202C2F;
+      --success:#4FCB93;
+      --success-tint:#153228;
+      --warning:#E7B85B;
+      --warning-tint:#372B10;
+      --critical:#EE7C6E;
+      --critical-tint:#3A1C18;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+      --bg:#0E1517;
+      --surface:#161F21;
+      --surface-2:#1C2729;
+      --surface-3:#233030;
+      --border:#2B3A3A;
+      --text:#E8F2EF;
+      --text-muted:#9FB6B1;
+      --brand:#3FC7AE;
+      --brand-strong:#8FE0CE;
+      --brand-tint:#193532;
+      --on-brand:#0B1416;
+      --navy:#B9C7CC;
+      --navy-tint:#202C2F;
+      --success:#4FCB93;
+      --success-tint:#153228;
+      --warning:#E7B85B;
+      --warning-tint:#372B10;
+      --critical:#EE7C6E;
+      --critical-tint:#3A1C18;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.5);
+      color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  a{color:var(--brand);}
+
+  /* ===== Top bar ===== */
+  .topbar{
+    position:sticky; top:0; z-index:30;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    padding:14px 20px 0 20px;
+    transition:padding .15s ease;
+  }
+  /* Compact mode: once the page is scrolled, the sticky stack shrinks so it
+     never covers the fields being filled in. */
+  .topbar.compact{ padding-top:6px; }
+  .topbar.compact .brandblock p,
+  .topbar.compact .theme-note{ display:none; }
+  .topbar.compact .brandblock h1{ font-size:1.02rem; }
+  .topbar.compact .logo-chip img{ height:22px; }
+  .topbar.compact .tabs{ margin-top:6px; }
+  .topbar.compact .tab-btn{ padding:6px 6px; }
+  .timerbar.compact{ padding:7px 20px; gap:14px; }
+  .timerbar.compact .chip-row{ display:none; }
+  .timerbar.compact .clock{ font-size:1.25rem; }
+  .timerbar.compact .clock-label{ display:none; }
+  .timerbar.compact .btn{ padding:6px 11px; font-size:0.78rem; }
+  .topbar-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brandblock h1{ margin:0; font-size:1.32rem; font-weight:800; letter-spacing:-0.01em; }
+  .brandblock p{ margin:2px 0 0; font-size:0.86rem; color:var(--text-muted); }
+  .theme-note{ font-size:0.72rem; color:var(--text-muted); text-align:right; max-width:260px; }
+  .logo-block{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .logo-chip{ background:#FFFFFF; border-radius:8px; padding:6px 10px; line-height:0; box-shadow:var(--shadow); }
+  .logo-chip img{ display:block; }
+
+  .tabs{ display:flex; gap:4px; margin:14px 0 0; }
+  .tab-btn{
+    appearance:none; border:none; background:transparent; cursor:pointer;
+    font-family:inherit; font-weight:700; font-size:0.86rem; color:var(--text-muted);
+    padding:10px 6px; border-bottom:3px solid transparent; letter-spacing:0.01em;
+  }
+  .tab-btn[aria-selected="true"]{ color:var(--brand-strong); border-bottom-color:var(--brand); }
+  .tab-btn + .tab-btn{ margin-left:18px; }
+
+  /* ===== Timer / milestone strip ===== */
+  .timerbar{
+    position:sticky; top:var(--topbar-h, 76px); z-index:29;
+    background:var(--navy-tint);
+    border-bottom:1px solid var(--border);
+    padding:12px 20px;
+    display:flex; align-items:center; gap:22px; flex-wrap:wrap;
+  }
+  .clock-wrap{ display:flex; align-items:baseline; gap:10px; }
+  .clock{ font-family:'IBM Plex Mono',monospace; font-size:1.9rem; font-weight:600; letter-spacing:0.01em; font-variant-numeric: tabular-nums; }
+  .clock-label{ font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .btn{
+    appearance:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.82rem;
+    border-radius:8px; padding:9px 14px; border:1px solid transparent; letter-spacing:0.01em;
+    transition:filter .12s ease, transform .08s ease;
+  }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--brand); color:var(--on-brand); }
+  .btn-primary:hover{ filter:brightness(1.06); }
+  .btn-ghost{ background:transparent; color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ background:var(--surface-2); }
+  .btn-critical{ background:var(--critical); color:#fff; }
+  .btn-dark{ background:#2C3B44; color:#fff; border-color:#1B262D; }
+  .btn-dark:hover{ filter:brightness(1.15); }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{
+    display:flex; align-items:center; gap:7px;
+    background:var(--surface); border:1px solid var(--border); border-radius:999px;
+    padding:6px 12px 6px 8px; font-size:0.78rem; font-weight:600;
+  }
+  .chip .dot{ width:9px; height:9px; border-radius:50%; background:var(--text-muted); flex:none; }
+  .chip[data-state="pending"] .dot{ background:var(--text-muted); }
+  .chip[data-state="ontime"] .dot{ background:var(--success); }
+  .chip[data-state="late"] .dot{ background:var(--critical); }
+  .chip .t{ font-family:'IBM Plex Mono',monospace; color:var(--text-muted); }
+
+  .score-dock{
+    display:flex; gap:16px; flex-wrap:wrap; align-items:center;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px;
+    padding:7px 14px; font-size:0.76rem; font-weight:600; color:var(--text-muted);
+  }
+  .score-dock b{ color:var(--brand-strong); font-size:0.94rem; margin-left:5px; }
+
+  /* ===== Layout ===== */
+  main{ max-width:1180px; margin:0 auto; padding:22px 20px 80px; }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    box-shadow:var(--shadow); padding:20px 22px; margin-bottom:16px;
+  }
+  /* Anchor targets land below the sticky stack instead of behind it */
+  .card[id]{ scroll-margin-top:var(--sticky-offset, 160px); }
+  /* Focused fields also scroll clear of the sticky stack instead of behind it */
+  .field input, .field select, .field textarea,
+  .radio-pill label, .check-item, .scale-item{ scroll-margin-top:calc(var(--sticky-offset, 160px) + 8px); }
+  .card h2{ margin:0 0 4px; font-size:1.02rem; font-weight:800; }
+  .card .sub{ margin:0 0 14px; color:var(--text-muted); font-size:0.84rem; }
+  .section-label{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-strong); margin:0 0 10px; }
+
+  /* Milestone cards */
+  .milestone{
+    display:grid; grid-template-columns:auto 1fr auto; gap:14px 18px; align-items:center;
+    padding:16px 0; border-top:1px solid var(--border);
+  }
+  .milestone:first-of-type{ border-top:none; padding-top:2px; }
+  .milestone .num{
+    width:30px; height:30px; border-radius:50%; background:var(--surface-2); color:var(--text);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.86rem; flex:none;
+  }
+  .milestone .info strong{ display:block; font-size:0.95rem; }
+  .milestone .info span{ display:block; font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
+  .milestone .status{ text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .badge{ font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:6px; letter-spacing:0.02em; }
+  .badge.pending{ background:var(--surface-2); color:var(--text-muted); }
+  .badge.ontime{ background:var(--success-tint); color:var(--success); }
+  .badge.late{ background:var(--critical-tint); color:var(--critical); }
+  .marked-time{ font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--text-muted); }
+
+  details.ref{ border:1px solid var(--border); border-radius:12px; background:var(--surface-2); padding:2px 16px; margin-bottom:16px; }
+  details.ref summary{ cursor:pointer; padding:12px 0; font-weight:700; font-size:0.9rem; list-style:none; display:flex; align-items:center; gap:8px;}
+  details.ref summary::-webkit-details-marker{ display:none; }
+  details.ref summary:before{ content:"▸"; color:var(--brand); transition:transform .12s; }
+  details.ref[open] summary:before{ transform:rotate(90deg); }
+  details.ref .refbody{ padding:0 0 16px; font-size:0.85rem; color:var(--text); }
+  .camaleon-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:8px; }
+  .camaleon-item{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; }
+  .camaleon-item b{ display:block; font-size:1rem; color:var(--brand-strong); }
+  .camaleon-item span{ font-size:0.74rem; color:var(--text-muted); }
+
+  /* Form grid */
+  .grid{ display:grid; gap:14px; }
+  .grid.cols-2{ grid-template-columns:repeat(2,1fr); }
+  .grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+  @media (max-width:720px){ .grid.cols-2, .grid.cols-3{ grid-template-columns:1fr; } .camaleon-row{ grid-template-columns:repeat(2,1fr);} }
+
+  .field label{ display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:5px; }
+  .field input[type=text], .field input[type=number], .field input[type=date], .field input[type=time], .field input[type=email], .field select, .field textarea{
+    width:100%; font-family:inherit; font-size:0.9rem; padding:8px 10px; border-radius:8px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text);
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:2px solid var(--brand); outline-offset:1px; }
+  .check-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; }
+  @media (max-width:600px){ .check-grid{ grid-template-columns:1fr; } }
+  .check-item{ display:flex; align-items:center; gap:8px; font-size:0.86rem; }
+
+  /* Initial-management rows with value capture */
+  .init-row{
+    display:grid; grid-template-columns:minmax(200px,1fr) auto auto; gap:12px 18px;
+    align-items:center; padding:12px 0; border-top:1px solid var(--border);
+  }
+  .init-row:first-of-type{ border-top:none; }
+  .init-inputs{ display:flex; gap:10px; flex-wrap:wrap; }
+  .field.inline{ display:flex; align-items:center; gap:7px; }
+  .field.inline label{ margin:0; white-space:nowrap; }
+  .field.inline input, .field.inline select{ width:auto; min-width:88px; padding:6px 8px; font-size:0.85rem; }
+  .init-flag{ font-size:0.76rem; font-weight:700; min-width:0; }
+  .init-flag.warn{ color:var(--critical); }
+  .init-flag.good{ color:var(--success); }
+  .stamp{ font-family:'IBM Plex Mono',monospace; font-size:0.74rem; color:var(--brand-strong); background:var(--brand-tint); padding:2px 7px; border-radius:6px; margin-left:8px; white-space:nowrap; }
+  .stamp:empty{ display:none; }
+
+  /* Registro de casos */
+  .case-list{ display:flex; flex-direction:column; gap:8px; }
+  .case-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    border:1px solid var(--border); border-radius:10px; padding:11px 13px; background:var(--surface-2); }
+  .case-item .meta{ min-width:0; }
+  .case-item .meta b{ display:block; font-size:0.9rem; }
+  .case-item .meta span{ font-size:0.76rem; color:var(--text-muted); }
+  .case-item .acts{ display:flex; gap:7px; flex-wrap:wrap; }
+  .sync-pill{ display:inline-flex; align-items:center; gap:6px; font-size:0.74rem; font-weight:700;
+    padding:4px 10px; border-radius:999px; background:var(--surface-2); color:var(--text-muted); border:1px solid var(--border); }
+  .sync-pill.ok{ background:var(--success-tint); color:var(--success); border-color:var(--success); }
+  .sync-pill.warn{ background:var(--warning-tint); color:var(--warning); border-color:var(--warning); }
+  @media (max-width:820px){ .init-row{ grid-template-columns:1fr; } }
+  .check-item input{ accent-color:var(--brand); width:16px; height:16px; }
+  .radio-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .radio-pill{ position:relative; }
+  .radio-pill input{ position:absolute; opacity:0; }
+  .radio-pill label{
+    display:block; padding:6px 12px; border-radius:8px; border:1px solid var(--border);
+    font-size:0.82rem; cursor:pointer; background:var(--surface); color:var(--text); margin:0;
+  }
+  .radio-pill input:checked + label{ background:var(--brand); border-color:var(--brand); color:var(--on-brand); font-weight:700; }
+  .radio-pill input:focus-visible + label{ outline:2px solid var(--brand); outline-offset:1px; }
+
+  /* Scale widgets */
+  .scale-item{ padding:12px 0; border-top:1px solid var(--border); }
+  .scale-item:first-child{ border-top:none; padding-top:0; }
+  .scale-item .qlabel{ font-weight:700; font-size:0.88rem; margin-bottom:8px; }
+  .scoreboard{
+    position:static; display:flex; align-items:center; justify-content:space-between;
+    background:var(--brand-tint); border:1px solid var(--border); border-radius:10px;
+    padding:12px 16px; margin-bottom:14px;
+  }
+  .scoreboard .val{ font-family:'IBM Plex Mono',monospace; font-size:1.5rem; font-weight:700; color:var(--brand-strong); }
+  .interp{ margin-top:10px; padding:10px 12px; border-radius:8px; font-size:0.83rem; font-weight:600; }
+  .interp.flag{ background:var(--critical-tint); color:var(--critical); }
+  .interp.ok{ background:var(--success-tint); color:var(--success); }
+
+  .status-banner{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--success-tint); border:1px solid var(--success); border-radius:10px;
+    padding:12px 16px; margin-bottom:16px; font-weight:700; color:var(--success);
+  }
+  .status-banner .t{ font-family:'IBM Plex Mono',monospace; }
+
+  .aspects-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+  @media (max-width:700px){ .aspects-grid{ grid-template-columns:repeat(2,1fr);} }
+  .aspects-cell{ border:1px solid var(--border); border-radius:8px; padding:8px; text-align:center; background:var(--surface); }
+  .aspects-cell input{ accent-color:var(--critical); }
+  .aspects-cell label{ display:block; font-size:0.72rem; margin-top:4px; }
+  .aspects-cell b{ font-size:0.86rem; }
+
+  .rankin-ref{ display:grid; gap:6px; font-size:0.8rem; }
+  .rankin-ref div{ display:grid; grid-template-columns:26px 1fr; gap:8px; }
+  .rankin-ref b{ color:var(--brand-strong); }
+
+  /* RES-Q layout with side nav */
+  .resq-shell{ display:grid; grid-template-columns:200px 1fr; gap:20px; align-items:start; }
+  @media (max-width:860px){ .resq-shell{ grid-template-columns:1fr; } .resq-nav{ display:none; } }
+  .resq-nav{ position:sticky; top:calc(var(--sticky-offset, 150px) + 12px); display:flex; flex-direction:column; gap:2px; }
+  .resq-nav a{ text-decoration:none; color:var(--text-muted); font-size:0.82rem; padding:7px 10px; border-radius:8px; font-weight:600; }
+  .resq-nav a:hover{ background:var(--surface-2); color:var(--text); }
+
+  .export-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+  .summary-pre{ white-space:pre-wrap; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:14px; max-height:420px; overflow:auto; }
+  .privacy-note{ font-size:0.76rem; color:var(--text-muted); background:var(--surface-2); border:1px dashed var(--border); border-radius:8px; padding:10px 12px; margin-top:6px; }
+
+  footer{ text-align:center; padding:26px 20px 40px; color:var(--text-muted); font-size:0.76rem; }
+
+  #summaryPrintArea{ display:none; }
+  @media print{
+    .topbar, .timerbar, .tabs, .resq-nav, .btn, footer, details.ref{ display:none !important; }
+    body.printing main > *:not(#summaryPrintArea){ display:none !important; }
+    #summaryPrintArea{ display:block !important; }
+    body{ background:#fff; color:#000; }
+  }
+
+  /* ===== Avisos y confirmación propios ===== */
+  #toastHost{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:120;
+    display:flex; flex-direction:column; gap:8px; align-items:center; width:calc(100% - 28px); max-width:460px; pointer-events:none; }
+  .toast{ background:var(--navy); color:#fff; border-radius:10px; padding:12px 16px; font-size:0.86rem;
+    font-weight:600; box-shadow:0 8px 26px rgba(0,0,0,.28); width:100%; }
+  :root[data-theme="dark"] .toast{ background:#2C3B44; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .toast{ background:#2C3B44; } }
+  .toast.ok{ background:var(--brand-strong); }
+  .toast.warn{ background:var(--critical); }
+
+  #modalHost{ position:fixed; inset:0; z-index:130; background:rgba(10,20,22,.55);
+    display:none; align-items:center; justify-content:center; padding:18px; }
+  #modalHost.open{ display:flex; }
+  .modal{ background:var(--surface); color:var(--text); border-radius:14px; border:1px solid var(--border);
+    max-width:420px; width:100%; padding:20px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  .modal h3{ margin:0 0 8px; font-size:1.02rem; }
+  .modal p{ margin:0 0 16px; font-size:0.88rem; color:var(--text-muted); line-height:1.5; }
+  .modal .acts{ display:flex; gap:9px; justify-content:flex-end; flex-wrap:wrap; }
+  .modal .acts .btn{ min-height:42px; }
+
+  /* Enlace de correo con apariencia de botón */
+  a.btn{ display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+
+  :focus-visible{ outline:2px solid var(--brand); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  /* ===== Theme switch ===== */
+  .theme-switch{ display:flex; gap:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; flex:none; }
+  .theme-switch button{
+    appearance:none; border:none; cursor:pointer; font-family:inherit; font-weight:700;
+    font-size:0.72rem; padding:7px 11px; background:var(--surface); color:var(--text-muted);
+    border-left:1px solid var(--border); min-height:34px;
+  }
+  .theme-switch button:first-child{ border-left:none; }
+  .theme-switch button[aria-pressed="true"]{ background:var(--brand); color:var(--on-brand); }
+
+  .timer-main{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .lbl-short{ display:none; }
+
+  /* ===== Collapsible RES-Q sections ===== */
+  .section-label.collapsible{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    cursor:pointer; user-select:none; margin:0; padding:4px 0; min-height:40px; width:100%;
+  }
+  .section-label.collapsible::after{
+    content:"▾"; font-size:0.95rem; color:var(--text-muted); transition:transform .15s ease; flex:none;
+  }
+  .card.collapsed .section-label.collapsible::after{ transform:rotate(-90deg); }
+  .card.collapsed > *:not(.section-label){ display:none !important; }
+  .collapse-tools{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+
+  /* Mobile jump menu (replaces the side nav on small screens) */
+  .mobile-jump{ display:none; margin-bottom:14px; }
+  .mobile-jump select{
+    width:100%; font-family:inherit; font-size:16px; padding:11px 12px; border-radius:10px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:600;
+  }
+
+  .share-row{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  /* ===== Mobile / tablet layout ===== */
+  @media (max-width:860px){
+    body{ -webkit-text-size-adjust:100%; }
+    main{ padding:14px 12px 90px; }
+    .card{ padding:15px 14px; border-radius:12px; }
+
+    .topbar{ padding:9px 12px 0; }
+    .topbar-row{ align-items:center; gap:10px; }
+    .brandblock h1{ font-size:1.05rem; }
+    .brandblock p, .theme-note, .logo-block{ display:none; }
+    .topbar-row{ flex-wrap:nowrap; justify-content:space-between; }
+    .theme-switch button{ font-size:0.68rem; padding:6px 9px; min-height:32px; }
+    .tabs{ margin-top:8px; }
+    .tab-btn{ font-size:0.82rem; padding:9px 4px; }
+    .tab-btn + .tab-btn{ margin-left:14px; }
+
+    .timerbar{ flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:8px; padding:8px 12px; min-width:0; }
+    .timer-main{ gap:9px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; min-width:0; }
+    .timer-main .btn, .timer-main .clock-wrap{ flex:none; }
+    .clock-label{ display:none; }
+    .clock{ font-size:1.35rem; }
+    .lbl-full{ display:none; }
+    .lbl-short{ display:inline; }
+    .chip-row{ display:none; }
+    .score-dock{ overflow-x:auto; flex-wrap:nowrap; white-space:nowrap; gap:13px; padding:6px 11px; min-width:0; }
+    .score-dock span{ flex:none; }
+
+    /* Touch targets and no iOS zoom-on-focus (16px minimum) */
+    .field input[type=text], .field input[type=number], .field input[type=date],
+    .field input[type=time], .field input[type=email], .field select, .field textarea,
+    .field.inline input, .field.inline select,
+    .mobile-jump select{ font-size:16px; padding:11px 12px; min-height:44px; }
+    .field.inline{ width:100%; justify-content:space-between; }
+    .field.inline input, .field.inline select{ width:auto; flex:1; min-width:0; margin-left:10px; }
+    .tab-btn{ min-height:44px; }
+    .radio-pill label{ min-height:44px; display:flex; align-items:center; font-size:0.88rem; padding:9px 13px; }
+    .radio-row{ gap:8px; }
+    .check-item{ min-height:44px; font-size:0.9rem; }
+    .check-item input{ width:22px; height:22px; flex:none; }
+    .btn{ min-height:42px; }
+
+    .grid.cols-2, .grid.cols-3, .check-grid{ grid-template-columns:1fr; }
+    .aspects-grid{ grid-template-columns:repeat(2,1fr); }
+    .aspects-cell{ min-height:64px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .aspects-cell input{ width:22px; height:22px; }
+    .init-row{ grid-template-columns:1fr; gap:10px; padding:14px 0; }
+    .init-inputs{ flex-direction:column; gap:8px; }
+    .camaleon-row{ grid-template-columns:repeat(2,1fr); }
+
+    .mobile-jump{ display:block; }
+    .resq-shell{ grid-template-columns:1fr; }
+    .resq-nav{ display:none; }
+    .milestone{ grid-template-columns:auto 1fr; gap:10px 12px; }
+    .milestone .status{ grid-column:1 / -1; flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .scoreboard{ padding:11px 13px; }
+    .scoreboard .val{ font-size:1.35rem; }
+    .export-row .btn, .share-row .btn, .collapse-tools .btn{ flex:1 1 auto; }
+    .summary-pre{ font-size:0.72rem; max-height:340px; }
+    footer{ padding:20px 14px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brandblock">
+      <h1>Código Ictus</h1>
+      <p>Checklist de tiempos + Registro de caso RES-Q — Urgencias CIMA</p>
+    </div>
+    <div class="logo-block">
+      <div class="logo-chip"><img alt="Hospital CIMA" src="data:image/png;base64,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" height="34"></div>
+      <div class="theme-note">Datos guardados en este dispositivo y en el servidor del hospital</div>
+    </div>
+    <div class="theme-switch" role="group" aria-label="Tema de la página">
+      <button type="button" data-theme-set="light" onclick="setTheme('light')" title="Fondo blanco">Blanco</button>
+      <button type="button" data-theme-set="dark" onclick="setTheme('dark')" title="Fondo negro">Negro</button>
+      <button type="button" data-theme-set="auto" onclick="setTheme('auto')" title="Según el sistema">Auto</button>
+    </div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" id="tabbtn-checklist" role="tab" aria-selected="true" onclick="showTab('checklist')">Checklist &amp; tiempos</button>
+    <button class="tab-btn" id="tabbtn-resq" role="tab" aria-selected="false" onclick="showTab('resq')">Registro RES-Q</button>
+  </div>
+</header>
+
+<div class="timerbar">
+  <div class="timer-main">
+    <div class="clock-wrap">
+      <div>
+        <div class="clock-label">Tiempo desde llegada</div>
+        <div class="clock mono" id="clockDisplay">00:00</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="startBtn" onclick="startClock()"><span class="lbl-full">Llegada del paciente — iniciar reloj</span><span class="lbl-short">Iniciar</span></button>
+    <button class="btn btn-dark" id="finishBtn" onclick="finishCase()" disabled><span class="lbl-full">Finalizar caso</span><span class="lbl-short">Finalizar</span></button>
+    <button class="btn btn-ghost" onclick="resetAll()"><span class="lbl-full">Nuevo caso</span><span class="lbl-short">Nuevo</span></button>
+  </div>
+  <div class="chip-row" id="chipRow"></div>
+  <div class="score-dock" id="scoreDock">
+    <span>Cincinnati <b class="mono" id="dockCincinnati">0/3</b></span>
+    <span>Glasgow <b class="mono" id="dockGlasgow">15</b></span>
+    <span>NIHSS <b class="mono" id="dockNihss">0</b></span>
+    <span>ASPECTS <b class="mono" id="dockAspects">10/10</b></span>
+    <span>RACE <b class="mono" id="dockRace">0/9</b></span>
+  </div>
+</div>
+
+<main>
+  <!-- ================= TAB 1: CHECKLIST ================= -->
+  <section class="tab-panel active" id="tab-checklist">
+
+    <details class="ref">
+      <summary>Referencia rápida: Estrategia CAMALEÓN (reconocimiento para personal y público)</summary>
+      <div class="refbody">
+        <div class="camaleon-row">
+          <div class="camaleon-item"><b>CA</b><span>Cara colgada</span></div>
+          <div class="camaleon-item"><b>MA</b><span>Mano cansada</span></div>
+          <div class="camaleon-item"><b>LE</b><span>Lengua trabada</span></div>
+          <div class="camaleon-item"><b>ÓN</b><span>Ponte en acción — llama al 911</span></div>
+        </div>
+      </div>
+    </details>
+
+    <div class="card">
+      <h2>Manejo inicial en urgencias</h2>
+      <p class="sub">Aplica desde el minuto cero, en paralelo al triage — captura el valor obtenido al marcar cada acción</p>
+
+      <div class="init-row">
+        <label class="check-item"><input type="checkbox" id="chkGlucosa" onchange="stampAction('chkGlucosa','tsGlucosa')">Glicemia capilar (DxTx) al inicio<span class="stamp" id="tsGlucosa"></span></label>
+        <div class="init-inputs">
+          <div class="field inline"><label for="initGlucosa">Glucosa (mg/dL)</label><input type="number" id="initGlucosa" oninput="syncInitialValues()" placeholder="—"></div>
+        </div>
+        <div class="init-flag" id="glucosaFlag"></div>
+      </div>
+
+      <div class="init-row">
+        <label class="check-item"><input type="checkbox" id="chkSignos" onchange="stampAction('chkSignos','tsSignos')">Monitoreo de signos vitales<span class="stamp" id="tsSignos"></span></label>
+        <div class="init-inputs">
+          <div class="field inline"><label for="initTAS">TA sistólica</label><input type="number" id="initTAS" oninput="syncInitialValues()" placeholder="—"></div>
+          <div class="field inline"><label for="initTAD">TA diastólica</label><input type="number" id="initTAD" oninput="syncInitialValues()" placeholder="—"></div>
+          <div class="field inline"><label for="initFC">FC (lpm)</label><input type="number" id="initFC" oninput="syncInitialValues()" placeholder="—"></div>
+          <div class="field inline"><label for="initSpo2">SpO₂ (%)</label><input type="number" id="initSpo2" oninput="syncInitialValues()" placeholder="—"></div>
+          <div class="field inline"><label for="initTemp">Temp (°C)</label><input type="number" step="0.1" id="initTemp" oninput="syncInitialValues()" placeholder="—"></div>
+        </div>
+        <div class="init-flag" id="taFlag"></div>
+      </div>
+
+      <div class="init-row">
+        <label class="check-item"><input type="checkbox" id="chkEcg" onchange="stampAction('chkEcg','tsEcg')">Electrocardiograma (ECG) — descartar arritmias (ej. FA)<span class="stamp" id="tsEcg"></span></label>
+        <div class="init-inputs">
+          <div class="field inline"><label for="initEcg">Hallazgo</label>
+            <select id="initEcg" onchange="syncInitialValues()"><option value="">—</option><option>Ritmo sinusal</option><option>Fibrilación auricular</option><option>Flutter auricular</option><option>Otra arritmia</option></select>
+          </div>
+        </div>
+        <div class="init-flag"></div>
+      </div>
+
+      <div class="init-row">
+        <label class="check-item"><input type="checkbox" id="chkAcceso" onchange="stampAction('chkAcceso','tsAcceso')">Acceso IV y toma de muestra basal<span class="stamp" id="tsAcceso"></span></label>
+        <div class="init-inputs"></div>
+        <div class="init-flag"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Escala de Cincinnati</h2>
+      <p class="sub">Triage de reconocimiento — un solo hallazgo positivo (≥1) activa el Código ICTUS</p>
+      <div class="scoreboard"><span>Puntaje Cincinnati</span><span class="val" id="cincinnatiTotal">0/3</span></div>
+      <div id="cincinnatiItems"></div>
+      <div class="interp" id="cincinnatiInterp"></div>
+    </div>
+
+    <div class="card">
+      <h2>Línea de tiempo del código</h2>
+      <p class="sub">Marca cada hito cuando ocurra — el estado se calcula contra la meta institucional</p>
+      <div id="caseStatusBanner"></div>
+      <div id="milestoneList"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Definición de imagen</div>
+      <div class="grid cols-2">
+        <label class="check-item"><input type="checkbox" id="wakeUpCheck" onchange="renderMilestones()"> Paciente en categoría <b>wake-up stroke</b></label>
+        <label class="check-item"><input type="checkbox" id="unstableCheck" onchange="renderMilestones()"> Paciente <b>inestable</b> hemodinámica o neurológicamente</label>
+      </div>
+      <div class="interp ok" id="imagingHint" style="margin-top:12px;"></div>
+      <p class="sub" style="margin-top:16px;">Camino seguido en este caso (marca el que corresponda una vez decidido)</p>
+      <div class="radio-row" id="imagingChoiceRow"></div>
+    </div>
+
+    <div class="card">
+      <h2>Ventana terapéutica</h2>
+      <div class="grid cols-3">
+        <div><div class="section-label">Estándar</div><div style="font-size:1.4rem;font-weight:800;" class="mono">4.5 h</div><div class="sub" style="margin:2px 0 0;">Trombólisis EV</div></div>
+        <div><div class="section-label">Extendida</div><div style="font-size:1.4rem;font-weight:800;" class="mono">9 h</div><div class="sub" style="margin:2px 0 0;">Con imagen avanzada / DWI-FLAIR</div></div>
+        <div><div class="section-label">Trombectomía (EVT)</div><div style="font-size:1.4rem;font-weight:800;" class="mono">24 h</div><div class="sub" style="margin:2px 0 0;">Oclusión de gran vaso / basilar</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 2: RES-Q FORM ================= -->
+  <section class="tab-panel" id="tab-resq">
+    <div class="mobile-jump">
+      <select id="jumpSelect" onchange="jumpToSection(this.value)" aria-label="Ir a una sección del registro">
+        <option value="">Ir a una sección…</option>
+      </select>
+    </div>
+
+    <div class="collapse-tools">
+      <button class="btn btn-ghost" onclick="setAllSections(true)">Abrir todas</button>
+      <button class="btn btn-ghost" onclick="setAllSections(false)">Cerrar todas</button>
+    </div>
+
+    <div class="resq-shell">
+      <nav class="resq-nav">
+        <a href="#sec-id">Identificación</a>
+        <a href="#sec-antecedentes">Antecedentes</a>
+        <a href="#sec-ingreso">Ingreso</a>
+        <a href="#sec-nihss">NIHSS</a>
+        <a href="#sec-glasgow">Glasgow</a>
+        <a href="#sec-aspects">ASPECTS</a>
+        <a href="#sec-race">RACE</a>
+        <a href="#sec-rankin">Rankin</a>
+        <a href="#sec-imagen">Neuroimagen</a>
+        <a href="#sec-tx">Trombólisis</a>
+        <a href="#sec-evt">Trombectomía (EVT)</a>
+        <a href="#sec-evolucion">Evolución</a>
+        <a href="#sec-disfagia">Disfagia</a>
+        <a href="#sec-alta">Alta</a>
+        <a href="#sec-export">Exportar</a>
+        <a href="#sec-registro">Casos registrados</a>
+        <a href="#sec-qr">Código QR</a>
+        <a href="#sec-correo">Enviar por correo</a>
+      </nav>
+
+      <div>
+        <div class="card" id="sec-id">
+          <div class="section-label">Identificación y tiempos</div>
+          <div class="grid cols-3">
+            <div class="field"><label>Identificador de caso</label><input type="text" id="f_caseid" placeholder="p. ej. EVC-2026-014"></div>
+            <div class="field"><label>Edad</label><input type="number" id="f_edad" min="0" max="120"></div>
+            <div class="field"><label>Género</label><select id="f_genero"><option value="">—</option><option>Hombre</option><option>Mujer</option><option>Otro</option></select></div>
+          </div>
+          <div class="grid cols-3" style="margin-top:14px;">
+            <div class="field"><label>¿Ictus del despertar?</label><select id="f_wakeup"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+            <div class="field"><label>Hora en que durmió el paciente</label><input type="time" id="f_horaDurmio"></div>
+            <div class="field"><label>Última hora visto sin síntomas</label><input type="time" id="f_ultimaHoraSano"></div>
+          </div>
+          <div class="grid cols-3" style="margin-top:14px;">
+            <div class="field"><label>Fecha de ictus</label><input type="date" id="f_fechaIctus"></div>
+            <div class="field"><label>Fecha de llegada al hospital</label><input type="date" id="f_fechaLlegada"></div>
+            <div class="field"><label>Hora de llegada al hospital</label><input type="time" id="f_horaLlegada"></div>
+          </div>
+          <div class="grid cols-2" style="margin-top:14px;">
+            <div class="field"><label>¿Ictus intrahospitalario?</label><select id="f_intrahosp"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+            <div class="field"><label>Procedencia del paciente</label>
+              <select id="f_procedencia">
+                <option value="">—</option>
+                <option>Ambulancia de casa / otro nivel de atención</option>
+                <option>Vehículo particular de casa / otro nivel de atención</option>
+                <option>Referencia de misma institución</option>
+                <option>Referencia de otra institución</option>
+              </select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:14px; max-width:280px;"><label>¿Pre-notificó la ambulancia?</label><select id="f_prenotifico"><option value="">N/A</option><option>Sí</option><option>No</option></select></div>
+        </div>
+
+        <div class="card" id="sec-antecedentes">
+          <div class="section-label">Antecedentes y tratamiento previo</div>
+          <p class="sub">Antecedentes</p>
+          <div class="check-grid" id="antecedentesGrid"></div>
+          <p class="sub" style="margin-top:16px;">Tratamiento previo al ingreso</p>
+          <div class="check-grid" id="txPrevioGrid"></div>
+        </div>
+
+        <div class="card" id="sec-ingreso">
+          <div class="section-label">Signos vitales y laboratorio de ingreso</div>
+          <div class="grid cols-3">
+            <div class="field"><label>Glucosa de ingreso (mg/dL)</label><input type="number" id="f_glucosa"></div>
+            <div class="field"><label>Colesterol LDL de ingreso (mg/dL)</label><input type="number" id="f_ldl"></div>
+            <div class="field"><label>INR</label><input type="number" step="0.1" id="f_inr"></div>
+          </div>
+          <div class="grid cols-2" style="margin-top:14px; max-width:400px;">
+            <div class="field"><label>TA sistólica de ingreso (mmHg)</label><input type="number" id="f_tas"></div>
+            <div class="field"><label>TA diastólica de ingreso (mmHg)</label><input type="number" id="f_tad"></div>
+          </div>
+        </div>
+
+        <div class="card" id="sec-nihss">
+          <div class="section-label">Escala NIHSS</div>
+          <p class="sub">National Institute of Health Stroke Scale — selecciona el hallazgo de cada ítem</p>
+          <div class="scoreboard"><span>Puntaje NIHSS total</span><span class="val" id="nihssTotal">0</span></div>
+          <div class="interp ok" id="nihssInterp"></div>
+          <div class="export-row" style="margin:12px 0 4px;">
+            <button class="btn btn-ghost" onclick="resetNihss()">Limpiar NIHSS</button>
+            <button class="btn btn-ghost" onclick="copyNihss()">Copiar puntaje NIHSS</button>
+          </div>
+          <div id="nihssItems"></div>
+        </div>
+
+        <div class="card" id="sec-glasgow">
+          <div class="section-label">Escala de coma de Glasgow</div>
+          <p class="sub">Estado de conciencia — se reporta desglosada (O + V + M) además del total</p>
+          <div class="scoreboard"><span>Puntaje Glasgow</span><span class="val" id="glasgowTotal">15/15</span></div>
+          <div class="interp ok" id="glasgowInterp"></div>
+          <div class="export-row" style="margin:12px 0 4px;">
+            <button class="btn btn-ghost" onclick="resetGlasgow()">Reiniciar a 15/15</button>
+          </div>
+          <div id="glasgowItems"></div>
+        </div>
+
+        <div class="card" id="sec-aspects">
+          <div class="section-label">Puntaje ASPECTS</div>
+          <p class="sub">Marca únicamente las regiones con isquemia visible en la TAC/RM</p>
+          <div class="scoreboard"><span>Puntaje ASPECTS</span><span class="val" id="aspectsTotal">10/10</span></div>
+          <div class="aspects-grid" id="aspectsGrid"></div>
+        </div>
+
+        <div class="card" id="sec-race">
+          <div class="section-label">Escala RACE — detección de oclusión de gran vaso</div>
+          <div class="field" style="max-width:320px; margin-bottom:14px;">
+            <label>Lado de la hemiparesia</label>
+            <select id="raceSide" onchange="renderRace()"><option value="">—</option><option value="derecha">Derecha</option><option value="izquierda">Izquierda</option></select>
+          </div>
+          <div class="scoreboard"><span>Puntaje RACE</span><span class="val" id="raceTotal">0/9</span></div>
+          <div id="raceItems"></div>
+          <div class="interp" id="raceInterp"></div>
+        </div>
+
+        <div class="card" id="sec-rankin">
+          <div class="section-label">Escala de Rankin modificada</div>
+          <div class="grid cols-2">
+            <div class="field"><label>Rankin previo / al ingreso</label>
+              <select id="f_rankinIngreso"><option value="">—</option><option value="0">0 — Sin síntomas</option><option value="1">1 — Sin incapacidad significativa</option><option value="2">2 — Incapacidad leve</option><option value="3">3 — Incapacidad moderada</option><option value="4">4 — Incapacidad moderadamente severa</option><option value="5">5 — Incapacidad severa</option><option value="6">6 — Defunción</option></select>
+            </div>
+            <div class="field"><label>Rankin al alta</label>
+              <select id="f_rankinAlta"><option value="">—</option><option value="0">0 — Sin síntomas</option><option value="1">1 — Sin incapacidad significativa</option><option value="2">2 — Incapacidad leve</option><option value="3">3 — Incapacidad moderada</option><option value="4">4 — Incapacidad moderadamente severa</option><option value="5">5 — Incapacidad severa</option><option value="6">6 — Defunción</option></select>
+            </div>
+          </div>
+          <div class="rankin-ref" style="margin-top:16px;">
+            <div><b>0</b><span>Sin síntomas.</span></div>
+            <div><b>1</b><span>Sin incapacidad significativa; realiza actividades cotidianas pese a los síntomas.</span></div>
+            <div><b>2</b><span>Incapacidad leve; incapaz de realizar actividades previas pero se vale sin asistencia.</span></div>
+            <div><b>3</b><span>Incapacidad moderada; requiere algo de ayuda pero camina sin asistencia.</span></div>
+            <div><b>4</b><span>Incapacidad moderadamente severa; incapaz de caminar y de atender sus necesidades sin ayuda.</span></div>
+            <div><b>5</b><span>Incapacidad severa; confinado a cama, incontinente, requiere cuidado constante.</span></div>
+            <div><b>6</b><span>Defunción.</span></div>
+          </div>
+        </div>
+
+        <div class="card" id="sec-imagen">
+          <div class="section-label">Neuroimagen y tipo de ictus</div>
+          <div class="grid cols-2">
+            <div class="field"><label>Fecha de neuroimagen</label><input type="date" id="f_fechaImagen"></div>
+            <div class="field"><label>Hora de neuroimagen</label><input type="time" id="f_horaImagen"></div>
+          </div>
+          <p class="sub" style="margin-top:16px;">Estudio de imagen</p>
+          <div class="check-grid" id="estudioImagenGrid"></div>
+          <p class="sub" style="margin-top:16px;">Tipo de ictus</p>
+          <div class="radio-row" id="tipoIctusRow"></div>
+          <div class="grid cols-2" id="tipoIctusExtra" style="margin-top:14px;"></div>
+        </div>
+
+        <div class="card" id="sec-tx">
+          <div class="section-label">Trombólisis</div>
+          <div class="radio-row" id="trombolisisRow"></div>
+          <div class="grid cols-3" style="margin-top:14px;">
+            <div class="field"><label>Fecha de trombólisis</label><input type="date" id="f_fechaTx"></div>
+            <div class="field"><label>Hora de trombólisis</label><input type="time" id="f_horaTx"></div>
+            <div class="field"><label>Dosis administrada (mg / mL)</label><input type="text" id="f_dosisTx" placeholder="p. ej. 63 mg / 70 mL"></div>
+          </div>
+          <div class="field" style="margin-top:14px;"><label>Si no trombolizado — motivo</label><input type="text" id="f_motivoNoTx" placeholder="p. ej. fuera de ventana, mejoría espontánea, contraindicación..."></div>
+        </div>
+
+        <div class="card" id="sec-evt">
+          <div class="section-label">Trombectomía mecánica (EVT)</div>
+          <p class="sub">Campo interno del protocolo 15.06 — no forma parte del formulario oficial RES-Q</p>
+          <div class="field" style="max-width:280px;"><label>¿Se realizó trombectomía mecánica?</label><select id="f_evtRealizada" onchange="toggleEvtFields()"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+          <div id="evtDetailFields" style="display:none; margin-top:14px;">
+            <div class="grid cols-3">
+              <div class="field"><label>Fecha de punción arterial</label><input type="date" id="f_fechaPuncion"></div>
+              <div class="field"><label>Hora de punción arterial</label><input type="time" id="f_horaPuncion"></div>
+              <div class="field"><label>Hora de reperfusión / fin de procedimiento</label><input type="time" id="f_horaReperfusion"></div>
+            </div>
+            <p class="sub" style="margin-top:16px;">Sitio de oclusión</p>
+            <div class="radio-row" id="evtSitioRow"></div>
+            <p class="sub" style="margin-top:16px;">Técnica</p>
+            <div class="radio-row" id="evtTecnicaRow"></div>
+            <div class="grid cols-2" style="margin-top:16px;">
+              <div class="field"><label>Anestesia</label>
+                <select id="f_evtAnestesia"><option value="">—</option><option>General</option><option>Sedación consciente</option></select>
+              </div>
+              <div class="field"><label>Resultado de reperfusión (eTICI)</label>
+                <select id="f_evtTici"><option value="">—</option><option>0</option><option>1</option><option>2a</option><option>2b</option><option>2c</option><option>3</option></select>
+              </div>
+            </div>
+            <p class="sub" style="margin-top:16px;">Complicaciones</p>
+            <div class="check-grid" id="evtComplicacionesGrid"></div>
+          </div>
+        </div>
+
+        <div class="card" id="sec-evolucion">
+          <div class="section-label">Evolución hospitalaria</div>
+          <div class="grid cols-2">
+            <div class="field"><label>¿Hospitalización &gt; 24 h?</label><select id="f_hosp24"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+            <div class="field"><label>¿Fiebre en &lt; 72 h?</label><select id="f_fiebre"><option value="">—</option><option>Sí</option><option>No</option></select></div>
+          </div>
+          <p class="sub" style="margin-top:16px;">Etiología de ictus</p>
+          <div class="radio-row" id="etiologiaRow"></div>
+          <div class="field" style="margin-top:16px; max-width:280px;"><label>Glucosa más alta registrada (mg/dL)</label><input type="number" id="f_glucosaMax"></div>
+        </div>
+
+        <div class="card" id="sec-disfagia">
+          <div class="section-label">Prueba de disfagia</div>
+          <p class="sub">Momento de realización</p>
+          <div class="radio-row" id="disfagiaMomentoRow"></div>
+          <p class="sub" style="margin-top:16px;">Prueba realizada</p>
+          <div class="radio-row" id="disfagiaPruebaRow"></div>
+          <p class="sub" style="margin-top:16px;">Área que realiza la prueba</p>
+          <div class="radio-row" id="disfagiaAreaRow"></div>
+        </div>
+
+        <div class="card" id="sec-alta">
+          <div class="section-label">Alta</div>
+          <div class="radio-row" id="altaRow"></div>
+          <div class="grid cols-3" style="margin-top:14px;">
+            <div class="field"><label>Fecha de alta</label><input type="date" id="f_fechaAlta"></div>
+            <div class="field"><label>NIHSS de alta</label><input type="number" id="f_nihssAlta"></div>
+            <div class="field"><label>(Rankin de alta — ver arriba)</label><input type="text" disabled placeholder="capturado en sección Rankin"></div>
+          </div>
+          <p class="sub" style="margin-top:16px;">Tratamiento al alta</p>
+          <div class="check-grid" id="txAltaGrid"></div>
+        </div>
+
+        <div class="card" id="sec-export">
+          <div class="section-label">Exportar registro</div>
+          <p class="sub">Genera un resumen legible del caso para copiarlo a tu expediente o imprimirlo.</p>
+          <div class="export-row">
+            <button class="btn btn-primary" onclick="generateSummary(); document.getElementById('summaryPanel').style.display='block';">Generar resumen</button>
+            <button class="btn btn-ghost" onclick="copySummary()">Copiar al portapapeles</button>
+            <button class="btn btn-ghost" onclick="printSummary()">Imprimir / guardar como PDF</button>
+          </div>
+          <div id="summaryPanel" style="display:none; margin-top:14px;">
+            <pre class="summary-pre" id="summaryText"></pre>
+          </div>
+          <div class="privacy-note">Este formulario guarda el caso en este dispositivo y, al finalizar o al pulsar "Guardar en el servidor", también en la base de datos del hospital para consulta desde otro equipo.</div>
+        </div>
+
+        <div class="card" id="sec-registro">
+          <div class="section-label">Casos registrados</div>
+          <p class="sub">Historial compartido con el servidor — se abre desde cualquier dispositivo para continuar o consultar un caso</p>
+          <div style="margin-bottom:12px;"><span class="sync-pill" id="syncPill">Comprobando almacenamiento…</span></div>
+          <div class="field" style="max-width:340px; margin-bottom:14px;"><label for="capturadoPor">Supervisor que captura</label><input type="text" id="capturadoPor" placeholder="Nombre o iniciales" oninput="saveMailPrefs()"></div>
+          <div class="export-row" style="margin-bottom:14px;">
+            <button class="btn btn-primary" id="saveLocalBtn" onclick="saveCaseLocal()">Guardar caso en este equipo</button>
+            <button class="btn btn-ghost" id="saveCloudBtn" onclick="saveCaseToCloud()">Guardar en el servidor</button>
+            <button class="btn btn-ghost" onclick="refreshCases()">Actualizar lista</button>
+          </div>
+          <div class="case-list" id="caseList"></div>
+          <div class="export-row" style="margin-top:14px;">
+            <button class="btn btn-ghost" onclick="purgeHistory()">Borrar historial de este equipo</button>
+          </div>
+          <div class="privacy-note" id="registroNote">El historial se guarda en este equipo. La trazabilidad entre turnos y dispositivos la da el servidor: cada caso guardado o finalizado queda disponible para todo el equipo.</div>
+        </div>
+
+        <div class="card" id="sec-qr">
+          <div class="section-label">Código QR de acceso</div>
+          <p class="sub">Imprímelo y colócalo en urgencias — cualquiera lo escanea y abre esta herramienta en su celular, tablet o computadora</p>
+          <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap;">
+            <img id="qrImg" alt="Código QR para abrir Código Ictus" width="180" height="180"
+                 style="background:#fff; padding:10px; border-radius:12px; border:1px solid var(--border);">
+            <div style="min-width:200px; flex:1;">
+              <p class="sub" style="margin:0 0 10px;">No requiere cuenta ni instalación. Cada quien captura su caso y lo envía al terminar.</p>
+              <div class="share-row">
+                <button class="btn btn-primary" onclick="sharePage()">Compartir enlace</button>
+                <button class="btn btn-ghost" onclick="copyLink()">Copiar enlace</button>
+                <button class="btn btn-ghost" onclick="printQR()">Imprimir cartel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="sec-correo">
+          <div class="section-label">Enviar informe por correo</div>
+          <p class="sub">Se abre tu aplicación de correo con el informe ya redactado — tú revisas y presionas enviar</p>
+          <div class="grid cols-2">
+            <div class="field"><label for="mailTo">Destinatario</label><input type="email" id="mailTo" value="rfelix@cimahermosillo.com" oninput="saveMailPrefs()"></div>
+            <div class="field"><label for="mailCc">Copia</label><input type="email" id="mailCc" value="vburgosn@cimahermosillo.com" oninput="saveMailPrefs()"></div>
+          </div>
+          <p class="sub" style="margin-top:14px;">Asunto</p>
+          <div class="field"><input type="text" id="mailSubject" placeholder="Se genera solo con el folio y la fecha"></div>
+          <div class="export-row" style="margin-top:14px;">
+            <a class="btn btn-primary" id="mailLink" href="mailto:" target="_blank" rel="noopener">Abrir en mi correo</a>
+            <button class="btn btn-ghost" onclick="copySummary()">Copiar informe</button>
+            <button class="btn btn-ghost" id="downloadBtn" onclick="downloadReport()">Descargar para adjuntar</button>
+            <button class="btn btn-ghost" onclick="printSummary()">Imprimir / PDF</button>
+          </div>
+          <div class="privacy-note" id="mailStatus">El informe viaja por tu propio correo institucional.</div>
+        </div>
+
+        <div class="card" id="sec-borrador">
+          <div class="section-label">Borrador en este dispositivo</div>
+          <p class="sub">Opcional — evita perder la captura si el teléfono se bloquea o la página se recarga</p>
+          <label class="check-item"><input type="checkbox" id="draftToggle" onchange="toggleDraft()"> Guardar borrador automáticamente en este teléfono o computadora</label>
+          <div class="export-row" style="margin-top:12px;">
+            <button class="btn btn-ghost" onclick="clearDraft(true)">Borrar borrador guardado</button>
+          </div>
+          <div class="privacy-note" id="draftStatus">Desactivado. Al cerrar o recargar la página se pierde lo capturado.</div>
+        </div>
+
+        <div class="card" id="sec-compartir">
+          <div class="section-label">Compartir con el equipo</div>
+          <p class="sub">Pasa esta misma página a los supervisores de urgencias — funciona igual en celular y computadora</p>
+          <div class="share-row">
+            <button class="btn btn-primary" onclick="sharePage()">Compartir enlace</button>
+            <button class="btn btn-ghost" onclick="copyLink()">Copiar enlace</button>
+          </div>
+          <div class="privacy-note" style="margin-top:12px;">Sugerencia para el celular: abre el enlace en el navegador y usa <b>Compartir → Agregar a la pantalla de inicio</b> (iPhone) o <b>Instalar / Agregar a inicio</b> (Android). Queda como un ícono y abre a pantalla completa durante el código.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Basado en el formulario de registro RES-Q (Angels Initiative) y el protocolo interno 15.06 · Algoritmo para EVC — Hospital CIMA.</footer>
+
+<div id="summaryPrintArea"></div>
+
+<div id="toastHost" aria-live="polite"></div>
+<div id="modalHost" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <h3 id="modalTitle"></h3>
+    <p id="modalBody"></p>
+    <div class="acts">
+      <button class="btn btn-ghost" id="modalNo">Cancelar</button>
+      <button class="btn btn-primary" id="modalYes">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------------- Avisos y confirmación ---------------- */
+function toast(msg, kind){
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  host.appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+let modalResolve = null;
+function askConfirm(title, body, okLabel){
+  return new Promise(resolve => {
+    modalResolve = resolve;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalBody').textContent = body || '';
+    document.getElementById('modalYes').textContent = okLabel || 'Confirmar';
+    document.getElementById('modalHost').classList.add('open');
+    document.getElementById('modalYes').focus();
+  });
+}
+function closeModal(answer){
+  document.getElementById('modalHost').classList.remove('open');
+  if(modalResolve){ modalResolve(answer); modalResolve = null; }
+}
+document.getElementById('modalYes').addEventListener('click', () => closeModal(true));
+document.getElementById('modalNo').addEventListener('click', () => closeModal(false));
+document.getElementById('modalHost').addEventListener('click', e => { if(e.target.id === 'modalHost') closeModal(false); });
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && document.getElementById('modalHost').classList.contains('open')) closeModal(false);
+});
+
+/* ---------------- Tabs ---------------- */
+function showTab(name){
+  document.getElementById('tab-checklist').classList.toggle('active', name==='checklist');
+  document.getElementById('tab-resq').classList.toggle('active', name==='resq');
+  document.getElementById('tabbtn-checklist').setAttribute('aria-selected', name==='checklist');
+  document.getElementById('tabbtn-resq').setAttribute('aria-selected', name==='resq');
+  updateStickyOffset();
+}
+
+/* ---------------- Sticky offset ---------------- */
+function updateStickyOffset(){
+  const topbarH = document.querySelector('.topbar').offsetHeight;
+  document.documentElement.style.setProperty('--topbar-h', topbarH + 'px');
+  const timerbarH = document.querySelector('.timerbar').offsetHeight;
+  document.documentElement.style.setProperty('--sticky-offset', (topbarH + timerbarH + 14) + 'px');
+}
+window.addEventListener('resize', updateStickyOffset);
+
+let compactState = false;
+function handleScrollCompact(){
+  const shouldCompact = window.scrollY > 40;
+  if(shouldCompact === compactState) return;
+  compactState = shouldCompact;
+  document.querySelector('.topbar').classList.toggle('compact', shouldCompact);
+  document.querySelector('.timerbar').classList.toggle('compact', shouldCompact);
+  updateStickyOffset();
+}
+window.addEventListener('scroll', handleScrollCompact, { passive:true });
+
+/* ---------------- Clock ---------------- */
+let clockStart = null, clockInterval = null;
+let caseFinished = false, finishedAt = null;
+function startClock(){
+  if(clockStart) return;
+  clockStart = Date.now();
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('startBtn').textContent = 'Reloj en marcha';
+  document.getElementById('finishBtn').disabled = false;
+  clockInterval = setInterval(updateClock, 1000);
+  renderMilestones();
+}
+function updateClock(){
+  const s = Math.floor((Date.now()-clockStart)/1000);
+  const m = String(Math.floor(s/60)).padStart(2,'0');
+  const sec = String(s%60).padStart(2,'0');
+  document.getElementById('clockDisplay').textContent = m+':'+sec;
+  renderMilestones();
+}
+function elapsedMinutes(){
+  if(!clockStart) return null;
+  if(caseFinished) return finishedAt;
+  return (Date.now()-clockStart)/60000;
+}
+function finishCase(){
+  if(!clockStart){ toast('Primero inicia el reloj con la llegada del paciente.', 'warn'); return; }
+  if(caseFinished) return;
+  caseFinished = true;
+  finishedAt = (Date.now()-clockStart)/60000;
+  clearInterval(clockInterval);
+  document.getElementById('finishBtn').textContent = 'Reabrir caso';
+  document.getElementById('finishBtn').onclick = reopenCase;
+  document.getElementById('startBtn').textContent = 'Caso finalizado — reloj detenido';
+  renderMilestones();
+  generateSummary();
+  document.getElementById('summaryPanel').style.display = 'block';
+  closeOutCase();
+}
+/* Al finalizar: se genera el informe, se guarda en el servidor y se abre el correo ya redactado */
+async function closeOutCase(){
+  const subjEl = document.getElementById('mailSubject');
+  subjEl.value = defaultSubject();
+  showTab('resq');
+  jumpToSection('sec-correo');
+  const status = document.getElementById('mailStatus');
+  status.textContent = 'Caso cerrado en ' + finishedAt.toFixed(1) + ' min. Generando informe…';
+
+  const enEquipo = saveCaseLocal(true);
+  const enServidor = await saveCaseToCloud(true);
+
+  refreshMailLink();
+  navigator.clipboard.writeText(buildReportText()).catch(()=>{});
+
+  const to = document.getElementById('mailTo').value.trim();
+  const cc = document.getElementById('mailCc').value.trim();
+  status.textContent = 'Caso cerrado en ' + finishedAt.toFixed(1) + ' min. ' +
+    (enEquipo ? 'Guardado en este equipo. ' : '') + (enServidor ? 'Guardado en el servidor. ' : '') +
+    'Informe listo para ' + (to || 'la jefatura') + (cc ? ' con copia a ' + cc : '') +
+    '. Toca "Abrir en mi correo" para enviarlo — el informe completo ya quedó copiado por si lo quieres pegar íntegro.';
+  toast('Informe listo — toca "Abrir en mi correo"', 'ok');
+  const a = document.getElementById('mailLink');
+  if(a){ a.focus({preventScroll:true}); }
+}
+function reopenCase(){
+  if(!caseFinished) return;
+  caseFinished = false;
+  clockInterval = setInterval(updateClock, 1000);
+  document.getElementById('finishBtn').textContent = 'Finalizar caso';
+  document.getElementById('finishBtn').onclick = finishCase;
+  document.getElementById('startBtn').textContent = 'Reloj en marcha';
+  finishedAt = null;
+  renderMilestones();
+}
+
+/* ---------------- Milestones ---------------- */
+const MILESTONES = [
+  {id:'triage', label:'Triage: Cincinnati (≥1) y/o NIHSS + Activación de Código ICTUS', goal:5},
+  {id:'imagen', label:'Estudio de imagen obtenido', goal:10},
+  {id:'interconsulta', label:'Interconsulta: Neurología + Neurointervencionismo + Neuroradiología', goal:null},
+  {id:'puncion', label:'Punción arterial — inicio de trombectomía mecánica (si aplica)', goal:null},
+  {id:'tratamiento', label:'Tratamiento definitivo administrado (trombólisis EV y/o EVT)', goal:60},
+];
+const markedAt = {};
+
+function renderMilestones(){
+  const banner = document.getElementById('caseStatusBanner');
+  if(banner){
+    banner.innerHTML = caseFinished
+      ? `<span>✓ Caso finalizado — tiempo total puerta-tratamiento: <span class="t">${finishedAt.toFixed(1)} min</span></span><button class="btn btn-ghost" onclick="reopenCase()">Reabrir caso</button>`
+      : '';
+    banner.className = caseFinished ? 'status-banner' : '';
+  }
+  const wrap = document.getElementById('milestoneList');
+  wrap.innerHTML = '';
+  const chipRow = document.getElementById('chipRow');
+  chipRow.innerHTML = '';
+  const unstable = document.getElementById('unstableCheck') ? document.getElementById('unstableCheck').checked : false;
+  const wakeup = document.getElementById('wakeUpCheck') ? document.getElementById('wakeUpCheck').checked : false;
+
+  const imagingChoiceEl = document.querySelector('input[name="imagingChoice"]:checked');
+  const imagingChoice = imagingChoiceEl ? imagingChoiceEl.value : null;
+
+  MILESTONES.forEach((m, idx) => {
+    let label = m.label;
+    if(m.id === 'imagen'){
+      let suggestion;
+      if(wakeup) suggestion = 'RM cerebral secuencia rápida (preferida por wake-up stroke)';
+      else if(unstable) suggestion = 'TAC de cráneo simple (paciente inestable)';
+      else suggestion = 'RM cerebral secuencia rápida (paciente estable)';
+      label = imagingChoice
+        ? `Estudio de imagen realizado: ${imagingChoice}`
+        : `Estudio de imagen — sugerido: ${suggestion} (aún sin confirmar)`;
+    }
+    const row = document.createElement('div');
+    row.className = 'milestone';
+    const marked = markedAt[m.id];
+    let badgeHtml, timeHtml = '', btnHtml;
+    if(marked != null){
+      const withinGoal = m.goal == null ? true : marked <= m.goal;
+      badgeHtml = `<span class="badge ${withinGoal ? 'ontime' : 'late'}">${withinGoal ? 'A tiempo' : 'Fuera de tiempo'}</span>`;
+      timeHtml = `<span class="marked-time">marcado a los ${marked.toFixed(1)} min</span>`;
+      btnHtml = `<button class="btn btn-ghost" onclick="unmark('${m.id}')">Deshacer</button>`;
+    } else {
+      badgeHtml = `<span class="badge pending">Pendiente</span>`;
+      const disabled = !clockStart ? 'disabled title="Inicia el reloj primero"' : (caseFinished ? 'disabled title="Caso finalizado — reabre el caso para seguir marcando"' : '');
+      btnHtml = `<button class="btn btn-primary" ${disabled} onclick="mark('${m.id}')">Marcar ahora</button>`;
+    }
+    row.innerHTML = `
+      <div class="num">${idx+1}</div>
+      <div class="info"><strong>${label}</strong><span>${m.goal != null ? 'Meta: ≤ ' + m.goal + ' min desde la llegada' : 'Sin meta de tiempo fija'}</span></div>
+      <div class="status">${badgeHtml}${timeHtml}${btnHtml}</div>
+    `;
+    wrap.appendChild(row);
+
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    let state = 'pending';
+    if(marked != null){ state = (m.goal == null || marked <= m.goal) ? 'ontime' : 'late'; }
+    chip.setAttribute('data-state', state);
+    chip.innerHTML = `<span class="dot"></span>${m.id.charAt(0).toUpperCase()+m.id.slice(1)}${marked != null ? ` <span class="t mono">${marked.toFixed(0)}m</span>` : ''}`;
+    chipRow.appendChild(chip);
+  });
+
+  const hint = document.getElementById('imagingHint');
+  if(hint){
+    if(wakeup) hint.textContent = 'Wake-up stroke marcado: preferir RM cerebral de primera instancia, independientemente de la estabilidad.';
+    else if(unstable) hint.textContent = 'Paciente inestable: proceder con TAC de cráneo simple para no retrasar la decisión terapéutica.';
+    else hint.textContent = 'Paciente estable, sin criterio de wake-up stroke: puede optarse por RM cerebral de secuencia rápida (objetivo ≤ 10 minutos).';
+    hint.className = 'interp ' + (unstable && !wakeup ? 'flag' : 'ok');
+  }
+}
+function mark(id){
+  const mins = elapsedMinutes();
+  if(mins == null) return;
+  markedAt[id] = mins;
+  renderMilestones();
+}
+function unmark(id){
+  delete markedAt[id];
+  renderMilestones();
+}
+async function resetAll(){
+  const ok = await askConfirm('¿Iniciar un nuevo caso?',
+    'Se borrará lo capturado en pantalla (reloj, checklist y formulario). Los casos ya guardados en el historial no se tocan.',
+    'Sí, nuevo caso');
+  if(!ok) return;
+  clearInterval(clockInterval);
+  clockStart = null;
+  caseFinished = false;
+  finishedAt = null;
+  Object.keys(markedAt).forEach(k => delete markedAt[k]);
+  document.getElementById('clockDisplay').textContent = '00:00';
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('startBtn').textContent = 'Llegada del paciente — iniciar reloj';
+  document.getElementById('finishBtn').disabled = true;
+  document.getElementById('finishBtn').textContent = 'Finalizar caso';
+  document.getElementById('finishBtn').onclick = finishCase;
+  document.getElementById('evtDetailFields').style.display = 'none';
+  document.querySelectorAll('input[type=text], input[type=number], input[type=date], input[type=time], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
+  document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  document.getElementById('glucosaFlag').textContent = '';
+  document.getElementById('glucosaFlag').className = 'init-flag';
+  document.getElementById('taFlag').textContent = '';
+  document.getElementById('taFlag').className = 'init-flag';
+  Object.keys(actionStamps).forEach(k => delete actionStamps[k]);
+  renderAllStamps();
+  currentCaseId = null;
+  document.getElementById('draftToggle').checked = draftOn;
+  renderMilestones();
+  computeNihss(); computeAspects(); renderRace(); computeCincinnati(); resetGlasgow();
+  document.getElementById('summaryPanel').style.display = 'none';
+  try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+}
+
+/* ---------------- Checkbox / radio builders ---------------- */
+function buildCheckGrid(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(t => `<label class="check-item"><input type="checkbox" value="${t}">${t}</label>`).join('');
+}
+function buildRadioRow(containerId, items, name){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map((t,i) => {
+    const id = name+'_'+i;
+    return `<div class="radio-pill"><input type="radio" name="${name}" id="${id}" value="${t}"><label for="${id}">${t}</label></div>`;
+  }).join('');
+}
+
+buildCheckGrid('antecedentesGrid', ['Ninguno','Desconoce','HTA','DM','Dislipidemia','Fumador','Ictus / AIT previo','Hemorragia intracraneal previa','FA o flutter auricular','Cardiopatía isquémica o IAM previo','Insuficiencia cardiaca congestiva','Trombosis venosa','Apnea del sueño (SAOS)','Alcoholismo + elevación de GGT']);
+buildCheckGrid('txPrevioGrid', ['Antidiabéticos','Antihipertensivos','Antiagregantes plaquetarios','Anticoagulantes','Anticonceptivos hormonales','Estatinas']);
+buildCheckGrid('estudioImagenGrid', ['TAC simple','TAC contrastada','PerfuTAC','RM','Realizado en otro hospital','Otro estudio de neuroimagen']);
+buildCheckGrid('txAltaGrid', ['Antidiabéticos','Antihipertensivos','Antiagregantes plaquetarios','Anticoagulantes','Estatinas']);
+
+buildRadioRow('imagingChoiceRow', ['TAC de cráneo simple','RM cerebral (secuencia rápida)'], 'imagingChoice');
+document.getElementById('imagingChoiceRow').addEventListener('change', renderMilestones);
+buildRadioRow('tipoIctusRow', ['Isquémico','Hemorragia intracerebral','AIT','Hemorragia subaracnoidea','Trombosis venosa central','Imitador de ictus','Indeterminado'], 'tipoIctus');
+document.getElementById('tipoIctusExtra').innerHTML = `
+  <div class="field"><label>Si hemorragia intracerebral — volumen (mL) / localización</label><input type="text" id="f_hicDetalle" placeholder="p. ej. 18 mL, supratentorial"></div>
+  <div class="field"><label>Si hemorragia subaracnoidea — intervención quirúrgica</label><select id="f_hsaQx"><option value="">N/A</option><option>Con intervención quirúrgica</option><option>Sin intervención quirúrgica</option></select></div>
+`;
+buildRadioRow('trombolisisRow', ['Alteplase','Tenecteplase','No trombolizado'], 'trombolisis');
+buildRadioRow('evtSitioRow', ['ACI intracraneal','M1','M2','Tándem (ACI + M1)','Basilar','Otro'], 'evtSitio');
+buildRadioRow('evtTecnicaRow', ['Aspiración directa','Stent retriever','Combinada','Stent de rescate (tándem)'], 'evtTecnica');
+buildCheckGrid('evtComplicacionesGrid', ['Ninguna','Hemorragia intracraneal sintomática','Disección arterial','Embolismo a territorio nuevo','Vasoespasmo','Perforación vascular']);
+function toggleEvtFields(){
+  const show = document.getElementById('f_evtRealizada').value === 'Sí';
+  document.getElementById('evtDetailFields').style.display = show ? 'block' : 'none';
+}
+buildRadioRow('etiologiaRow', ['Aterotrombótico','Cardioembólico','Lacunar o pequeño vaso','Indeterminado'], 'etiologia');
+buildRadioRow('disfagiaMomentoRow', ['En < 4 h','Entre 4–24 h','En > 24 h','No aplica (ETI, NSG)','No se realizó'], 'disfagiaMomento');
+buildRadioRow('disfagiaPruebaRow', ['GUSS','ASSIST','V-VST','Prueba de H2O','Otra'], 'disfagiaPrueba');
+buildRadioRow('disfagiaAreaRow', ['Enfermería','Med. UMQ','Med. Rehab.','Fisioterapia'], 'disfagiaArea');
+buildRadioRow('altaRow', ['Domicilio','Otra área','Otro hospital','Fallecimiento','Alta voluntaria'], 'alta');
+
+/* ---------------- NIHSS ---------------- */
+const NIHSS_ITEMS = [
+  {id:'1a', label:'1a. Nivel de conciencia', opts:[[0,'Alerta'],[1,'Somnolencia'],[2,'Obnubilación'],[3,'Coma']]},
+  {id:'1b', label:'1b. Preguntas verbales (mes / edad)', opts:[[0,'Ambas respuestas correctas'],[1,'Una respuesta correcta'],[2,'Ninguna respuesta correcta']]},
+  {id:'1c', label:'1c. Órdenes motoras (ojos / mano)', opts:[[0,'Ambas respuestas correctas'],[1,'Una respuesta correcta'],[2,'Ninguna respuesta correcta']]},
+  {id:'2', label:'2. Mirada conjugada', opts:[[0,'Normal'],[1,'Paresia parcial de la mirada'],[2,'Paresia total o desviación forzada']]},
+  {id:'3', label:'3. Campos visuales', opts:[[0,'Normal'],[1,'Hemianopsia parcial'],[2,'Hemianopsia completa'],[3,'Ceguera bilateral']]},
+  {id:'4', label:'4. Paresia facial', opts:[[0,'Normal'],[1,'Paresia leve'],[2,'Parálisis total de músc. facial inferior'],[3,'Parálisis total superior e inferior']]},
+  {id:'5a', label:'5a. Paresia de extremidad superior — Derecha', opts:[[0,'Mantiene la posición 10"'],[1,'Claudica en <10", sin tocar la cama'],[2,'Claudica y toca la cama en <10"'],[3,'Hay movimiento, no vence gravedad'],[4,'Parálisis completa'],[9,'Amputada / inmovilizada (no cuenta)']]},
+  {id:'5b', label:'5b. Paresia de extremidad superior — Izquierda', opts:[[0,'Mantiene la posición 10"'],[1,'Claudica en <10", sin tocar la cama'],[2,'Claudica y toca la cama en <10"'],[3,'Hay movimiento, no vence gravedad'],[4,'Parálisis completa'],[9,'Amputada / inmovilizada (no cuenta)']]},
+  {id:'6a', label:'6a. Paresia de extremidad inferior — Derecha', opts:[[0,'Mantiene la posición 5"'],[1,'Claudica en <5", sin tocar la cama'],[2,'Claudica y toca la cama en <5"'],[3,'Hay movimiento, no vence gravedad'],[4,'Parálisis completa'],[9,'Amputada / inmovilizada (no cuenta)']]},
+  {id:'6b', label:'6b. Paresia de extremidad inferior — Izquierda', opts:[[0,'Mantiene la posición 5"'],[1,'Claudica en <5", sin tocar la cama'],[2,'Claudica y toca la cama en <5"'],[3,'Hay movimiento, no vence gravedad'],[4,'Parálisis completa'],[9,'Amputada / inmovilizada (no cuenta)']]},
+  {id:'7', label:'7. Ataxia de extremidades', opts:[[0,'Normal'],[1,'Ataxia en una extremidad'],[2,'Ataxia en dos extremidades']]},
+  {id:'8', label:'8. Sensibilidad', opts:[[0,'Normal'],[1,'Hipoestesia leve o moderada'],[2,'Anestesia']]},
+  {id:'9', label:'9. Lenguaje', opts:[[0,'Normal'],[1,'Afasia leve o moderada'],[2,'Afasia grave, no es posible entenderse'],[3,'Afasia global o en coma']]},
+  {id:'10', label:'10. Disartria', opts:[[0,'Normal'],[1,'Leve, se le puede entender'],[2,'Grave, ininteligible o anartria'],[9,'Intubado (no puntúa)']]},
+  {id:'11', label:'11. Extinción / negligencia / inatención', opts:[[0,'Normal'],[1,'Inatención o extinción en una modalidad'],[2,'Inatención o extinción en más de una modalidad']]},
+];
+function buildNihss(){
+  const el = document.getElementById('nihssItems');
+  el.innerHTML = NIHSS_ITEMS.map(item => `
+    <div class="scale-item">
+      <div class="qlabel">${item.label}</div>
+      <div class="radio-row">
+        ${item.opts.map(([v,t],i) => `<div class="radio-pill"><input type="radio" name="nihss_${item.id}" id="nihss_${item.id}_${i}" value="${v}" onchange="computeNihss()"><label for="nihss_${item.id}_${i}">${v} — ${t}</label></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function computeNihss(){
+  let total = 0;
+  NIHSS_ITEMS.forEach(item => {
+    const checked = document.querySelector(`input[name="nihss_${item.id}"]:checked`);
+    if(checked){
+      const v = parseInt(checked.value,10);
+      if(v !== 9) total += v;
+    }
+  });
+  document.getElementById('nihssTotal').textContent = total;
+
+  const answered = NIHSS_ITEMS.filter(item => document.querySelector(`input[name="nihss_${item.id}"]:checked`)).length;
+  const interp = document.getElementById('nihssInterp');
+  let sev;
+  if(total === 0) sev = 'Sin déficit medible';
+  else if(total <= 4) sev = 'Déficit leve';
+  else if(total <= 15) sev = 'Déficit moderado';
+  else if(total <= 20) sev = 'Déficit moderado a severo';
+  else sev = 'Déficit severo';
+  interp.textContent = `${sev} — ${total} puntos · ${answered} de ${NIHSS_ITEMS.length} ítems evaluados` +
+    (total >= 6 ? ' · NIHSS ≥ 6: cumple umbral de trombectomía en circulación anterior.' : '');
+  interp.className = 'interp ' + (total >= 6 ? 'flag' : 'ok');
+
+  document.getElementById('dockNihss').textContent = total;
+}
+function resetNihss(){
+  NIHSS_ITEMS.forEach(item => {
+    document.querySelectorAll(`input[name="nihss_${item.id}"]`).forEach(el => el.checked = false);
+  });
+  computeNihss();
+}
+function copyNihss(){
+  const total = document.getElementById('nihssTotal').textContent;
+  const detail = NIHSS_ITEMS.map(item => {
+    const c = document.querySelector(`input[name="nihss_${item.id}"]:checked`);
+    return item.label + ': ' + (c ? c.value : '—');
+  }).join('\n');
+  const text = 'NIHSS total: ' + total + '\n' + document.getElementById('nihssInterp').textContent + '\n\n' + detail;
+  navigator.clipboard.writeText(text)
+    .then(()=>toast('Puntaje NIHSS copiado.', 'ok'))
+    .catch(()=>toast('No se pudo copiar automáticamente.', 'warn'));
+}
+buildNihss();
+
+/* ---------------- Escala de coma de Glasgow ---------------- */
+const GLASGOW_ITEMS = [
+  {id:'ocular', letter:'O', label:'Respuesta ocular', max:4, opts:[
+    [4,'Espontánea'],
+    [3,'Al estímulo verbal'],
+    [2,'Al estímulo doloroso'],
+    [1,'Sin respuesta'],
+    ['C','Ojos cerrados por edema o trauma (no valorable)'],
+  ]},
+  {id:'verbal', letter:'V', label:'Respuesta verbal', max:5, opts:[
+    [5,'Orientada'],
+    [4,'Confusa'],
+    [3,'Palabras inapropiadas'],
+    [2,'Sonidos incomprensibles'],
+    [1,'Sin respuesta'],
+    ['T','Intubado / traqueostomía (no valorable)'],
+  ]},
+  {id:'motora', letter:'M', label:'Respuesta motora', max:6, opts:[
+    [6,'Obedece órdenes'],
+    [5,'Localiza el dolor'],
+    [4,'Retirada al dolor'],
+    [3,'Flexión anormal (decorticación)'],
+    [2,'Extensión anormal (descerebración)'],
+    [1,'Sin respuesta'],
+  ]},
+];
+function buildGlasgow(){
+  document.getElementById('glasgowItems').innerHTML = GLASGOW_ITEMS.map(item => `
+    <div class="scale-item">
+      <div class="qlabel">${item.letter}. ${item.label} <span style="font-weight:400;color:var(--text-muted);">— máximo ${item.max}</span></div>
+      <div class="radio-row">
+        ${item.opts.map(([v,t],i) => `<div class="radio-pill"><input type="radio" name="gcs_${item.id}" id="gcs_${item.id}_${i}" value="${v}" ${v === item.max ? 'checked' : ''} onchange="computeGlasgow()"><label for="gcs_${item.id}_${i}">${v} — ${t}</label></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function computeGlasgow(){
+  let total = 0, maxPossible = 0;
+  const parts = [], notTestable = [];
+  GLASGOW_ITEMS.forEach(item => {
+    const c = document.querySelector(`input[name="gcs_${item.id}"]:checked`);
+    const v = c ? c.value : String(item.max);
+    if(v === 'T' || v === 'C'){
+      notTestable.push(item.letter + v);
+      parts.push(item.letter + v);
+    } else {
+      total += parseInt(v,10);
+      maxPossible += item.max;
+      parts.push(item.letter + v);
+    }
+  });
+  const suffix = notTestable.length ? 'T' : '';
+  const display = notTestable.length ? `${total}/${maxPossible}${suffix}` : `${total}/15`;
+  document.getElementById('glasgowTotal').textContent = display;
+  document.getElementById('dockGlasgow').textContent = display.split('/')[0] + suffix;
+
+  const interp = document.getElementById('glasgowInterp');
+  let sev, flag = false;
+  if(notTestable.length){
+    sev = 'Puntaje parcial (' + notTestable.join(', ') + ' no valorable) — reportar siempre desglosado';
+    flag = true;
+  } else if(total <= 8){
+    sev = 'Deterioro grave del estado de conciencia (≤8) — valorar protección de vía aérea';
+    flag = true;
+  } else if(total <= 12){
+    sev = 'Deterioro moderado (9–12)';
+    flag = true;
+  } else {
+    sev = 'Deterioro leve o sin deterioro (13–15)';
+  }
+  interp.textContent = `${parts.join(' + ')} = ${display} · ${sev}`;
+  interp.className = 'interp ' + (flag ? 'flag' : 'ok');
+}
+function resetGlasgow(){
+  GLASGOW_ITEMS.forEach(item => {
+    document.querySelectorAll(`input[name="gcs_${item.id}"]`).forEach(el => { el.checked = (el.value === String(item.max)); });
+  });
+  computeGlasgow();
+}
+buildGlasgow();
+
+/* ---------------- Escala de Cincinnati ---------------- */
+const CINCINNATI_ITEMS = [
+  {id:'cara', label:'Asimetría facial', hint:'Pedir que sonría o muestre los dientes', opts:[[0,'Normal — ambos lados se mueven igual'],[1,'Anormal — un lado no se mueve igual']]},
+  {id:'brazo', label:'Caída del brazo', hint:'Ojos cerrados, brazos extendidos 10 segundos', opts:[[0,'Normal — ambos brazos se mueven igual'],[1,'Anormal — un brazo cae o no se mueve']]},
+  {id:'lenguaje', label:'Lenguaje anormal', hint:'Pedir que repita una frase sencilla', opts:[[0,'Normal — frase correcta sin dificultad'],[1,'Anormal — arrastra palabras, palabras incorrectas o no habla']]},
+];
+function buildCincinnati(){
+  document.getElementById('cincinnatiItems').innerHTML = CINCINNATI_ITEMS.map(item => `
+    <div class="scale-item">
+      <div class="qlabel">${item.label} <span style="font-weight:400;color:var(--text-muted);">— ${item.hint}</span></div>
+      <div class="radio-row">
+        ${item.opts.map(([v,t],i) => `<div class="radio-pill"><input type="radio" name="cinc_${item.id}" id="cinc_${item.id}_${i}" value="${v}" onchange="computeCincinnati()"><label for="cinc_${item.id}_${i}">${t}</label></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+function computeCincinnati(){
+  let total = 0, answered = 0;
+  CINCINNATI_ITEMS.forEach(item => {
+    const c = document.querySelector(`input[name="cinc_${item.id}"]:checked`);
+    if(c){ total += parseInt(c.value,10); answered++; }
+  });
+  document.getElementById('cincinnatiTotal').textContent = total+'/3';
+  document.getElementById('dockCincinnati').textContent = total+'/3';
+  const interp = document.getElementById('cincinnatiInterp');
+  if(answered === 0){ interp.textContent = ''; interp.className = 'interp'; return; }
+  if(total >= 1){
+    interp.textContent = `Cincinnati ${total}/3 — POSITIVA. Activar Código ICTUS de inmediato y continuar con NIHSS.`;
+    interp.className = 'interp flag';
+  } else if(answered === CINCINNATI_ITEMS.length){
+    interp.textContent = 'Cincinnati 0/3 — negativa en los tres ítems. Buscar otras causas de la sintomatología, sin descartar ictus si la sospecha clínica es alta.';
+    interp.className = 'interp ok';
+  } else {
+    interp.textContent = `Evaluados ${answered} de 3 ítems, sin hallazgos positivos hasta ahora.`;
+    interp.className = 'interp ok';
+  }
+}
+buildCincinnati();
+
+/* ---------------- Valores iniciales (glicemia, signos vitales) ---------------- */
+function syncInitialValues(){
+  const g = document.getElementById('initGlucosa').value;
+  const tas = document.getElementById('initTAS').value;
+  const tad = document.getElementById('initTAD').value;
+
+  if(g !== '') document.getElementById('f_glucosa').value = g;
+  if(tas !== '') document.getElementById('f_tas').value = tas;
+  if(tad !== '') document.getElementById('f_tad').value = tad;
+
+  const gFlag = document.getElementById('glucosaFlag');
+  if(g === ''){ gFlag.textContent = ''; gFlag.className = 'init-flag'; }
+  else if(+g < 60){ gFlag.textContent = 'Hipoglucemia — corregir antes de continuar'; gFlag.className = 'init-flag warn'; }
+  else if(+g > 180){ gFlag.textContent = 'Hiperglucemia — meta 140–180 mg/dL'; gFlag.className = 'init-flag warn'; }
+  else { gFlag.textContent = 'En rango'; gFlag.className = 'init-flag good'; }
+
+  const taFlag = document.getElementById('taFlag');
+  if(tas === '' && tad === ''){ taFlag.textContent = ''; taFlag.className = 'init-flag'; }
+  else if((tas !== '' && +tas > 185) || (tad !== '' && +tad > 110)){
+    taFlag.textContent = 'TA > 185/110 — controlar antes de trombólisis';
+    taFlag.className = 'init-flag warn';
+  } else {
+    taFlag.textContent = 'Apta para trombólisis (≤185/110)';
+    taFlag.className = 'init-flag good';
+  }
+}
+
+/* ---------------- ASPECTS ---------------- */
+const ASPECTS_REGIONS = [
+  ['C','Núcleo caudado'],['I','Cinta insular'],['IC','Cápsula interna'],['L','Núcleo lenticular'],
+  ['M1','Corteza anterior ACM'],['M2','Corteza lateral a la ínsula'],['M3','Corteza posterior ACM'],
+  ['M4','Territorio superior anterior ACM'],['M5','Territorio superior lateral ACM'],['M6','Territorio superior posterior ACM'],
+];
+function buildAspects(){
+  const el = document.getElementById('aspectsGrid');
+  el.innerHTML = ASPECTS_REGIONS.map(([code,name],i) => `
+    <div class="aspects-cell">
+      <input type="checkbox" id="asp_${i}" onchange="computeAspects()">
+      <label for="asp_${i}"><b>${code}</b><br>${name}</label>
+    </div>
+  `).join('');
+}
+function computeAspects(){
+  const checked = document.querySelectorAll('#aspectsGrid input:checked').length;
+  document.getElementById('aspectsTotal').textContent = (10-checked)+'/10';
+  document.getElementById('dockAspects').textContent = (10-checked)+'/10';
+}
+buildAspects();
+
+/* ---------------- RACE ---------------- */
+const RACE_COMMON = [
+  {id:'facial', label:'Parálisis facial', opts:[[0,'Ausente'],[1,'Leve'],[2,'Moderada a severa']]},
+  {id:'es', label:'Función motora — extremidad superior', opts:[[0,'Normal a leve'],[1,'Moderada'],[2,'Severa']]},
+  {id:'ei', label:'Función motora — extremidad inferior', opts:[[0,'Normal a leve'],[1,'Moderada'],[2,'Severa']]},
+  {id:'cabeza', label:'Desviación de cabeza y/o mirada', opts:[[0,'Ausente'],[1,'Presente']]},
+];
+const RACE_DERECHA = {id:'afasia', label:'Afasia (hemiparesia derecha)', opts:[[0,'Realiza ambas tareas correctamente'],[1,'Realiza una tarea correctamente'],[2,'No realiza ninguna tarea']]};
+const RACE_IZQUIERDA = {id:'agnosia', label:'Agnosia (hemiparesia izquierda)', opts:[[0,'Reconoce su brazo'],[1,'No reconoce brazo o incapacidad de moverlo'],[2,'No reconoce nada']]};
+
+function renderRace(){
+  const side = document.getElementById('raceSide').value;
+  const items = [...RACE_COMMON];
+  if(side === 'derecha') items.push(RACE_DERECHA);
+  if(side === 'izquierda') items.push(RACE_IZQUIERDA);
+  const el = document.getElementById('raceItems');
+  if(!side){
+    el.innerHTML = '<p class="sub">Selecciona el lado de la hemiparesia para desplegar el ítem correspondiente (afasia / agnosia).</p>';
+    document.getElementById('raceTotal').textContent = '0/9';
+    document.getElementById('dockRace').textContent = '0/9';
+    document.getElementById('raceInterp').textContent = '';
+    document.getElementById('raceInterp').className = 'interp';
+    return;
+  }
+  el.innerHTML = items.map(item => `
+    <div class="scale-item">
+      <div class="qlabel">${item.label}</div>
+      <div class="radio-row">
+        ${item.opts.map(([v,t],i) => `<div class="radio-pill"><input type="radio" name="race_${item.id}" id="race_${item.id}_${i}" value="${v}" onchange="computeRace()"><label for="race_${item.id}_${i}">${v} — ${t}</label></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+  computeRace();
+}
+function computeRace(){
+  const side = document.getElementById('raceSide').value;
+  const ids = ['facial','es','ei','cabeza'].concat(side === 'derecha' ? ['afasia'] : side === 'izquierda' ? ['agnosia'] : []);
+  let total = 0, answered = 0;
+  ids.forEach(id => {
+    const checked = document.querySelector(`input[name="race_${id}"]:checked`);
+    if(checked){ total += parseInt(checked.value,10); answered++; }
+  });
+  document.getElementById('raceTotal').textContent = total+'/9';
+  document.getElementById('dockRace').textContent = total+'/9';
+  const interp = document.getElementById('raceInterp');
+  if(answered === ids.length && ids.length){
+    if(total >= 5){
+      interp.textContent = 'RACE ≥ 5: alta probabilidad de oclusión de gran vaso (LVO). Considerar traslado directo / activación de neurointervencionismo.';
+      interp.className = 'interp flag';
+    } else {
+      interp.textContent = 'RACE < 5: baja probabilidad de oclusión de gran vaso proximal, sin excluirla por completo.';
+      interp.className = 'interp ok';
+    }
+  } else {
+    interp.textContent = '';
+    interp.className = 'interp';
+  }
+}
+renderRace();
+
+/* ---------------- Export ---------------- */
+function val(id){ const el = document.getElementById(id); return el ? (el.value || '—') : '—'; }
+function checkedList(containerId){
+  return [...document.querySelectorAll('#'+containerId+' input:checked')].map(i => i.value).join(', ') || '—';
+}
+function radioVal(name){
+  const c = document.querySelector(`input[name="${name}"]:checked`);
+  return c ? c.value : '—';
+}
+function buildReportText(){
+  const L = [];
+  const push = (s) => L.push(s);
+  const blank = v => v === undefined || v === null || v === '' || v === '—' || v === '0/9' && false;
+  const row = (label, value, unit) => {
+    if(blank(value)) return;
+    push('  ' + label + ': ' + value + (unit ? ' ' + unit : ''));
+  };
+  const HEAD = '';
+  const head = (t) => { push(''); push(HEAD + t.toUpperCase()); };
+  const txt = id => { const el = document.getElementById(id); return el ? el.textContent.trim() : ''; };
+
+  const folio = val('f_caseid');
+  push('INFORME DE CÓDIGO ICTUS');
+  push('Hospital CIMA — El Corazón Médico de Sonora · Urgencias');
+  push('='.repeat(56));
+  push('Folio del caso: ' + (folio === '—' ? '(sin folio)' : folio));
+  push('Informe generado: ' + new Date().toLocaleString('es-MX'));
+  if(caseFinished) push('Caso cerrado a los ' + finishedAt.toFixed(1) + ' min de la llegada');
+  { const q = (document.getElementById('capturadoPor')||{}).value; if(q && q.trim()) push('Capturó: ' + q.trim()); }
+
+  head('Identificación');
+  row('Edad', val('f_edad'), 'años');
+  row('Género', val('f_genero'));
+  row('Ictus del despertar', val('f_wakeup'));
+  row('Hora en que durmió', val('f_horaDurmio'));
+  row('Última hora visto sin síntomas', val('f_ultimaHoraSano'));
+  row('Fecha de ictus', val('f_fechaIctus'));
+  row('Llegada al hospital', [val('f_fechaLlegada'), val('f_horaLlegada')].filter(v=>v!=='—').join(' '));
+  row('Ictus intrahospitalario', val('f_intrahosp'));
+  row('Procedencia', val('f_procedencia'));
+  row('Pre-notificó la ambulancia', val('f_prenotifico'));
+
+  head('Manejo inicial en urgencias');
+  row('Glicemia capilar', val('initGlucosa'), 'mg/dL' + (txt('glucosaFlag') ? ' — ' + txt('glucosaFlag') : ''));
+  const ta = (val('initTAS') !== '—' || val('initTAD') !== '—') ? val('initTAS') + '/' + val('initTAD') : '';
+  row('Tensión arterial', ta, 'mmHg' + (txt('taFlag') ? ' — ' + txt('taFlag') : ''));
+  row('Frecuencia cardiaca', val('initFC'), 'lpm');
+  row('SpO2', val('initSpo2'), '%');
+  row('Temperatura', val('initTemp'), '°C');
+  row('ECG', val('initEcg'));
+  const acciones = [['chkGlucosa','Glicemia capilar'],['chkSignos','Signos vitales'],['chkEcg','ECG'],['chkAcceso','Acceso IV']]
+    .filter(([id]) => { const el = document.getElementById(id); return el && el.checked; });
+  if(acciones.length){
+    push('  Hora de cada acción:');
+    acciones.forEach(([id,n]) => push('    · ' + n + (stampText(id) || ' [hora no registrada]')));
+  }
+
+  head('Escalas clínicas');
+  row('Cincinnati', (txt('cincinnatiInterp') || txt('cincinnatiTotal')).replace(/^Cincinnati\s+/, ''));
+  row('Glasgow', txt('glasgowInterp') || txt('glasgowTotal'));
+  row('NIHSS', txt('nihssInterp') || txt('nihssTotal'));
+  row('ASPECTS', txt('aspectsTotal'));
+  const raceSide = val('raceSide');
+  row('RACE', txt('raceTotal') + (raceSide !== '—' ? ' (hemiparesia ' + raceSide + ')' : '') + (txt('raceInterp') ? ' — ' + txt('raceInterp') : ''));
+  row('Rankin previo', val('f_rankinIngreso'));
+  row('Rankin al alta', val('f_rankinAlta'));
+
+  head('Laboratorio de ingreso');
+  row('Glucosa', val('f_glucosa'), 'mg/dL');
+  row('Colesterol LDL', val('f_ldl'), 'mg/dL');
+  row('INR', val('f_inr'));
+  const taIng = (val('f_tas') !== '—' || val('f_tad') !== '—') ? val('f_tas') + '/' + val('f_tad') : '';
+  row('TA de ingreso', taIng, 'mmHg');
+
+  head('Antecedentes');
+  row('Antecedentes', checkedList('antecedentesGrid'));
+  row('Tratamiento previo', checkedList('txPrevioGrid'));
+
+  head('Neuroimagen');
+  row('Fecha y hora', [val('f_fechaImagen'), val('f_horaImagen')].filter(v=>v!=='—').join(' '));
+  row('Camino de imagen del código', radioVal('imagingChoice'));
+  row('Estudio realizado', checkedList('estudioImagenGrid'));
+  row('Tipo de ictus', radioVal('tipoIctus'));
+  row('Detalle hemorragia intracerebral', val('f_hicDetalle'));
+  row('Hemorragia subaracnoidea', val('f_hsaQx'));
+
+  head('Trombólisis');
+  row('Agente', radioVal('trombolisis'));
+  row('Fecha y hora', [val('f_fechaTx'), val('f_horaTx')].filter(v=>v!=='—').join(' '));
+  row('Dosis administrada', val('f_dosisTx'));
+  row('Motivo si no trombolizado', val('f_motivoNoTx'));
+
+  head('Trombectomía mecánica (EVT)');
+  row('¿Realizada?', val('f_evtRealizada'));
+  if(val('f_evtRealizada') === 'Sí'){
+    row('Punción arterial', [val('f_fechaPuncion'), val('f_horaPuncion')].filter(v=>v!=='—').join(' '));
+    row('Reperfusión / fin de procedimiento', val('f_horaReperfusion'));
+    row('Sitio de oclusión', radioVal('evtSitio'));
+    row('Técnica', radioVal('evtTecnica'));
+    row('Anestesia', val('f_evtAnestesia'));
+    row('Resultado eTICI', val('f_evtTici'));
+    row('Complicaciones', checkedList('evtComplicacionesGrid'));
+  }
+
+  head('Tiempos del código');
+  MILESTONES.forEach(m => {
+    const t = markedAt[m.id];
+    push('  ' + (t != null ? String(t.toFixed(1)).padStart(6) + ' min' : '     — sin marcar') +
+         '  ·  ' + m.label + (m.goal != null ? '  (meta ≤' + m.goal + ' min)' : ''));
+  });
+
+  head('Evolución y alta');
+  row('Hospitalización > 24 h', val('f_hosp24'));
+  row('Fiebre en < 72 h', val('f_fiebre'));
+  row('Glucosa más alta registrada', val('f_glucosaMax'), 'mg/dL');
+  row('Etiología', radioVal('etiologia'));
+  row('Prueba de disfagia', [radioVal('disfagiaMomento'), radioVal('disfagiaPrueba'), radioVal('disfagiaArea')].filter(v=>v!=='—').join(' · '));
+  row('Destino al alta', radioVal('alta'));
+  row('Fecha de alta', val('f_fechaAlta'));
+  row('NIHSS al alta', val('f_nihssAlta'));
+  row('Tratamiento al alta', checkedList('txAltaGrid'));
+
+  push('');
+  push('='.repeat(56));
+  push('Registro basado en el formulario RES-Q (Angels Initiative)');
+  push('y el protocolo interno 15.06 — Algoritmo para EVC.');
+
+  const out = [];
+  let n = 0;
+  for(let i = 0; i < L.length; i++){
+    if(L[i].startsWith('')){
+      const hasRows = L[i+1] && L[i+1].startsWith('  ');
+      if(!hasRows){ out.pop(); continue; }
+      const title = (++n) + '. ' + L[i].slice(1);
+      out.push(title);
+      out.push('-'.repeat(Math.min(title.length + 4, 56)));
+      continue;
+    }
+    out.push(L[i]);
+  }
+  return out.join('\n');
+}
+function buildSummaryText(){ return buildReportText(); }
+function generateSummary(){
+  const text = buildSummaryText();
+  document.getElementById('summaryText').textContent = text;
+  document.getElementById('summaryPrintArea').innerHTML = '<pre style="font-family:monospace;white-space:pre-wrap;padding:24px;">'+text.replace(/</g,'&lt;')+'</pre>';
+}
+function copySummary(){
+  generateSummary();
+  const text = buildSummaryText();
+  navigator.clipboard.writeText(text).then(()=>toast('Informe copiado.', 'ok')).catch(()=>toast('No se pudo copiar; selecciona el texto del recuadro.', 'warn'));
+  document.getElementById('summaryPanel').style.display='block';
+}
+function printSummary(){
+  generateSummary();
+  document.body.classList.add('printing');
+  window.print();
+  setTimeout(()=>document.body.classList.remove('printing'), 500);
+}
+
+/* ---------------- Tema: blanco / negro / automático ---------------- */
+function setTheme(mode){
+  if(mode === 'auto') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = mode;
+  document.querySelectorAll('.theme-switch button').forEach(b => {
+    b.setAttribute('aria-pressed', b.dataset.themeSet === mode);
+  });
+  try { localStorage.setItem('ci_theme', mode); } catch(e){}
+  requestAnimationFrame(updateStickyOffset);
+}
+(function initTheme(){
+  let saved = 'auto';
+  try { saved = localStorage.getItem('ci_theme') || 'auto'; } catch(e){}
+  setTheme(saved);
+})();
+
+/* ---------------- Secciones plegables del registro ---------------- */
+const SECTION_CARDS = [...document.querySelectorAll('#tab-resq .card[id^="sec-"]')];
+function initSections(){
+  const jump = document.getElementById('jumpSelect');
+  SECTION_CARDS.forEach(card => {
+    const label = card.querySelector('.section-label');
+    if(!label) return;
+    label.classList.add('collapsible');
+    label.setAttribute('role','button');
+    label.setAttribute('tabindex','0');
+    const toggle = () => {
+      card.classList.toggle('collapsed');
+      label.setAttribute('aria-expanded', String(!card.classList.contains('collapsed')));
+    };
+    label.addEventListener('click', toggle);
+    label.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    });
+    label.setAttribute('aria-expanded','true');
+
+    const opt = document.createElement('option');
+    opt.value = card.id;
+    opt.textContent = label.textContent.trim();
+    jump.appendChild(opt);
+  });
+  if(window.innerWidth <= 860) setAllSections(false, SECTION_CARDS[0]);
+}
+function setAllSections(open, keepOpen){
+  SECTION_CARDS.forEach(card => {
+    const shouldOpen = open || card === keepOpen;
+    card.classList.toggle('collapsed', !shouldOpen);
+    const label = card.querySelector('.section-label');
+    if(label) label.setAttribute('aria-expanded', String(shouldOpen));
+  });
+}
+function jumpToSection(id){
+  if(!id) return;
+  const card = document.getElementById(id);
+  if(!card) return;
+  card.classList.remove('collapsed');
+  const label = card.querySelector('.section-label');
+  if(label) label.setAttribute('aria-expanded','true');
+  card.scrollIntoView({ behavior:'smooth', block:'start' });
+  document.getElementById('jumpSelect').value = '';
+}
+initSections();
+
+/* ---------------- Sellos de hora de las acciones iniciales ---------------- */
+const actionStamps = {};
+function stampAction(checkId, stampId){
+  const box = document.getElementById(checkId);
+  if(box.checked){
+    const now = new Date();
+    actionStamps[checkId] = {
+      hora: now.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}),
+      min: clockStart ? (Date.now()-clockStart)/60000 : null,
+    };
+  } else {
+    delete actionStamps[checkId];
+  }
+  renderStamp(checkId, stampId);
+  saveDraft();
+}
+function renderStamp(checkId, stampId){
+  const out = document.getElementById(stampId);
+  const s = actionStamps[checkId];
+  out.textContent = s ? (s.hora + (s.min != null ? ' · ' + s.min.toFixed(0) + ' min' : '')) : '';
+}
+function renderAllStamps(){
+  [['chkGlucosa','tsGlucosa'],['chkSignos','tsSignos'],['chkEcg','tsEcg'],['chkAcceso','tsAcceso']]
+    .forEach(([c,t]) => renderStamp(c,t));
+}
+function stampText(checkId){
+  const s = actionStamps[checkId];
+  return s ? ' [' + s.hora + (s.min != null ? ', ' + s.min.toFixed(0) + ' min de la llegada' : '') + ']' : '';
+}
+
+/* ---------------- Registro de casos en el servidor ---------------- */
+let cloudCases = [];
+let currentCaseId = null;
+
+function setSyncPill(text, cls){
+  const el = document.getElementById('syncPill');
+  el.textContent = text;
+  el.className = 'sync-pill' + (cls ? ' ' + cls : '');
+}
+async function initCloud(){
+  loadLocalHistory();
+  await refreshCases();
+  updateSyncPill();
+}
+function updateSyncPill(){
+  const n = localHistory.length;
+  setSyncPill(n ? n + (n === 1 ? ' caso en este equipo' : ' casos en este equipo') + ' · servidor disponible' : 'Sin casos guardados en este equipo · servidor disponible', n ? 'ok' : '');
+}
+
+/* Historial local: cada equipo lleva su propio registro además del servidor */
+const HISTORY_KEY = 'ci_history_v1';
+let localHistory = [];
+function loadLocalHistory(){
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    localHistory = raw ? JSON.parse(raw) : [];
+    if(!Array.isArray(localHistory)) localHistory = [];
+  } catch(e){ localHistory = []; }
+}
+function persistLocalHistory(){
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(localHistory)); return true; }
+  catch(e){ return false; }
+}
+function buildRecord(){
+  const folio = val('f_caseid');
+  return {
+    id: currentCaseId || ('caso-' + Date.now().toString(36)),
+    folio: folio === '—' ? '(sin folio)' : folio,
+    fecha: new Date().toLocaleString('es-MX'),
+    estado: caseFinished ? 'Finalizado' : 'En curso',
+    puertaTratamiento: caseFinished ? Number(finishedAt.toFixed(1)) : null,
+    capturadoPor: (document.getElementById('capturadoPor').value || '').trim() || null,
+    origen: 'equipo',
+    informe: buildReportText(),
+    state: collectState(),
+    stamps: JSON.parse(JSON.stringify(actionStamps)),
+    marcas: JSON.parse(JSON.stringify(markedAt)),
+  };
+}
+function saveCaseLocal(silent){
+  const record = buildRecord();
+  currentCaseId = record.id;
+  const idx = localHistory.findIndex(c => c.id === record.id);
+  if(idx >= 0) localHistory[idx] = record; else localHistory.push(record);
+  if(localHistory.length > 200) localHistory = localHistory.slice(-200);
+  const ok = persistLocalHistory();
+  renderCases();
+  updateSyncPill();
+  if(!ok && !silent) toast('No se pudo guardar en este equipo.', 'warn');
+  else if(!silent) toast('Caso guardado en este equipo.', 'ok');
+  return ok;
+}
+async function purgeHistory(){
+  if(!localHistory.length){ toast('No hay casos guardados en este equipo.'); return; }
+  const ok = await askConfirm('¿Borrar el historial de este equipo?',
+    'Se eliminarán los ' + localHistory.length + ' casos guardados aquí. Los casos guardados en el servidor no se afectan.',
+    'Sí, borrar');
+  if(!ok) return;
+  localHistory = [];
+  try { localStorage.removeItem(HISTORY_KEY); } catch(e){}
+  renderCases();
+  updateSyncPill();
+}
+async function refreshCases(){
+  try {
+    const res = await fetch('/api/casos?t=' + Date.now(), { cache:'no-store' });
+    const data = res.ok ? await res.json() : [];
+    cloudCases = Array.isArray(data) ? data : [];
+  } catch(e){ cloudCases = []; }
+  renderCases();
+}
+function allCases(){
+  const seen = new Set(localHistory.map(c => c.id));
+  return localHistory.concat(cloudCases.filter(c => !seen.has(c.id)).map(c => ({...c, origen:'servidor'})));
+}
+function renderCases(){
+  const list = document.getElementById('caseList');
+  const cases = allCases();
+  if(!cases.length){
+    list.innerHTML = '<p class="sub" style="margin:0;">Todavía no hay casos guardados. Al finalizar un caso se guarda aquí automáticamente.</p>';
+    return;
+  }
+  list.innerHTML = cases.slice().reverse().map(c => `
+    <div class="case-item">
+      <div class="meta">
+        <b>${escapeHtml(c.folio || '(sin folio)')}</b>
+        <span>${escapeHtml(c.fecha || '')}${c.estado ? ' · ' + escapeHtml(c.estado) : ''}${c.puertaTratamiento != null ? ' · ' + c.puertaTratamiento + ' min' : ''}${c.capturadoPor ? ' · ' + escapeHtml(c.capturadoPor) : ''}${c.origen === 'servidor' ? ' · del servidor' : ''}</span>
+      </div>
+      <div class="acts">
+        <button class="btn btn-ghost" onclick="continueCase('${c.id}')">Continuar</button>
+        <button class="btn btn-ghost" onclick="viewCaseReport('${c.id}')">Ver informe</button>
+      </div>
+    </div>
+  `).join('');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+async function saveCaseToCloud(silent){
+  const btn = document.getElementById('saveCloudBtn');
+  btn.disabled = true;
+  setSyncPill('Guardando…');
+  const folio = val('f_caseid');
+  const record = {
+    id: currentCaseId || ('caso-' + Date.now().toString(36)),
+    folio: folio === '—' ? '(sin folio)' : folio,
+    fecha: new Date().toLocaleString('es-MX'),
+    estado: caseFinished ? 'Finalizado' : 'En curso',
+    puertaTratamiento: caseFinished ? Number(finishedAt.toFixed(1)) : null,
+    capturadoPor: (document.getElementById('capturadoPor')?.value || '').trim() || null,
+    informe: buildReportText(),
+    state: collectState(),
+    stamps: actionStamps,
+    marcas: markedAt,
+  };
+  currentCaseId = record.id;
+  try {
+    const res = await fetch('/api/casos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(record),
+    });
+    if(!res.ok) throw new Error('save failed');
+    await refreshCases();
+    setSyncPill('Caso guardado en el servidor', 'ok');
+    btn.disabled = false;
+    return true;
+  } catch(err){
+    btn.disabled = false;
+    setSyncPill('No se pudo guardar en el servidor', 'warn');
+    if(!silent) toast('No se pudo guardar en el servidor.', 'warn');
+    return false;
+  }
+}
+async function continueCase(id){
+  const c = allCases().find(x => x.id === id);
+  if(!c) return;
+  const ok = await askConfirm('¿Cargar el caso ' + (c.folio || '') + '?',
+    'Se reemplaza lo que tengas capturado en pantalla ahora mismo.', 'Sí, cargar');
+  if(!ok) return;
+  currentCaseId = c.id;
+  Object.keys(actionStamps).forEach(k => delete actionStamps[k]);
+  Object.assign(actionStamps, c.stamps || {});
+  Object.keys(markedAt).forEach(k => delete markedAt[k]);
+  Object.assign(markedAt, c.marcas || {});
+  applyState(c.state);
+  renderAllStamps();
+  renderMilestones();
+  setSyncPill('Caso ' + (c.folio || '') + ' cargado', 'ok');
+}
+function viewCaseReport(id){
+  const c = allCases().find(x => x.id === id);
+  if(!c) return;
+  document.getElementById('summaryText').textContent = c.informe || '(sin informe)';
+  document.getElementById('summaryPanel').style.display = 'block';
+  jumpToSection('sec-export');
+}
+
+/* ---------------- Envío del informe por correo ---------------- */
+function defaultSubject(){
+  const folio = val('f_caseid');
+  return 'Informe Código Ictus' + (folio !== '—' ? ' — ' + folio : '') + ' — ' + new Date().toLocaleDateString('es-MX');
+}
+function saveMailPrefs(){
+  try {
+    localStorage.setItem('ci_mail_to', document.getElementById('mailTo').value);
+    localStorage.setItem('ci_mail_cc', document.getElementById('mailCc').value);
+    localStorage.setItem('ci_captura', (document.getElementById('capturadoPor')||{}).value || '');
+  } catch(e){}
+}
+(function initMailPrefs(){
+  try {
+    const to = localStorage.getItem('ci_mail_to'); if(to) document.getElementById('mailTo').value = to;
+    const cc = localStorage.getItem('ci_mail_cc'); if(cc) document.getElementById('mailCc').value = cc;
+    document.getElementById('capturadoPor').value = localStorage.getItem('ci_captura') || '';
+  } catch(e){}
+})();
+
+/* Resumen ejecutivo: cabe en el cuerpo del correo sin que los clientes lo recorten */
+function buildCompactReport(){
+  const txt = id => { const el = document.getElementById(id); return el ? el.textContent.trim() : ''; };
+  const v = id => { const x = val(id); return x === '—' ? '' : x; };
+  const L = [];
+  const add = (label, value) => { if(value) L.push(label + ': ' + value); };
+  const folio = v('f_caseid');
+
+  L.push('INFORME CÓDIGO ICTUS — Urgencias CIMA');
+  add('Folio', folio || '(sin folio)');
+  add('Fecha', new Date().toLocaleString('es-MX'));
+  add('Capturó', v('capturadoPor'));
+  add('Estado', caseFinished ? 'Finalizado — puerta-tratamiento ' + finishedAt.toFixed(1) + ' min' : 'En curso');
+  L.push('');
+  L.push('PACIENTE');
+  add('Edad / género', [v('f_edad') && v('f_edad')+' años', v('f_genero')].filter(Boolean).join(', '));
+  add('Ictus del despertar', v('f_wakeup'));
+  add('Última hora visto sin síntomas', v('f_ultimaHoraSano'));
+  add('Llegada', [v('f_fechaLlegada'), v('f_horaLlegada')].filter(Boolean).join(' '));
+  L.push('');
+  L.push('MANEJO INICIAL');
+  add('Glicemia', (v('initGlucosa') ? v('initGlucosa') + ' mg/dL' : '') + stampText('chkGlucosa'));
+  const ta = (v('initTAS') || v('initTAD')) ? val('initTAS') + '/' + val('initTAD') + ' mmHg' : '';
+  add('TA', ta + stampText('chkSignos'));
+  add('ECG', v('initEcg') + stampText('chkEcg'));
+  L.push('');
+  L.push('ESCALAS');
+  add('Cincinnati', txt('cincinnatiTotal'));
+  add('Glasgow', txt('glasgowTotal'));
+  add('NIHSS', txt('nihssTotal'));
+  add('ASPECTS', txt('aspectsTotal'));
+  add('RACE', txt('raceTotal'));
+  L.push('');
+  L.push('TIEMPOS (min desde la llegada)');
+  MILESTONES.forEach(m => {
+    const t = markedAt[m.id];
+    const short = m.label.split(':')[0].split('—')[0].trim();
+    L.push('  ' + (t != null ? t.toFixed(0).padStart(3) : '  —') + '  ' + short);
+  });
+  L.push('');
+  L.push('TRATAMIENTO');
+  add('Imagen', radioVal('imagingChoice') === '—' ? '' : radioVal('imagingChoice'));
+  add('Tipo de ictus', radioVal('tipoIctus') === '—' ? '' : radioVal('tipoIctus'));
+  add('Trombólisis', [radioVal('trombolisis') === '—' ? '' : radioVal('trombolisis'), v('f_dosisTx')].filter(Boolean).join(' '));
+  if(v('f_evtRealizada') === 'Sí'){
+    add('Trombectomía', [radioVal('evtSitio') === '—' ? '' : radioVal('evtSitio'), v('f_evtTici') && 'eTICI ' + v('f_evtTici')].filter(Boolean).join(', '));
+  }
+  L.push('');
+  L.push('— Resumen automático. El informe completo (antecedentes, laboratorio,');
+  L.push('  disfagia, alta) está en el registro del caso y en el archivo adjunto.');
+  return L.join('\n');
+}
+
+/* El enlace de correo se mantiene actualizado en un <a> real */
+function buildMailUrl(){
+  const to = document.getElementById('mailTo').value.trim();
+  const cc = document.getElementById('mailCc').value.trim();
+  if(!to) return null;
+  const subjEl = document.getElementById('mailSubject');
+  const subject = subjEl.value.trim() || defaultSubject();
+  const params = [];
+  if(cc) params.push('cc=' + encodeURIComponent(cc));
+  params.push('subject=' + encodeURIComponent(subject));
+  params.push('body=' + encodeURIComponent(buildCompactReport()));
+  return 'mailto:' + to + '?' + params.join('&');
+}
+function refreshMailLink(){
+  const a = document.getElementById('mailLink');
+  if(!a) return;
+  const url = buildMailUrl();
+  if(url){
+    a.href = url;
+    a.removeAttribute('aria-disabled');
+    a.style.opacity = '';
+  } else {
+    a.href = 'mailto:';
+    a.setAttribute('aria-disabled','true');
+    a.style.opacity = '.5';
+  }
+}
+function sendReportByMail(){
+  const url = buildMailUrl();
+  const status = document.getElementById('mailStatus');
+  if(!url){
+    status.textContent = 'Escribe primero el correo del destinatario.';
+    document.getElementById('mailTo').focus();
+    return;
+  }
+  refreshMailLink();
+  const opened = window.open(url, '_blank');
+  if(!opened) document.getElementById('mailLink').click();
+}
+
+/* Descarga del informe para adjuntarlo */
+function downloadReport(){
+  const status = document.getElementById('mailStatus');
+  const folio = val('f_caseid');
+  const name = 'informe-codigo-ictus' + (folio !== '—' ? '-' + folio.replace(/[^A-Za-z0-9_-]+/g,'_') : '') + '.txt';
+  try {
+    const blob = new Blob([buildReportText()], { type:'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    status.textContent = 'Informe descargado como ' + name + '. Adjúntalo a tu correo.';
+  } catch(err){
+    status.textContent = 'No se pudo descargar el archivo. Usa "Copiar informe" y pégalo en el correo.';
+  }
+}
+
+/* ---------------- Código QR ---------------- */
+(function initQR(){
+  const img = document.getElementById('qrImg');
+  if(img) img.src = '/api/qr?t=' + Date.now();
+})();
+function printQR(){
+  const w = window.open('', '_blank');
+  if(!w){ toast('Permite las ventanas emergentes para imprimir el cartel.', 'warn'); return; }
+  const qrUrl = location.origin + '/api/qr';
+  w.document.write(`<!doctype html><html lang="es"><head><meta charset="utf-8">
+  <title>Código Ictus — acceso rápido</title>
+  <style>
+    @page{ margin:14mm; }
+    body{ font-family:Arial,Helvetica,sans-serif; color:#16232A; text-align:center; margin:0; padding:18mm 10mm; }
+    h1{ font-size:34pt; margin:0 0 4pt; color:#00594F; letter-spacing:-0.5pt; }
+    h2{ font-size:15pt; margin:0 0 20pt; font-weight:normal; color:#52666B; }
+    img{ width:250pt; height:250pt; }
+    .steps{ margin:20pt auto 0; max-width:420pt; text-align:left; font-size:12pt; line-height:1.6; }
+    .steps li{ margin-bottom:5pt; }
+    .foot{ margin-top:22pt; font-size:9.5pt; color:#52666B; }
+    .band{ margin-top:16pt; font-size:13pt; font-weight:bold; color:#C00000; }
+  </style></head><body>
+    <h1>CÓDIGO ICTUS</h1>
+    <h2>Checklist de tiempos y registro del caso · Urgencias CIMA</h2>
+    <img src="${qrUrl}" alt="Código QR">
+    <div class="band">Escanea al llegar el paciente — el reloj corre desde ese momento</div>
+    <ol class="steps">
+      <li>Escanea el código con la cámara del celular, tablet o abre el enlace en la computadora.</li>
+      <li>Pulsa <b>Llegada del paciente</b> para iniciar el reloj.</li>
+      <li>Captura glicemia, signos vitales y las escalas conforme avanza la atención.</li>
+      <li>Al terminar pulsa <b>Finalizar caso</b>: el informe se guarda y se abre el correo a jefatura.</li>
+    </ol>
+    <div class="foot">Meta institucional: puerta-tratamiento ≤ 60 minutos · Protocolo 15.06 — Algoritmo para EVC</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(() => { w.focus(); w.print(); }, 350);
+}
+
+/* ---------------- Compartir la página ---------------- */
+function sharePage(){
+  const data = { title:'Código Ictus — Urgencias CIMA', text:'Checklist y registro de caso para código ictus', url:location.href };
+  if(navigator.share){
+    navigator.share(data).catch(()=>{});
+  } else {
+    copyLink();
+  }
+}
+function copyLink(){
+  navigator.clipboard.writeText(location.href)
+    .then(()=>toast('Enlace copiado.', 'ok'))
+    .catch(()=>toast('Copia el enlace desde la barra de direcciones.', 'warn'));
+}
+
+/* ---------------- Borrador opcional en el dispositivo ---------------- */
+const DRAFT_KEY = 'ci_draft_v1';
+let draftOn = false;
+function collectState(){
+  const state = { fields:{}, checks:{}, radios:{} };
+  document.querySelectorAll('input[type=text],input[type=number],input[type=date],input[type=time],select,textarea').forEach(el => {
+    if(el.id && el.id !== 'jumpSelect') state.fields[el.id] = el.value;
+  });
+  document.querySelectorAll('input[type=checkbox]').forEach(el => {
+    if(el.id && el.id !== 'draftToggle') state.checks[el.id] = el.checked;
+  });
+  document.querySelectorAll('input[type=radio]:checked').forEach(el => { state.radios[el.name] = el.value; });
+  state.stamps = JSON.parse(JSON.stringify(actionStamps));
+  return state;
+}
+function applyState(state){
+  if(!state) return;
+  Object.entries(state.fields || {}).forEach(([id,v]) => { const el = document.getElementById(id); if(el) el.value = v; });
+  Object.entries(state.checks || {}).forEach(([id,v]) => { const el = document.getElementById(id); if(el) el.checked = v; });
+  Object.entries(state.radios || {}).forEach(([name,v]) => {
+    const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(v)}"]`);
+    if(el) el.checked = true;
+  });
+  if(state.stamps){
+    Object.keys(actionStamps).forEach(k => delete actionStamps[k]);
+    Object.assign(actionStamps, state.stamps);
+  }
+  renderAllStamps();
+  renderRace(); computeNihss(); computeAspects(); computeCincinnati(); computeGlasgow();
+  syncInitialValues(); toggleEvtFields(); renderMilestones();
+}
+function saveDraft(){
+  if(!draftOn) return;
+  try {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(collectState()));
+    const d = new Date();
+    document.getElementById('draftStatus').textContent =
+      'Borrador guardado en este dispositivo a las ' + d.toLocaleTimeString('es-MX') + '. Bórralo al terminar el caso.';
+  } catch(e){
+    document.getElementById('draftStatus').textContent = 'No se pudo guardar el borrador en este navegador.';
+  }
+}
+function toggleDraft(){
+  draftOn = document.getElementById('draftToggle').checked;
+  try { localStorage.setItem('ci_draft_on', draftOn ? '1' : '0'); } catch(e){}
+  if(draftOn) saveDraft();
+  else clearDraft(false);
+}
+function clearDraft(announce){
+  try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+  document.getElementById('draftStatus').textContent = draftOn
+    ? 'Borrador activado. Se guardará conforme captures.'
+    : 'Desactivado. Al cerrar o recargar la página se pierde lo capturado.';
+  if(announce) toast('Borrador borrado de este dispositivo.', 'ok');
+}
+(function initDraft(){
+  let on = false, saved = null;
+  try {
+    on = localStorage.getItem('ci_draft_on') === '1';
+    saved = localStorage.getItem(DRAFT_KEY);
+  } catch(e){}
+  if(on){
+    document.getElementById('draftToggle').checked = true;
+    draftOn = true;
+    if(saved){
+      try { applyState(JSON.parse(saved)); } catch(e){}
+      document.getElementById('draftStatus').textContent = 'Se restauró el borrador guardado en este dispositivo.';
+    }
+  }
+  document.addEventListener('input', () => { saveDraft(); refreshMailLink(); });
+  document.addEventListener('change', () => { saveDraft(); refreshMailLink(); });
+})();
+
+renderMilestones();
+computeNihss();
+computeCincinnati();
+computeGlasgow();
+renderAllStamps();
+refreshMailLink();
+updateStickyOffset();
+initCloud();
+</script>
+</body>
+</html>
