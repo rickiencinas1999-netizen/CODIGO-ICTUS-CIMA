@@ -566,21 +566,40 @@
     </div>
 
     <div class="card">
-      <h2>Línea de tiempo del código</h2>
-      <p class="sub">Marca cada hito cuando ocurra — el estado se calcula contra la meta institucional</p>
-      <div id="caseStatusBanner"></div>
-      <div id="milestoneList"></div>
+      <div class="section-label">Definición de imagen</div>
+      <p class="sub">Categoría del paciente</p>
+      <div class="radio-row" id="pacienteCategoriaRow"></div>
+      <div class="interp ok" id="imagingHint" style="margin-top:12px;"></div>
+      <p class="sub" style="margin-top:16px;">Estudio(s) de imagen realizado(s) — puedes marcar los dos si aplica</p>
+      <label class="check-item"><input type="checkbox" id="imgTac" onchange="onImgCheckChange()"> TAC de cráneo simple</label>
+      <div id="imgTacResultRow" style="display:none; margin:8px 0 14px 26px;">
+        <div class="radio-row" id="imgTacResultadoRow"></div>
+      </div>
+      <label class="check-item"><input type="checkbox" id="imgRm" onchange="onImgCheckChange()"> RM de difusión rápida</label>
+      <div id="imgRmResultRow" style="display:none; margin:8px 0 0 26px;">
+        <div class="radio-row" id="imgRmResultadoRow"></div>
+      </div>
     </div>
 
     <div class="card">
-      <div class="section-label">Definición de imagen</div>
-      <div class="grid cols-2">
-        <label class="check-item"><input type="checkbox" id="wakeUpCheck" onchange="renderMilestones()"> Paciente en categoría <b>wake-up stroke</b></label>
-        <label class="check-item"><input type="checkbox" id="unstableCheck" onchange="renderMilestones()"> Paciente <b>inestable</b> hemodinámica o neurológicamente</label>
+      <h2>Línea de tiempo del código</h2>
+      <p class="sub">Marca cada hito cuando ocurra — el estado se calcula contra la meta institucional</p>
+      <div id="caseStatusBanner"></div>
+      <div id="milestoneListA"></div>
+
+      <div class="section-label" style="margin-top:18px;">Trombolítico traído por farmacia</div>
+      <div class="radio-row" id="farmaciaTromboliticoRow"></div>
+
+      <div id="milestoneListB" style="margin-top:6px;"></div>
+
+      <div class="section-label" style="margin-top:18px;">Tratamiento definitivo — qué se realizó</div>
+      <p class="sub">Puedes marcar trombolítico y trombectomía a la vez si se hicieron ambos</p>
+      <div class="check-grid" id="tratamientoDefinitivoGrid"></div>
+      <div id="tratamientoMotivoWrap" style="display:none; margin-top:10px;">
+        <div class="field"><label>Motivo por el que no se administró tratamiento</label><input type="text" id="tratamientoMotivo" placeholder="p. ej. fuera de ventana, mejoría espontánea, contraindicación..."></div>
       </div>
-      <div class="interp ok" id="imagingHint" style="margin-top:12px;"></div>
-      <p class="sub" style="margin-top:16px;">Camino seguido en este caso (marca el que corresponda una vez decidido)</p>
-      <div class="radio-row" id="imagingChoiceRow"></div>
+
+      <div id="milestoneListC" style="margin-top:6px;"></div>
     </div>
 
     <div class="card">
@@ -1071,11 +1090,13 @@ function reopenCase(){
 
 /* ---------------- Milestones ---------------- */
 const MILESTONES = [
-  {id:'triage', label:'Triage: Cincinnati (≥1) y/o NIHSS + Activación de Código ICTUS', goal:5},
-  {id:'imagen', label:'Estudio de imagen obtenido', goal:10},
-  {id:'interconsulta', label:'Interconsulta: Neurología + Neurointervencionismo + Neuroradiología', goal:null},
-  {id:'puncion', label:'Punción arterial — inicio de trombectomía mecánica (si aplica)', goal:null},
-  {id:'tratamiento', label:'Tratamiento definitivo administrado (trombólisis EV y/o EVT)', goal:60},
+  {id:'triage', label:'Triage: Cincinnati (≥1) y/o NIHSS + Activación de Código ICTUS', goal:5, group:'A'},
+  {id:'imagen', label:'Estudio de imagen obtenido', goal:10, group:'A'},
+  {id:'farmacia', label:'Farmacia trae el trombolítico', goal:null, group:'B'},
+  {id:'interconsulta_neuro', label:'Interconsulta: Neurología', goal:null, group:'B'},
+  {id:'interconsulta_neurointerv', label:'Interconsulta: Neurointervencionismo', goal:null, group:'B'},
+  {id:'interconsulta_neurorad', label:'Interconsulta: Neuroradiología', goal:null, group:'B'},
+  {id:'tratamiento', label:'Tratamiento definitivo administrado (trombólisis EV y/o EVT)', goal:60, group:'C'},
 ];
 const markedAt = {};
 
@@ -1087,26 +1108,52 @@ function renderMilestones(){
       : '';
     banner.className = caseFinished ? 'status-banner' : '';
   }
-  const wrap = document.getElementById('milestoneList');
-  wrap.innerHTML = '';
+  const wraps = {
+    A: document.getElementById('milestoneListA'),
+    B: document.getElementById('milestoneListB'),
+    C: document.getElementById('milestoneListC'),
+  };
+  Object.values(wraps).forEach(w => { if(w) w.innerHTML = ''; });
   const chipRow = document.getElementById('chipRow');
   chipRow.innerHTML = '';
-  const unstable = document.getElementById('unstableCheck') ? document.getElementById('unstableCheck').checked : false;
-  const wakeup = document.getElementById('wakeUpCheck') ? document.getElementById('wakeUpCheck').checked : false;
 
-  const imagingChoiceEl = document.querySelector('input[name="imagingChoice"]:checked');
-  const imagingChoice = imagingChoiceEl ? imagingChoiceEl.value : null;
+  const categoriaEl = document.querySelector('input[name="pacienteCategoria"]:checked');
+  const categoria = categoriaEl ? categoriaEl.value : null;
+
+  const tacChecked = document.getElementById('imgTac') ? document.getElementById('imgTac').checked : false;
+  const rmChecked = document.getElementById('imgRm') ? document.getElementById('imgRm').checked : false;
+  const tacResultEl = document.querySelector('input[name="imgTacResultado"]:checked');
+  const rmResultEl = document.querySelector('input[name="imgRmResultado"]:checked');
+
+  const drugEl = document.querySelector('input[name="farmaciaTrombolitico"]:checked');
+
+  const txTromboliticoEl = document.getElementById('txTrombolitico');
+  const txTrombectomiaEl = document.getElementById('txTrombectomia');
+  const txNingunoEl = document.getElementById('txNinguno');
 
   MILESTONES.forEach((m, idx) => {
     let label = m.label;
     if(m.id === 'imagen'){
       let suggestion;
-      if(wakeup) suggestion = 'RM cerebral secuencia rápida (preferida por wake-up stroke)';
-      else if(unstable) suggestion = 'TAC de cráneo simple (paciente inestable)';
-      else suggestion = 'RM cerebral secuencia rápida (paciente estable)';
-      label = imagingChoice
-        ? `Estudio de imagen realizado: ${imagingChoice}`
+      if(categoria === 'Wake-up stroke') suggestion = 'RM de difusión rápida (preferida por wake-up stroke)';
+      else if(categoria === 'Paciente inestable') suggestion = 'TAC de cráneo simple (paciente inestable)';
+      else suggestion = 'RM de difusión rápida (paciente estable)';
+      const parts = [];
+      if(tacChecked) parts.push('TAC de cráneo simple' + (tacResultEl ? ' (' + tacResultEl.value + ')' : ''));
+      if(rmChecked) parts.push('RM de difusión rápida' + (rmResultEl ? ' (' + rmResultEl.value + ')' : ''));
+      label = parts.length
+        ? `Estudio de imagen realizado: ${parts.join(' + ')}`
         : `Estudio de imagen — sugerido: ${suggestion} (aún sin confirmar)`;
+    }
+    if(m.id === 'farmacia'){
+      label = drugEl ? `Farmacia trae el trombolítico: ${drugEl.value}` : m.label;
+    }
+    if(m.id === 'tratamiento'){
+      const parts = [];
+      if(txTromboliticoEl && txTromboliticoEl.checked) parts.push('Trombolítico');
+      if(txTrombectomiaEl && txTrombectomiaEl.checked) parts.push('Trombectomía mecánica');
+      if(txNingunoEl && txNingunoEl.checked) parts.push('Ninguno');
+      label = parts.length ? `Tratamiento definitivo administrado: ${parts.join(' + ')}` : m.label;
     }
     const row = document.createElement('div');
     row.className = 'milestone';
@@ -1127,23 +1174,24 @@ function renderMilestones(){
       <div class="info"><strong>${label}</strong><span>${m.goal != null ? 'Meta: ≤ ' + m.goal + ' min desde la llegada' : 'Sin meta de tiempo fija'}</span></div>
       <div class="status">${badgeHtml}${timeHtml}${btnHtml}</div>
     `;
-    wrap.appendChild(row);
+    (wraps[m.group] || wraps.A).appendChild(row);
 
     const chip = document.createElement('div');
     chip.className = 'chip';
     let state = 'pending';
     if(marked != null){ state = (m.goal == null || marked <= m.goal) ? 'ontime' : 'late'; }
     chip.setAttribute('data-state', state);
-    chip.innerHTML = `<span class="dot"></span>${m.id.charAt(0).toUpperCase()+m.id.slice(1)}${marked != null ? ` <span class="t mono">${marked.toFixed(0)}m</span>` : ''}`;
+    chip.innerHTML = `<span class="dot"></span>${idx+1}${marked != null ? ` <span class="t mono">${marked.toFixed(0)}m</span>` : ''}`;
     chipRow.appendChild(chip);
   });
 
   const hint = document.getElementById('imagingHint');
   if(hint){
-    if(wakeup) hint.textContent = 'Wake-up stroke marcado: preferir RM cerebral de primera instancia, independientemente de la estabilidad.';
-    else if(unstable) hint.textContent = 'Paciente inestable: proceder con TAC de cráneo simple para no retrasar la decisión terapéutica.';
-    else hint.textContent = 'Paciente estable, sin criterio de wake-up stroke: puede optarse por RM cerebral de secuencia rápida (objetivo ≤ 10 minutos).';
-    hint.className = 'interp ' + (unstable && !wakeup ? 'flag' : 'ok');
+    if(categoria === 'Wake-up stroke') hint.textContent = 'Wake-up stroke marcado: preferir RM de difusión rápida de primera instancia, independientemente de la estabilidad.';
+    else if(categoria === 'Paciente inestable') hint.textContent = 'Paciente inestable: proceder con TAC de cráneo simple para no retrasar la decisión terapéutica.';
+    else if(categoria === 'Paciente estable') hint.textContent = 'Paciente estable, sin criterio de wake-up stroke: puede optarse por RM de difusión rápida (objetivo ≤ 10 minutos).';
+    else hint.textContent = 'Selecciona la categoría del paciente para ver la recomendación de imagen.';
+    hint.className = 'interp ' + (categoria === 'Paciente inestable' ? 'flag' : 'ok');
   }
 }
 function mark(id){
@@ -1173,6 +1221,9 @@ async function resetAll(){
   document.getElementById('finishBtn').textContent = 'Finalizar caso';
   document.getElementById('finishBtn').onclick = finishCase;
   document.getElementById('evtDetailFields').style.display = 'none';
+  document.getElementById('imgTacResultRow').style.display = 'none';
+  document.getElementById('imgRmResultRow').style.display = 'none';
+  document.getElementById('tratamientoMotivoWrap').style.display = 'none';
   document.querySelectorAll('input[type=text], input[type=number], input[type=date], input[type=time], textarea').forEach(el => el.value = '');
   document.querySelectorAll('input[type=checkbox]').forEach(el => el.checked = false);
   document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
@@ -1209,8 +1260,38 @@ buildCheckGrid('txPrevioGrid', ['Antidiabéticos','Antihipertensivos','Antiagreg
 buildCheckGrid('estudioImagenGrid', ['TAC simple','TAC contrastada','PerfuTAC','RM','Realizado en otro hospital','Otro estudio de neuroimagen']);
 buildCheckGrid('txAltaGrid', ['Antidiabéticos','Antihipertensivos','Antiagregantes plaquetarios','Anticoagulantes','Estatinas']);
 
-buildRadioRow('imagingChoiceRow', ['TAC de cráneo simple','RM cerebral (secuencia rápida)'], 'imagingChoice');
-document.getElementById('imagingChoiceRow').addEventListener('change', renderMilestones);
+buildRadioRow('pacienteCategoriaRow', ['Wake-up stroke','Paciente estable','Paciente inestable'], 'pacienteCategoria');
+document.getElementById('pacienteCategoriaRow').addEventListener('change', renderMilestones);
+
+buildRadioRow('imgTacResultadoRow', ['Positivo','Negativo'], 'imgTacResultado');
+document.getElementById('imgTacResultadoRow').addEventListener('change', renderMilestones);
+buildRadioRow('imgRmResultadoRow', ['Positivo','Negativo'], 'imgRmResultado');
+document.getElementById('imgRmResultadoRow').addEventListener('change', renderMilestones);
+function onImgCheckChange(){
+  document.getElementById('imgTacResultRow').style.display = document.getElementById('imgTac').checked ? 'block' : 'none';
+  document.getElementById('imgRmResultRow').style.display = document.getElementById('imgRm').checked ? 'block' : 'none';
+  renderMilestones();
+  saveDraft();
+}
+
+buildRadioRow('farmaciaTromboliticoRow', ['Alteplase','Tenecteplase'], 'farmaciaTrombolitico');
+document.getElementById('farmaciaTromboliticoRow').addEventListener('change', renderMilestones);
+
+document.getElementById('tratamientoDefinitivoGrid').innerHTML = `
+  <label class="check-item"><input type="checkbox" id="txTrombolitico" value="Trombolítico (farmacológico)" onchange="onTratamientoChange(this)"> Trombolítico (farmacológico)</label>
+  <label class="check-item"><input type="checkbox" id="txTrombectomia" value="Trombectomía mecánica" onchange="onTratamientoChange(this)"> Trombectomía mecánica</label>
+  <label class="check-item"><input type="checkbox" id="txNinguno" value="Ninguno" onchange="onTratamientoChange(this)"> Ninguno</label>
+`;
+function onTratamientoChange(el){
+  const tx = document.getElementById('txTrombolitico');
+  const evt = document.getElementById('txTrombectomia');
+  const ninguno = document.getElementById('txNinguno');
+  if(el === ninguno && ninguno.checked){ tx.checked = false; evt.checked = false; }
+  else if((el === tx || el === evt) && el.checked){ ninguno.checked = false; }
+  document.getElementById('tratamientoMotivoWrap').style.display = ninguno.checked ? 'block' : 'none';
+  renderMilestones();
+  saveDraft();
+}
 buildRadioRow('tipoIctusRow', ['Isquémico','Hemorragia intracerebral','AIT','Hemorragia subaracnoidea','Trombosis venosa central','Imitador de ictus','Indeterminado'], 'tipoIctus');
 document.getElementById('tipoIctusExtra').innerHTML = `
   <div class="field"><label>Si hemorragia intracerebral — volumen (mL) / localización</label><input type="text" id="f_hicDetalle" placeholder="p. ej. 18 mL, supratentorial"></div>
@@ -1612,7 +1693,10 @@ function buildReportText(){
 
   head('Neuroimagen');
   row('Fecha y hora', [val('f_fechaImagen'), val('f_horaImagen')].filter(v=>v!=='—').join(' '));
-  row('Camino de imagen del código', radioVal('imagingChoice'));
+  { const tacOn = document.getElementById('imgTac').checked, rmOn = document.getElementById('imgRm').checked;
+    const tacR = radioVal('imgTacResultado'), rmR = radioVal('imgRmResultado');
+    row('TAC de cráneo simple (checklist)', tacOn ? (tacR !== '—' ? tacR : 'realizado') : '');
+    row('RM de difusión rápida (checklist)', rmOn ? (rmR !== '—' ? rmR : 'realizado') : ''); }
   row('Estudio realizado', checkedList('estudioImagenGrid'));
   row('Tipo de ictus', radioVal('tipoIctus'));
   row('Detalle hemorragia intracerebral', val('f_hicDetalle'));
@@ -1635,6 +1719,12 @@ function buildReportText(){
     row('Resultado eTICI', val('f_evtTici'));
     row('Complicaciones', checkedList('evtComplicacionesGrid'));
   }
+
+  head('Checklist del código — categoría y tratamiento');
+  row('Categoría del paciente', radioVal('pacienteCategoria'));
+  row('Trombolítico traído por farmacia', radioVal('farmaciaTrombolitico'));
+  row('Tratamiento definitivo (checklist)', checkedList('tratamientoDefinitivoGrid'));
+  row('Motivo si no se administró tratamiento', val('tratamientoMotivo'));
 
   head('Tiempos del código');
   MILESTONES.forEach(m => {
@@ -2015,11 +2105,17 @@ function buildCompactReport(){
   });
   L.push('');
   L.push('TRATAMIENTO');
-  add('Imagen', radioVal('imagingChoice') === '—' ? '' : radioVal('imagingChoice'));
+  { const imgParts = [];
+    if(document.getElementById('imgTac').checked) imgParts.push('TAC' + (radioVal('imgTacResultado') !== '—' ? ' (' + radioVal('imgTacResultado') + ')' : ''));
+    if(document.getElementById('imgRm').checked) imgParts.push('RM' + (radioVal('imgRmResultado') !== '—' ? ' (' + radioVal('imgRmResultado') + ')' : ''));
+    add('Imagen', imgParts.join(' + ')); }
+  add('Categoría del paciente', radioVal('pacienteCategoria') === '—' ? '' : radioVal('pacienteCategoria'));
   add('Tipo de ictus', radioVal('tipoIctus') === '—' ? '' : radioVal('tipoIctus'));
-  add('Trombólisis', [radioVal('trombolisis') === '—' ? '' : radioVal('trombolisis'), v('f_dosisTx')].filter(Boolean).join(' '));
+  add('Farmacia trae', radioVal('farmaciaTrombolitico') === '—' ? '' : radioVal('farmaciaTrombolitico'));
+  add('Tratamiento definitivo', checkedList('tratamientoDefinitivoGrid') === '—' ? '' : checkedList('tratamientoDefinitivoGrid'));
+  add('Trombólisis (RES-Q)', [radioVal('trombolisis') === '—' ? '' : radioVal('trombolisis'), v('f_dosisTx')].filter(Boolean).join(' '));
   if(v('f_evtRealizada') === 'Sí'){
-    add('Trombectomía', [radioVal('evtSitio') === '—' ? '' : radioVal('evtSitio'), v('f_evtTici') && 'eTICI ' + v('f_evtTici')].filter(Boolean).join(', '));
+    add('Trombectomía (RES-Q)', [radioVal('evtSitio') === '—' ? '' : radioVal('evtSitio'), v('f_evtTici') && 'eTICI ' + v('f_evtTici')].filter(Boolean).join(', '));
   }
   L.push('');
   L.push('— Resumen automático. El informe completo (antecedentes, laboratorio,');
@@ -2167,7 +2263,11 @@ function applyState(state){
   }
   renderAllStamps();
   renderRace(); computeNihss(); computeAspects(); computeCincinnati(); computeGlasgow();
-  syncInitialValues(); toggleEvtFields(); renderMilestones();
+  syncInitialValues(); toggleEvtFields();
+  document.getElementById('imgTacResultRow').style.display = document.getElementById('imgTac').checked ? 'block' : 'none';
+  document.getElementById('imgRmResultRow').style.display = document.getElementById('imgRm').checked ? 'block' : 'none';
+  document.getElementById('tratamientoMotivoWrap').style.display = document.getElementById('txNinguno').checked ? 'block' : 'none';
+  renderMilestones();
 }
 function saveDraft(){
   if(!draftOn) return;
