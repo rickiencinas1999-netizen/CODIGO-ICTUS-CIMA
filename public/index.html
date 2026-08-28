@@ -589,12 +589,13 @@
 
     <div class="card">
       <h2>Manejo inicial en urgencias</h2>
-      <p class="sub">Aplica desde el minuto cero, en paralelo al triage — captura el valor obtenido al marcar cada acción. La hora de signos vitales se registra sola y puedes corregirla si hace falta.</p>
+      <p class="sub">Aplica desde el minuto cero, en paralelo al triage — captura el valor obtenido al marcar cada acción. La hora se registra sola y puedes corregirla si hace falta.</p>
 
       <div class="init-row">
-        <label class="check-item"><input type="checkbox" id="chkGlucosa" onchange="stampAction('chkGlucosa','tsGlucosa')">Glicemia capilar (DxTx) al inicio<span class="stamp" id="tsGlucosa"></span></label>
+        <label class="check-item"><input type="checkbox" id="chkGlucosa" onchange="stampActionHora('chkGlucosa','tsGlucosa')">Glicemia capilar (DxTx) al inicio</label>
         <div class="init-inputs">
           <div class="field inline"><label for="initGlucosa">Glucosa (mg/dL)</label><input type="number" id="initGlucosa" oninput="syncInitialValues()" placeholder="—"></div>
+          <div class="field inline" id="tsGlucosaWrap" style="display:none;"><label for="tsGlucosa">Hora</label><input type="time" id="tsGlucosa" onchange="onStampTimeChange('chkGlucosa', this)"></div>
         </div>
         <div class="init-flag" id="glucosaFlag"></div>
       </div>
@@ -613,18 +614,21 @@
       </div>
 
       <div class="init-row">
-        <label class="check-item"><input type="checkbox" id="chkEcg" onchange="stampAction('chkEcg','tsEcg')">Electrocardiograma (ECG) — descartar arritmias (ej. FA)<span class="stamp" id="tsEcg"></span></label>
+        <label class="check-item"><input type="checkbox" id="chkEcg" onchange="stampActionHora('chkEcg','tsEcg')">Electrocardiograma (ECG) — descartar arritmias (ej. FA)</label>
         <div class="init-inputs">
           <div class="field inline"><label for="initEcg">Hallazgo</label>
             <select id="initEcg" onchange="syncInitialValues()"><option value="">—</option><option>Ritmo sinusal</option><option>Fibrilación auricular</option><option>Flutter auricular</option><option>Otra arritmia</option></select>
           </div>
+          <div class="field inline" id="tsEcgWrap" style="display:none;"><label for="tsEcg">Hora</label><input type="time" id="tsEcg" onchange="onStampTimeChange('chkEcg', this)"></div>
         </div>
         <div class="init-flag"></div>
       </div>
 
       <div class="init-row">
-        <label class="check-item"><input type="checkbox" id="chkAcceso" onchange="stampAction('chkAcceso','tsAcceso')">Acceso IV y toma de muestra basal<span class="stamp" id="tsAcceso"></span></label>
-        <div class="init-inputs"></div>
+        <label class="check-item"><input type="checkbox" id="chkAcceso" onchange="stampActionHora('chkAcceso','tsAcceso')">Acceso IV y toma de muestra basal</label>
+        <div class="init-inputs">
+          <div class="field inline" id="tsAccesoWrap" style="display:none;"><label for="tsAcceso">Hora</label><input type="time" id="tsAcceso" onchange="onStampTimeChange('chkAcceso', this)"></div>
+        </div>
         <div class="init-flag"></div>
       </div>
     </div>
@@ -1904,28 +1908,8 @@ makeCollapsible(document.getElementById('cincinnatiCard'));
 makeCollapsible(document.getElementById('sec-nihss'));
 
 /* ---------------- Sellos de hora de las acciones iniciales ---------------- */
+/* Hora editable en un <input type=time> para cada acción, sin minutos transcurridos */
 const actionStamps = {};
-/* Glicemia, ECG y Acceso IV: sello de texto fijo (hora + minutos desde la llegada) */
-function stampAction(checkId, stampId){
-  const box = document.getElementById(checkId);
-  if(box.checked){
-    const now = new Date();
-    actionStamps[checkId] = {
-      hora: now.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'}),
-      min: clockStart ? (Date.now()-clockStart)/60000 : null,
-    };
-  } else {
-    delete actionStamps[checkId];
-  }
-  renderStamp(checkId, stampId);
-  saveDraft();
-}
-function renderStamp(checkId, stampId){
-  const out = document.getElementById(stampId);
-  const s = actionStamps[checkId];
-  out.textContent = s ? (s.hora + (s.min != null ? ' · ' + s.min.toFixed(0) + ' min' : '')) : '';
-}
-/* Signos vitales: hora editable en un <input type=time>, sin minutos transcurridos */
 function stampActionHora(checkId, stampId){
   const box = document.getElementById(checkId);
   const wrap = document.getElementById(stampId + 'Wrap');
@@ -1957,14 +1941,14 @@ function renderStampHora(checkId, stampId){
   else { input.value = ''; wrap.style.display = 'none'; }
 }
 function renderAllStamps(){
-  renderStamp('chkGlucosa','tsGlucosa');
+  renderStampHora('chkGlucosa','tsGlucosa');
   renderStampHora('chkSignos','tsSignos');
-  renderStamp('chkEcg','tsEcg');
-  renderStamp('chkAcceso','tsAcceso');
+  renderStampHora('chkEcg','tsEcg');
+  renderStampHora('chkAcceso','tsAcceso');
 }
 function stampText(checkId){
   const s = actionStamps[checkId];
-  return s ? ' [' + s.hora + (s.min != null ? ', ' + s.min.toFixed(0) + ' min de la llegada' : '') + ']' : '';
+  return s ? ' [' + s.hora + ']' : '';
 }
 
 /* ---------------- Registro de casos en el servidor ---------------- */
