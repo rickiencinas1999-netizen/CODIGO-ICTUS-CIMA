@@ -1,0 +1,13 @@
+{
+  "name": "Código Ictus — Hospital CIMA",
+  "short_name": "Código Ictus",
+  "description": "Checklist de tiempos y registro de caso para el protocolo de código ictus — Urgencias CIMA",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F9F8",
+  "theme_color": "#00594F",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
