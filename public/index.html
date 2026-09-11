@@ -104,12 +104,12 @@
     position:sticky; top:0; z-index:30;
     background:var(--surface);
     border-bottom:1px solid var(--border);
-    padding:14px 20px 0 20px;
+    padding:calc(14px + env(safe-area-inset-top)) 20px 0 20px;
     transition:padding .15s ease;
   }
   /* Compact mode: once the page is scrolled, the sticky stack shrinks so it
      never covers the fields being filled in. */
-  .topbar.compact{ padding-top:6px; }
+  .topbar.compact{ padding-top:calc(6px + env(safe-area-inset-top)); }
   .topbar.compact .brandblock p,
   .topbar.compact .theme-note{ display:none; }
   .topbar.compact .brandblock h1{ font-size:1.02rem; }
@@ -242,6 +242,9 @@
     width:100%; font-family:inherit; font-size:0.9rem; padding:8px 10px; border-radius:8px;
     border:1px solid var(--border); background:var(--surface); color:var(--text);
   }
+  /* iOS Safari sizes date/time inputs unpredictably (can render much taller than
+     text inputs) unless a height is pinned explicitly. */
+  .field input[type=date], .field input[type=time]{ height:38px; line-height:normal; -webkit-appearance:auto; appearance:auto; }
   .field input:focus, .field select:focus, .field textarea:focus{ outline:2px solid var(--brand); outline-offset:1px; }
   .check-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; }
   @media (max-width:600px){ .check-grid{ grid-template-columns:1fr; } }
@@ -341,7 +344,7 @@
   }
 
   /* ===== Avisos y confirmación propios ===== */
-  #toastHost{ position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:120;
+  #toastHost{ position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:120;
     display:flex; flex-direction:column; gap:8px; align-items:center; width:calc(100% - 28px); max-width:460px; pointer-events:none; }
   .toast{ background:var(--navy); color:#fff; border-radius:10px; padding:12px 16px; font-size:0.86rem;
     font-weight:600; box-shadow:0 8px 26px rgba(0,0,0,.28); width:100%; }
@@ -403,10 +406,10 @@
   /* ===== Mobile / tablet layout ===== */
   @media (max-width:860px){
     body{ -webkit-text-size-adjust:100%; }
-    main{ padding:14px 12px 90px; }
+    main{ padding:14px 12px calc(90px + env(safe-area-inset-bottom)); }
     .card{ padding:15px 14px; border-radius:12px; }
 
-    .topbar{ padding:9px 12px 0; }
+    .topbar{ padding:calc(9px + env(safe-area-inset-top)) 12px 0; }
     .topbar-row{ align-items:center; gap:10px; }
     .brandblock h1{ font-size:1.05rem; }
     .brandblock p, .theme-note, .logo-block{ display:none; }
@@ -432,6 +435,7 @@
     .field input[type=time], .field input[type=email], .field select, .field textarea,
     .field.inline input, .field.inline select,
     .mobile-jump select{ font-size:16px; padding:11px 12px; min-height:44px; }
+    .field input[type=date], .field input[type=time]{ height:44px; }
     .field.inline{ width:100%; justify-content:space-between; }
     .field.inline input, .field.inline select{ width:auto; flex:1; min-width:0; margin-left:10px; }
     .tab-btn{ min-height:44px; }
