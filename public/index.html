@@ -1,0 +1,1678 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Código Oro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#B8860B">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Código Oro">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#FAF6EC;
+    --surface:#FFFFFF;
+    --surface-2:#F6EFD9;
+    --surface-3:#EFE2BB;
+    --border:#E4D3A0;
+    --text:#2B2416;
+    --text-muted:#7C6B45;
+    --brand:#B8860B;
+    --brand-strong:#7A5A08;
+    --brand-tint:#F5E7C2;
+    --on-brand:#FFFFFF;
+    --navy:#4A3B1D;
+    --navy-tint:#F1E6C8;
+    --success:#1F8A5F;
+    --success-tint:#DFF3E8;
+    --warning:#B45309;
+    --warning-tint:#FBEBD9;
+    --critical:#B23A2E;
+    --critical-tint:#FBE1DD;
+    --amarillo:#C99A1E;
+    --amarillo-tint:#FBF0CE;
+    --shadow: 0 1px 2px rgba(60,40,10,0.06), 0 6px 20px -8px rgba(60,40,10,0.14);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#181307;
+      --surface:#241C0C;
+      --surface-2:#2E2410;
+      --surface-3:#3A2E14;
+      --border:#4A3B1D;
+      --text:#F5EDD9;
+      --text-muted:#C9B98A;
+      --brand:#E8B84B;
+      --brand-strong:#F5CE7A;
+      --brand-tint:#3A2E10;
+      --on-brand:#241C0C;
+      --navy:#D8C48F;
+      --navy-tint:#2E2410;
+      --success:#4FCB93;
+      --success-tint:#153228;
+      --warning:#E7A85B;
+      --warning-tint:#3A2A10;
+      --critical:#EE7C6E;
+      --critical-tint:#3A1C18;
+      --amarillo:#E8C34B;
+      --amarillo-tint:#3A2E10;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.5);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+      --bg:#181307;
+      --surface:#241C0C;
+      --surface-2:#2E2410;
+      --surface-3:#3A2E14;
+      --border:#4A3B1D;
+      --text:#F5EDD9;
+      --text-muted:#C9B98A;
+      --brand:#E8B84B;
+      --brand-strong:#F5CE7A;
+      --brand-tint:#3A2E10;
+      --on-brand:#241C0C;
+      --navy:#D8C48F;
+      --navy-tint:#2E2410;
+      --success:#4FCB93;
+      --success-tint:#153228;
+      --warning:#E7A85B;
+      --warning-tint:#3A2A10;
+      --critical:#EE7C6E;
+      --critical-tint:#3A1C18;
+      --amarillo:#E8C34B;
+      --amarillo-tint:#3A2E10;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 30px -10px rgba(0,0,0,0.5);
+      color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    line-height:1.45;
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+    padding-bottom:env(safe-area-inset-bottom);
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+  a{color:var(--brand-strong);}
+
+  /* ===== Top bar ===== */
+  .topbar{ position:sticky; top:0; z-index:30; background:var(--surface); border-bottom:1px solid var(--border); padding:calc(14px + env(safe-area-inset-top)) 20px 0 20px; transition:padding .15s ease; }
+  .topbar.compact{ padding-top:calc(6px + env(safe-area-inset-top)); }
+  .topbar.compact .brandblock p, .topbar.compact .theme-note{ display:none; }
+  .topbar.compact .brandblock h1{ font-size:1.02rem; }
+  .topbar.compact .logo-chip img{ height:22px; }
+  .topbar.compact .tabs{ margin-top:6px; }
+  .topbar.compact .tab-btn{ padding:6px 6px; }
+  .topbar-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .brandblock h1{ margin:0; font-size:1.32rem; font-weight:800; letter-spacing:-0.01em; }
+  .brandblock p{ margin:2px 0 0; font-size:0.86rem; color:var(--text-muted); }
+  .theme-note{ font-size:0.72rem; color:var(--text-muted); text-align:right; max-width:260px; }
+  .logo-block{ display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .logo-chip{ background:#FFFFFF; border-radius:8px; padding:6px 10px; line-height:0; box-shadow:var(--shadow); }
+  .logo-chip img{ display:block; }
+
+  .tabs{ display:flex; gap:4px; margin:14px 0 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tab-btn{ appearance:none; border:none; background:transparent; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.86rem; color:var(--text-muted); padding:10px 6px; border-bottom:3px solid transparent; letter-spacing:0.01em; white-space:nowrap; flex:none; }
+  .tab-btn[aria-selected="true"]{ color:var(--brand-strong); border-bottom-color:var(--brand); }
+  .tab-btn + .tab-btn{ margin-left:18px; }
+
+  /* ===== Timer strip ===== */
+  .timerbar{ position:sticky; top:var(--topbar-h, 76px); z-index:29; background:var(--navy-tint); border-bottom:1px solid var(--border); padding:12px 20px; display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+  .clock-wrap{ display:flex; align-items:baseline; gap:10px; }
+  .clock{ font-family:'IBM Plex Mono',monospace; font-size:1.9rem; font-weight:600; letter-spacing:0.01em; font-variant-numeric: tabular-nums; }
+  .clock.warn{ color:var(--critical); animation:clock-warn-pulse 1s ease-in-out infinite; }
+  @keyframes clock-warn-pulse{ 0%,100%{ opacity:1; } 50%{ opacity:0.45; } }
+  .clock-label{ font-size:0.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; }
+  .btn{ appearance:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.82rem; border-radius:8px; padding:9px 14px; border:1px solid transparent; letter-spacing:0.01em; transition:filter .12s ease, transform .08s ease; }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--brand); color:var(--on-brand); }
+  .btn-primary:hover{ filter:brightness(1.06); }
+  .btn-ghost{ background:transparent; color:var(--text); border-color:var(--border); }
+  .btn-ghost:hover{ background:var(--surface-2); }
+  .btn-critical{ background:var(--critical); color:#fff; }
+  .btn-dark{ background:#3A2E14; color:#fff; border-color:#241C0C; }
+  .btn-dark:hover{ filter:brightness(1.2); }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+
+  .chip-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .chip{ display:flex; align-items:center; gap:7px; background:var(--surface); border:1px solid var(--border); border-radius:999px; padding:6px 12px 6px 8px; font-size:0.78rem; font-weight:600; }
+  .chip .dot{ width:9px; height:9px; border-radius:50%; background:var(--text-muted); flex:none; }
+  .chip[data-state="pending"] .dot{ background:var(--text-muted); }
+  .chip[data-state="ontime"] .dot{ background:var(--success); }
+  .chip[data-state="late"] .dot{ background:var(--critical); }
+  .chip .t{ font-family:'IBM Plex Mono',monospace; color:var(--text-muted); }
+
+  .score-dock{ display:flex; gap:16px; flex-wrap:wrap; align-items:center; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:7px 14px; font-size:0.76rem; font-weight:600; color:var(--text-muted); }
+  .score-dock b{ color:var(--brand-strong); font-size:0.94rem; margin-left:5px; }
+
+  /* ===== Layout ===== */
+  main{ max-width:1180px; margin:0 auto; padding:22px 20px calc(80px + env(safe-area-inset-bottom)); }
+  .tab-panel{ display:none; }
+  .tab-panel.active{ display:block; }
+
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); padding:20px 22px; margin-bottom:16px; }
+  .card[id]{ scroll-margin-top:var(--sticky-offset, 160px); }
+  .field input, .field select, .field textarea, .radio-pill label, .check-item{ scroll-margin-top:calc(var(--sticky-offset, 160px) + 8px); }
+  .card h2{ margin:0 0 4px; font-size:1.02rem; font-weight:800; }
+  .card .sub{ margin:0 0 14px; color:var(--text-muted); font-size:0.84rem; }
+  .section-label{ font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.08em; color:var(--brand-strong); margin:0 0 10px; }
+
+  .milestone{ display:grid; grid-template-columns:auto 1fr auto; gap:14px 18px; align-items:center; padding:16px 0; border-top:1px solid var(--border); }
+  .milestone:first-of-type{ border-top:none; padding-top:2px; }
+  .milestone .num{ width:30px; height:30px; border-radius:50%; background:var(--surface-2); color:var(--text); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.86rem; flex:none; }
+  .milestone .info strong{ display:block; font-size:0.95rem; }
+  .milestone .info span{ display:block; font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
+  .milestone .status{ text-align:right; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }
+  .badge{ font-size:0.72rem; font-weight:800; padding:3px 9px; border-radius:6px; letter-spacing:0.02em; }
+  .badge.pending{ background:var(--surface-2); color:var(--text-muted); }
+  .badge.ontime{ background:var(--success-tint); color:var(--success); }
+  .badge.late{ background:var(--critical-tint); color:var(--critical); }
+  .badge.logged{ background:var(--brand-tint); color:var(--brand-strong); }
+  .marked-time{ font-family:'IBM Plex Mono',monospace; font-size:0.78rem; color:var(--text-muted); }
+
+  details.ref{ border:1px solid var(--border); border-radius:12px; background:var(--surface-2); padding:2px 16px; margin-bottom:16px; }
+  details.ref summary{ cursor:pointer; padding:12px 0; font-weight:700; font-size:0.9rem; list-style:none; display:flex; align-items:center; gap:8px;}
+  details.ref summary::-webkit-details-marker{ display:none; }
+  details.ref summary:before{ content:"▸"; color:var(--brand); transition:transform .12s; }
+  details.ref[open] summary:before{ transform:rotate(90deg); }
+  details.ref .refbody{ padding:0 0 16px; font-size:0.85rem; color:var(--text); }
+  .chain-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:8px; }
+  .chain-item{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; }
+  .chain-item b{ display:block; font-size:0.86rem; color:var(--brand-strong); margin-bottom:2px; }
+  .chain-item span{ font-size:0.74rem; color:var(--text-muted); }
+
+  .grid{ display:grid; gap:14px; }
+  .grid.cols-2{ grid-template-columns:repeat(2,1fr); }
+  .grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+  .grid.cols-4{ grid-template-columns:repeat(4,1fr); }
+  @media (max-width:720px){ .grid.cols-2, .grid.cols-3, .grid.cols-4{ grid-template-columns:1fr; } .chain-row{ grid-template-columns:repeat(2,1fr);} }
+
+  .field label{ display:block; font-size:0.78rem; font-weight:700; color:var(--text-muted); margin-bottom:5px; }
+  .field input[type=text], .field input[type=number], .field input[type=date], .field input[type=time], .field input[type=email], .field select, .field textarea{
+    width:100%; font-family:inherit; font-size:0.9rem; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text);
+  }
+  .field input[readonly]{ background:var(--surface-2); color:var(--text-muted); }
+  .field input[type=date], .field input[type=time]{ height:38px; line-height:normal; }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:2px solid var(--brand); outline-offset:1px; }
+  .check-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:6px 14px; }
+  @media (max-width:600px){ .check-grid{ grid-template-columns:1fr; } }
+  .check-item{ display:flex; align-items:center; gap:8px; font-size:0.86rem; }
+  .check-item input{ accent-color:var(--brand); width:16px; height:16px; }
+
+  .init-row{ display:grid; grid-template-columns:minmax(220px,1.4fr) minmax(160px,1fr) auto; gap:12px 18px; align-items:center; padding:12px 0; border-top:1px solid var(--border); }
+  .init-row:first-of-type{ border-top:none; }
+  .init-row .role-name{ font-weight:800; font-size:0.9rem; }
+  .init-row .role-desc{ font-size:0.78rem; color:var(--text-muted); margin-top:2px; }
+  .stamp{ font-family:'IBM Plex Mono',monospace; font-size:0.74rem; color:var(--brand-strong); background:var(--brand-tint); padding:2px 7px; border-radius:6px; margin-left:8px; white-space:nowrap; }
+  .stamp:empty{ display:none; }
+
+  .case-list{ display:flex; flex-direction:column; gap:8px; }
+  .case-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; border:1px solid var(--border); border-radius:10px; padding:11px 13px; background:var(--surface-2); }
+  .case-item .meta{ min-width:0; }
+  .case-item .meta b{ display:block; font-size:0.9rem; }
+  .case-item .meta span{ font-size:0.76rem; color:var(--text-muted); }
+  .case-item .acts{ display:flex; gap:7px; flex-wrap:wrap; }
+  .sync-pill{ display:inline-flex; align-items:center; gap:6px; font-size:0.74rem; font-weight:700; padding:4px 10px; border-radius:999px; background:var(--surface-2); color:var(--text-muted); border:1px solid var(--border); }
+  .sync-pill.ok{ background:var(--success-tint); color:var(--success); border-color:var(--success); }
+  .sync-pill.warn{ background:var(--warning-tint); color:var(--warning); border-color:var(--warning); }
+  @media (max-width:820px){ .init-row{ grid-template-columns:1fr; } }
+  .radio-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .radio-pill{ position:relative; }
+  .radio-pill input{ position:absolute; opacity:0; }
+  .radio-pill label{ display:block; padding:6px 12px; border-radius:8px; border:1px solid var(--border); font-size:0.82rem; cursor:pointer; background:var(--surface); color:var(--text); margin:0; }
+  .radio-pill input:checked + label{ background:var(--brand); border-color:var(--brand); color:var(--on-brand); font-weight:700; }
+  .radio-pill input:focus-visible + label{ outline:2px solid var(--brand); outline-offset:1px; }
+
+  .algo-list{ margin:8px 0 0; padding-left:20px; font-size:0.88rem; line-height:1.65; }
+  .algo-list li{ margin-bottom:6px; }
+
+  .quick-log-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px; }
+  .quick-log-row input[type=number]{ width:96px; padding:7px 8px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-family:inherit; }
+  .quick-log-row input[type=text]{ flex:1; min-width:180px; padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-family:inherit; }
+  .quick-log-row select{ padding:7px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-family:inherit; font-size:0.86rem; }
+  .event-list{ display:flex; flex-direction:column; gap:6px; margin-top:12px; }
+  .event-item{ display:flex; align-items:center; gap:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:0.84rem; }
+  .event-item .et{ font-family:'IBM Plex Mono',monospace; color:var(--brand-strong); font-weight:700; min-width:56px; }
+  .event-item .el{ flex:1; }
+  .event-item button{ background:transparent; border:none; color:var(--text-muted); cursor:pointer; font-size:0.95rem; padding:2px 6px; }
+  .event-item button:hover{ color:var(--critical); }
+
+  .status-banner{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; border-radius:10px; padding:14px 16px; margin-bottom:16px; font-weight:800; }
+  .status-banner .t{ font-family:'IBM Plex Mono',monospace; font-weight:600; }
+  .status-banner.rojo{ background:var(--critical-tint); border:1px solid var(--critical); color:var(--critical); }
+  .status-banner.amarillo{ background:var(--amarillo-tint); border:1px solid var(--amarillo); color:#7A5C0C; }
+  :root[data-theme="dark"] .status-banner.amarillo{ color:var(--amarillo); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .status-banner.amarillo{ color:var(--amarillo); } }
+  .status-banner.verde{ background:var(--success-tint); border:1px solid var(--success); color:var(--success); }
+  .status-banner.neutral{ background:var(--surface-2); border:1px solid var(--border); color:var(--text-muted); }
+
+  .triage-group{ margin-bottom:6px; }
+  .triage-group h3{ font-size:0.78rem; font-weight:800; text-transform:uppercase; letter-spacing:0.07em; color:var(--text-muted); margin:18px 0 6px; }
+  .triage-group:first-child h3{ margin-top:2px; }
+  .triage-item{ border-top:1px solid var(--border); padding:12px 0; }
+  .triage-item:first-of-type{ border-top:none; }
+  .triage-item .tname{ font-weight:800; font-size:0.88rem; margin-bottom:2px; }
+  .triage-item .tnote{ font-size:0.72rem; color:var(--text-muted); margin-bottom:8px; }
+  .triage-opts{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  .triage-opts.two{ grid-template-columns:repeat(2,1fr); }
+  .triage-btn{ border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-size:0.76rem; text-align:left; cursor:pointer; background:var(--surface); color:var(--text); line-height:1.3; min-height:46px; display:flex; align-items:center; font-family:inherit; }
+  .triage-btn b{ display:block; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:2px; opacity:0.75; }
+  .triage-btn[data-color="rojo"].active{ background:var(--critical); border-color:var(--critical); color:#fff; font-weight:700; }
+  .triage-btn[data-color="amarillo"].active{ background:var(--amarillo); border-color:var(--amarillo); color:#241C0C; font-weight:700; }
+  .triage-btn[data-color="verde"].active{ background:var(--success); border-color:var(--success); color:#fff; font-weight:700; }
+  .triage-btn.active b{ opacity:0.9; }
+
+  .shock-calc{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+  .shock-calc .field{ max-width:140px; }
+  .shock-result{ background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:10px 14px; font-size:0.84rem; min-width:180px; }
+  .shock-result b{ font-size:1.1rem; }
+
+  .export-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:6px; }
+  .summary-pre{ white-space:pre-wrap; font-family:'IBM Plex Mono',monospace; font-size:0.8rem; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:14px; max-height:420px; overflow:auto; }
+  .privacy-note{ font-size:0.76rem; color:var(--text-muted); background:var(--surface-2); border:1px dashed var(--border); border-radius:8px; padding:10px 12px; margin-top:6px; }
+
+  footer{ text-align:center; padding:26px 20px 40px; color:var(--text-muted); font-size:0.76rem; }
+
+  #summaryPrintArea{ display:none; }
+  @media print{
+    .topbar, .timerbar, .tabs, .utstein-nav, .btn, footer, details.ref{ display:none !important; }
+    body.printing main > *:not(#summaryPrintArea){ display:none !important; }
+    #summaryPrintArea{ display:block !important; }
+    body{ background:#fff; color:#000; }
+  }
+
+  #toastHost{ position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:120; display:flex; flex-direction:column; gap:8px; align-items:center; width:calc(100% - 28px); max-width:460px; pointer-events:none; }
+  .toast{ background:var(--navy); color:#fff; border-radius:10px; padding:12px 16px; font-size:0.86rem; font-weight:600; box-shadow:0 8px 26px rgba(0,0,0,.28); width:100%; }
+  :root[data-theme="dark"] .toast{ background:#3A2E14; color:var(--text); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .toast{ background:#3A2E14; color:var(--text); } }
+  .toast.ok{ background:var(--brand-strong); color:#fff; }
+  .toast.warn{ background:var(--critical); }
+
+  #modalHost{ position:fixed; inset:0; z-index:130; background:rgba(30,20,5,.55); display:none; align-items:center; justify-content:center; padding:18px; }
+  #modalHost.open{ display:flex; }
+  .modal{ background:var(--surface); color:var(--text); border-radius:14px; border:1px solid var(--border); max-width:420px; width:100%; padding:20px; box-shadow:0 20px 50px rgba(0,0,0,.3); }
+  .modal h3{ margin:0 0 8px; font-size:1.02rem; }
+  .modal p{ margin:0 0 16px; font-size:0.88rem; color:var(--text-muted); line-height:1.5; }
+  .modal .acts{ display:flex; gap:9px; justify-content:flex-end; flex-wrap:wrap; }
+  .modal .acts .btn{ min-height:42px; }
+
+  a.btn{ display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+  :focus-visible{ outline:2px solid var(--brand); outline-offset:2px; }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+
+  .theme-switch{ display:flex; gap:0; border:1px solid var(--border); border-radius:8px; overflow:hidden; flex:none; }
+  .theme-switch button{ appearance:none; border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:0.72rem; padding:7px 11px; background:var(--surface); color:var(--text-muted); border-left:1px solid var(--border); min-height:34px; }
+  .theme-switch button:first-child{ border-left:none; }
+  .theme-switch button[aria-pressed="true"]{ background:var(--brand); color:var(--on-brand); }
+
+  .timer-main{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .mini-clock-block{ display:flex; align-items:center; gap:9px; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:5px 12px; }
+  .mini-clock-block .clock-label{ text-transform:none; letter-spacing:0; font-size:0.72rem; }
+  .lbl-short{ display:none; }
+
+  .section-label.collapsible{ display:flex; align-items:center; justify-content:space-between; gap:10px; cursor:pointer; user-select:none; margin:0; padding:4px 0; min-height:40px; width:100%; }
+  .section-label.collapsible::after{ content:"▾"; font-size:0.95rem; color:var(--text-muted); transition:transform .15s ease; flex:none; }
+  .card.collapsed .section-label.collapsible::after{ transform:rotate(-90deg); }
+  .card.collapsed > *:not(.section-label){ display:none !important; }
+  .collapse-tools{ display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; }
+
+  .mobile-jump{ display:none; margin-bottom:14px; }
+  .mobile-jump select{ width:100%; font-family:inherit; font-size:16px; padding:11px 12px; border-radius:10px; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:600; }
+
+  .share-row{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  .debrief-table{ width:100%; border-collapse:collapse; font-size:0.82rem; }
+  .debrief-table th, .debrief-table td{ border:1px solid var(--border); padding:8px; text-align:left; vertical-align:top; }
+  .debrief-table th{ background:var(--surface-2); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); }
+  .debrief-table input[type=text]{ width:100%; border:none; background:transparent; font-family:inherit; font-size:0.82rem; color:var(--text); padding:2px; }
+  .debrief-table input[type=text]:focus{ outline:1px solid var(--brand); border-radius:4px; }
+  .debrief-tablewrap{ overflow-x:auto; }
+  .star-row{ display:flex; align-items:center; gap:4px; }
+  .star-btn{ background:none; border:none; cursor:pointer; font-size:1.25rem; color:var(--border); padding:2px; line-height:1; }
+  .star-btn.on{ color:var(--brand); }
+
+  @media (max-width:860px){
+    body{ -webkit-text-size-adjust:100%; }
+    main{ padding:14px 12px 90px; }
+    .card{ padding:15px 14px; border-radius:12px; }
+    .topbar{ padding:calc(9px + env(safe-area-inset-top)) 12px 0; }
+    .topbar-row{ align-items:center; gap:10px; }
+    .brandblock h1{ font-size:1.05rem; }
+    .brandblock p, .theme-note, .logo-block{ display:none; }
+    .topbar-row{ flex-wrap:nowrap; justify-content:space-between; }
+    .theme-switch button{ font-size:0.68rem; padding:6px 9px; min-height:32px; }
+    .tabs{ margin-top:8px; }
+    .tab-btn{ font-size:0.82rem; padding:9px 4px; }
+    .tab-btn + .tab-btn{ margin-left:14px; }
+    .timerbar{ flex-direction:column; flex-wrap:nowrap; align-items:stretch; gap:8px; padding:8px 12px; min-width:0; }
+    .timer-main{ gap:8px; flex-wrap:wrap; overflow-x:visible; min-width:0; }
+    .timer-main .clock-wrap{ flex:none; }
+    .timer-main .btn{ flex:1 1 auto; min-width:0; text-align:center; }
+    .clock-label{ display:none; }
+    .clock{ font-size:1.35rem; }
+    .lbl-full{ display:none; }
+    .lbl-short{ display:inline; }
+    .chip-row{ display:none; }
+    .score-dock{ overflow-x:visible; flex-wrap:wrap; white-space:normal; gap:6px 13px; padding:6px 11px; min-width:0; }
+    .score-dock span{ flex:none; }
+    .field input[type=text], .field input[type=number], .field input[type=date], .field input[type=time], .field input[type=email], .field select, .field textarea,
+    .mobile-jump select{ font-size:16px; padding:11px 12px; min-height:44px; }
+    .field input[type=date], .field input[type=time]{ height:44px; }
+    .tab-btn{ min-height:44px; }
+    .radio-pill label{ min-height:44px; display:flex; align-items:center; font-size:0.88rem; padding:9px 13px; }
+    .radio-row{ gap:8px; }
+    .quick-log-row .btn{ flex:1 1 100%; }
+    .quick-log-row input[type=number]{ flex:1 1 auto; width:auto; min-width:90px; }
+    .check-item{ min-height:44px; font-size:0.9rem; }
+    .check-item input{ width:22px; height:22px; flex:none; }
+    .btn{ min-height:42px; }
+    .grid.cols-2, .grid.cols-3, .grid.cols-4, .check-grid{ grid-template-columns:1fr; }
+    .init-row{ grid-template-columns:1fr; gap:10px; padding:14px 0; }
+    .chain-row{ grid-template-columns:repeat(2,1fr); }
+    .mobile-jump{ display:block; }
+    .triage-opts, .triage-opts.two{ grid-template-columns:1fr; }
+    .milestone{ grid-template-columns:auto 1fr; gap:10px 12px; }
+    .milestone .status{ grid-column:1 / -1; flex-direction:row; align-items:center; justify-content:space-between; flex-wrap:wrap; }
+    .export-row .btn, .share-row .btn, .collapse-tools .btn{ flex:1 1 auto; }
+    .summary-pre{ font-size:0.72rem; max-height:340px; }
+    footer{ padding:20px 14px 30px; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brandblock">
+      <h1>Código Oro</h1>
+      <p>Activación &amp; Triaje Obstétrico + ERIO — Urgencias / Tococirugía CIMA</p>
+    </div>
+    <div class="logo-block">
+      <div class="logo-chip"><img alt="Hospital CIMA" src="data:image/png;base64,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" height="34"></div>
+      <div class="theme-note">Datos guardados en este dispositivo y en el servidor del hospital</div>
+    </div>
+    <div class="theme-switch" role="group" aria-label="Tema de la página">
+      <button type="button" data-theme-set="light" onclick="setTheme('light')" title="Fondo blanco">Blanco</button>
+      <button type="button" data-theme-set="dark" onclick="setTheme('dark')" title="Fondo negro">Negro</button>
+      <button type="button" data-theme-set="auto" onclick="setTheme('auto')" title="Según el sistema">Auto</button>
+    </div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab-btn" id="tabbtn-triaje" role="tab" aria-selected="true" onclick="showTab('triaje')">Activación &amp; Triaje</button>
+    <button class="tab-btn" id="tabbtn-manejo" role="tab" aria-selected="false" onclick="showTab('manejo')">Manejo clínico</button>
+    <button class="tab-btn" id="tabbtn-registro" role="tab" aria-selected="false" onclick="showTab('registro')">Registro del caso</button>
+    <button class="tab-btn" id="tabbtn-debrief" role="tab" aria-selected="false" onclick="showTab('debrief')">Debriefing</button>
+  </div>
+</header>
+
+<div class="timerbar">
+  <div class="timer-main">
+    <div class="clock-wrap">
+      <div>
+        <div class="clock-label">Tiempo desde la activación</div>
+        <div class="clock mono" id="clockDisplay">00:00</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="startBtn" onclick="startClock()"><span class="lbl-full">Activar Código ORO — iniciar reloj</span><span class="lbl-short">Activar</span></button>
+    <button class="btn btn-dark" id="finishBtn" onclick="finishCase()" disabled><span class="lbl-full">Concluir código</span><span class="lbl-short">Concluir</span></button>
+    <button class="btn btn-ghost" onclick="resetAll()"><span class="lbl-full">Nuevo caso</span><span class="lbl-short">Nuevo</span></button>
+  </div>
+  <div class="chip-row" id="chipRow"></div>
+  <div class="score-dock" id="scoreDock">
+    <span>Clasificación <b class="mono" id="dockClasif">—</b></span>
+    <span>Equipo ERIO <b class="mono" id="dockRoles">0/9</b></span>
+    <span>Triaje <b class="mono" id="dockTriaje">Pendiente</b></span>
+    <span>Eventos <b class="mono" id="dockEventos">0</b></span>
+  </div>
+</div>
+
+<main>
+  <!-- ================= TAB 1: ACTIVACIÓN & TRIAJE ================= -->
+  <section class="tab-panel active" id="tab-triaje">
+
+    <div class="privacy-note" style="margin-bottom:16px;">Escala de valoración, roles ERIO y criterios de activación según PR-ENF/GRL-018 "Activación del Código ORO, integración y actuación del Equipo de Respuesta Inmediata Obstétrica (ERIO)" y checklist institucional del Hospital CIMA. Ante cualquier duda, prevalece el protocolo impreso vigente y el criterio clínico.</div>
+
+    <div class="mobile-jump">
+      <select onchange="jumpToSection(this.value)">
+        <option value="">Ir a sección…</option>
+        <option value="cardDatos">Datos del evento</option>
+        <option value="cardTriage">Escala de valoración obstétrica</option>
+        <option value="cardShock">Índice de choque</option>
+        <option value="cardErio">Equipo ERIO</option>
+        <option value="cardActivacion">Checklist de activación</option>
+      </select>
+    </div>
+
+    <div class="card" id="cardDatos">
+      <h2>Datos del evento</h2>
+      <p class="sub">Se usan para el folio, el reporte final y el registro del caso</p>
+      <div class="grid cols-3">
+        <div class="field"><label>Fecha</label><input type="date" id="f_fecha" onchange="saveDraft()"></div>
+        <div class="field"><label>Hora de activación</label><input type="time" id="f_horaActivacion" onchange="saveDraft()"></div>
+        <div class="field"><label>Folio</label><input type="text" id="f_folio" readonly></div>
+      </div>
+      <div class="grid cols-3" style="margin-top:14px;">
+        <div class="field"><label>Nombre de la paciente</label><input type="text" id="f_nombrePac" placeholder="nombre completo" oninput="saveDraft()"></div>
+        <div class="field"><label>Edad gestacional</label><input type="text" id="f_edadGest" placeholder="p. ej. 34.2 SDG" oninput="saveDraft()"></div>
+        <div class="field"><label>Lugar / servicio</label><input type="text" id="f_lugar" placeholder="p. ej. Tococirugía, hab. 103" oninput="saveDraft()"></div>
+      </div>
+      <div class="grid cols-3" style="margin-top:14px;">
+        <div class="field"><label>Líder del equipo ERIO</label><input type="text" id="f_lider" placeholder="nombre" oninput="saveDraft()"></div>
+        <div class="field"><label>Quién activa / enfermera de contacto</label><input type="text" id="f_activadoPor" placeholder="nombre o iniciales" oninput="saveDraft()"></div>
+        <div class="field"><label>Motivo principal de activación</label>
+          <select id="f_motivo" onchange="saveDraft()">
+            <option value="">Selecciona…</option>
+            <option>Hemorragia obstétrica</option>
+            <option>Crisis hipertensiva / Eclampsia</option>
+            <option>Paro cardiorrespiratorio materno</option>
+            <option>Sepsis obstétrica</option>
+            <option>Inversión uterina</option>
+            <option>Embolia de líquido amniótico</option>
+            <option>Trauma obstétrico</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <details class="ref" open>
+      <summary>Activación del "Código Oro" — recordatorio institucional</summary>
+      <div class="refbody">
+        <ul class="algo-list">
+          <li>El Código Oro se activa desde <b>cualquier área</b> del hospital donde se presente la emergencia obstétrica.</li>
+          <li>Se activa por <b>voceo, 3 ocasiones</b>, mencionando área y/o habitación. Ejemplo: <i>"Código Oro, habitación 103, primer piso, Ala A"</i> (x3).</li>
+          <li>Al escuchar el voceo, Banco de Sangre, UTI, UCIN, Quirófano de Ginecología, Laboratorio e Imagen se colocan en estado de alerta.</li>
+          <li>Código <b>Rojo</b> → Activación inmediata de Código Oro. Código <b>Amarillo</b> → llamada de alerta al médico de Urgencias/Supervisora Clínica (ext. 1401) y valoración especializada. Código <b>Verde</b> → monitoreo y notificación al médico tratante.</li>
+          <li>Meta de tiempo: clasificación (triaje) en <b>&lt; 3 min</b> desde la llegada; el equipo ERIO acude al área en <b>&lt; 3 min</b> desde la alarma.</li>
+        </ul>
+      </div>
+    </details>
+
+    <div class="card" id="cardTriage">
+      <h2>Escala de valoración de riesgo obstétrico (Triaje Obstétrico)</h2>
+      <p class="sub">Marca el hallazgo encontrado en cada parámetro. La clasificación final toma el color más grave marcado (Rojo &gt; Amarillo &gt; Verde). * Asociado a algún otro signo o síntoma de la tabla.</p>
+      <div id="statusBannerTriage"></div>
+      <div id="triageContainer"></div>
+      <div class="export-row">
+        <button class="btn btn-ghost" onclick="clearTriage()">Limpiar escala</button>
+      </div>
+    </div>
+
+    <div class="card" id="cardShock">
+      <h2>Índice de choque</h2>
+      <p class="sub">Frecuencia cardiaca ÷ presión arterial sistólica. Normal: 0.5–0.7 · Alerta: 0.71–0.79 · Crítico: &gt; 0.8</p>
+      <div class="shock-calc">
+        <div class="field"><label>FC (lpm)</label><input type="number" id="shockFC" min="0" oninput="calcShock()"></div>
+        <div class="field"><label>PAS (mmHg)</label><input type="number" id="shockPAS" min="0" oninput="calcShock()"></div>
+        <div class="shock-result" id="shockResult">Ingresa FC y PAS para calcular</div>
+      </div>
+    </div>
+
+    <div class="card" id="cardErio">
+      <h2>Equipo de Respuesta Inmediata Obstétrica (ERIO)</h2>
+      <p class="sub">9 integrantes según PR-ENF/GRL-018. Marca la llegada de cada integrante — meta institucional: equipo reunido en &lt; 3 min desde la alarma.</p>
+      <div id="erioContainer"></div>
+    </div>
+
+    <div class="card" id="cardActivacion">
+      <h2>Checklist de activación</h2>
+      <p class="sub">Componentes del checklist institucional de activación de Código ORO y Triaje</p>
+      <div class="check-grid" id="activacionCheckGrid"></div>
+    </div>
+
+    <details class="ref">
+      <summary>Comunicación ISBAR</summary>
+      <div class="refbody">
+        <ul class="algo-list">
+          <li><b>I</b> — Identificación: paciente, edad, edad gestacional, quien reporta.</li>
+          <li><b>S</b> — Situación: motivo de la alerta en una frase.</li>
+          <li><b>B</b> — Antecedentes (Background): historia obstétrica relevante, comorbilidades.</li>
+          <li><b>A</b> — Evaluación (Assessment): hallazgos actuales, signos vitales, clasificación del triaje.</li>
+          <li><b>R</b> — Recomendación: qué se necesita del equipo ERIO ahora mismo.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- ================= TAB 2: MANEJO CLÍNICO ================= -->
+  <section class="tab-panel" id="tab-manejo">
+    <div class="mobile-jump">
+      <select onchange="jumpToSection(this.value)">
+        <option value="">Ir a sección…</option>
+        <option value="cardHpp">Hemorragia postparto</option>
+        <option value="cardHtn">Crisis hipertensiva y eclampsia</option>
+        <option value="cardRcp">RCP obstétrica</option>
+        <option value="cardOtras">Otras causas de riesgo obstétrico</option>
+      </select>
+    </div>
+
+    <!-- HEMORRAGIA POSTPARTO -->
+    <div class="card" id="cardHpp">
+      <h2>Hemorragia Post Parto</h2>
+      <p class="sub">Nemotecnia de las 4 T's — activar Protocolo de Transfusión Masiva si no hay respuesta a manejo inicial</p>
+      <div class="chain-row">
+        <div class="chain-item"><b>Tono</b><span>Masaje uterino bimanual constante. Atonía uterina = causa #1.</span></div>
+        <div class="chain-item"><b>Trauma</b><span>Revisión de canal de parto y cérvix — laceraciones.</span></div>
+        <div class="chain-item"><b>Tejido</b><span>Revisión manual de cavidad — restos placentarios.</span></div>
+        <div class="chain-item"><b>Trombina</b><span>Pruebas de coagulación urgentes (TP, TTP, Fibrinógeno).</span></div>
+      </div>
+      <div class="section-label" style="margin-top:18px;">Diagnóstico</div>
+      <div class="check-grid" id="hppDiagGrid"></div>
+      <div class="section-label" style="margin-top:18px;">Manejo farmacológico</div>
+      <div class="check-grid" id="hppFarmGrid"></div>
+      <div class="section-label" style="margin-top:18px;">Manejo avanzado</div>
+      <div class="check-grid" id="hppAvanzGrid"></div>
+    </div>
+
+    <!-- CRISIS HIPERTENSIVA -->
+    <div class="card" id="cardHtn">
+      <h2>Crisis Hipertensiva y Eclampsia</h2>
+      <p class="sub">Meta terapéutica: TA &lt; 150/100 mmHg sostenida. Evitar descensos bruscos que comprometan la perfusión feto-placentaria.</p>
+      <div class="section-label">Control de tensión arterial (meta &lt; 150/100 mmHg)</div>
+      <div class="check-grid" id="htnTaGrid"></div>
+      <div class="section-label" style="margin-top:18px;">Sulfato de magnesio (MgSO₄)</div>
+      <div class="check-grid" id="htnMgGrid"></div>
+      <div class="quick-log-row" style="align-items:center;">
+        <div class="mini-clock-block">
+          <span class="clock-label">Desde impregnación MgSO₄</span>
+          <div class="clock mono" id="mgTimerDisplay" style="font-size:1.1rem;">00:00</div>
+        </div>
+        <button class="btn btn-primary" id="mgTimerBtn" onclick="toggleMgTimer()">▶ Iniciar cronómetro de impregnación (15–20 min)</button>
+      </div>
+      <div class="section-label" style="margin-top:18px;">Seguridad — monitoreo de toxicidad</div>
+      <div class="check-grid" id="htnSegGrid"></div>
+      <div class="card" style="background:var(--critical-tint); border-color:var(--critical); margin-top:16px; box-shadow:none;">
+        <h2 style="color:var(--critical);">⚠ Alertas de seguridad MgSO₄</h2>
+        <ul class="algo-list" style="margin-bottom:0;">
+          <li>Reflejo patelar ausente → Suspender infusión inmediatamente</li>
+          <li>FR &lt; 12 rpm → Riesgo de depresión respiratoria</li>
+          <li>Diuresis &lt; 25 mL/h → Riesgo de acumulación tóxica</li>
+          <li>Antídoto SIEMPRE disponible: Gluconato de Calcio 1 g IV</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- RCP OBSTÉTRICA -->
+    <div class="card" id="cardRcp">
+      <h2>Reanimación Cardiopulmonar Obstétrica</h2>
+      <p class="sub">Regla de los 4 minutos: Fase 1 RCP materna modificada → Fase 2 Vía aérea → Fase 3 Histerotomía de emergencia si no hay RCE al minuto 4</p>
+      <div class="quick-log-row" style="align-items:center;">
+        <div>
+          <div class="clock-label">Cronómetro de paro (regla de los 4 minutos)</div>
+          <div class="clock mono" id="rcpTimerDisplay">00:00</div>
+        </div>
+        <button class="btn btn-critical" id="rcpTimerBtn" onclick="toggleRcpTimer()">▶ Iniciar paro cardiorrespiratorio materno</button>
+      </div>
+      <div class="section-label" style="margin-top:18px;">Modificaciones RCP materna</div>
+      <div class="check-grid" id="rcpModGrid"></div>
+      <div class="section-label" style="margin-top:18px;">Vía aérea</div>
+      <div class="check-grid" id="rcpViaGrid"></div>
+      <div class="section-label" style="margin-top:18px;">Histerotomía de emergencia — Cesárea Perimortem</div>
+      <div class="check-grid" id="rcpHistGrid"></div>
+      <div class="privacy-note">Regla de oro: si no hay RCE al minuto 4 de RCP y la gestación es ≥ 20 semanas confirmadas, iniciar histerotomía de emergencia sin demora.</div>
+    </div>
+
+    <!-- OTRAS CAUSAS -->
+    <div class="card" id="cardOtras">
+      <h2>Otras causas de riesgo obstétrico</h2>
+      <p class="sub">Sepsis · Inversión uterina · Embolia de líquido amniótico · Trauma · Incompatibilidad Rh(−)</p>
+      <div id="otrasContainer"></div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 3: REGISTRO DEL CASO ================= -->
+  <section class="tab-panel" id="tab-registro">
+    <div class="utstein-shell">
+      <nav class="utstein-nav">
+        <a href="#regResumen" onclick="jumpToSection('regResumen');return false;">Línea de tiempo</a>
+        <a href="#regEventos" onclick="jumpToSection('regEventos');return false;">Eventos del caso</a>
+        <a href="#regDesenlace" onclick="jumpToSection('regDesenlace');return false;">Desenlace</a>
+        <a href="#regReporte" onclick="jumpToSection('regReporte');return false;">Reporte</a>
+        <a href="#regHistorial" onclick="jumpToSection('regHistorial');return false;">Historial de casos</a>
+      </nav>
+      <div>
+        <div class="mobile-jump">
+          <select onchange="jumpToSection(this.value)">
+            <option value="">Ir a sección…</option>
+            <option value="regResumen">Línea de tiempo</option>
+            <option value="regEventos">Eventos del caso</option>
+            <option value="regDesenlace">Desenlace</option>
+            <option value="regReporte">Reporte</option>
+            <option value="regHistorial">Historial de casos</option>
+          </select>
+        </div>
+
+        <div class="card" id="regResumen">
+          <h2>Línea de tiempo del código</h2>
+          <p class="sub">Marca cada hito cuando ocurra — el estado se calcula contra la meta institucional (&lt; 3 min). Los horarios registrados son la hora real del reloj del dispositivo.</p>
+          <div id="caseStatusBanner"></div>
+          <div id="milestoneList"></div>
+        </div>
+
+        <div class="card" id="regEventos">
+          <h2>Registro de eventos del código</h2>
+          <p class="sub">Medicamentos, intervenciones y otros eventos con marca de tiempo</p>
+          <div class="quick-log-row">
+            <select id="eventoTipoSelect">
+              <option value="Medicamento">💉 Medicamento</option>
+              <option value="Hemoderivado">🩸 Hemoderivado</option>
+              <option value="Signo vital">📈 Signo vital</option>
+              <option value="Intervención">🛠 Intervención</option>
+              <option value="Comunicación">📞 Comunicación / traslado</option>
+              <option value="Otro">📝 Otro</option>
+            </select>
+            <input type="text" id="eventoTexto" placeholder="describe el evento (dosis, hallazgo, destino…)">
+            <button class="btn btn-primary" onclick="logEvent()">Registrar evento</button>
+          </div>
+          <div class="event-list" id="eventLogList"></div>
+        </div>
+
+        <div class="card" id="regDesenlace">
+          <h2>Desenlace del código</h2>
+          <div class="radio-row" id="desenlaceRow"></div>
+          <div class="field" style="margin-top:14px;">
+            <label>Capturado por</label>
+            <input type="text" id="capturadoPor" placeholder="nombre de quien llena el registro" oninput="saveMailPrefs(); saveDraft();">
+          </div>
+        </div>
+
+        <div class="card" id="regReporte">
+          <h2>Reporte del caso</h2>
+          <p class="sub">Genera un resumen de texto listo para copiar, imprimir, descargar o enviar</p>
+          <div class="export-row">
+            <button class="btn btn-primary" onclick="generateSummary()">Generar reporte</button>
+            <button class="btn btn-ghost" onclick="copySummary()">Copiar</button>
+            <button class="btn btn-ghost" onclick="printSummary()">Imprimir</button>
+            <button class="btn btn-ghost" onclick="downloadReport()">Descargar .txt</button>
+          </div>
+          <div class="grid cols-2" style="margin-top:14px;">
+            <div class="field"><label>Enviar a (correo)</label><input type="text" id="mailTo" placeholder="destino@hospitalcima.com" oninput="saveMailPrefs()"></div>
+            <div class="field"><label>CC</label><input type="text" id="mailCc" placeholder="opcional" oninput="saveMailPrefs()"></div>
+          </div>
+          <div class="export-row">
+            <button class="btn btn-ghost" onclick="sendReportByMail()">Enviar por correo</button>
+          </div>
+          <pre class="summary-pre" id="summaryPre" style="margin-top:14px; display:none;"></pre>
+          <div id="summaryPrintArea"></div>
+          <div class="privacy-note">Este reporte puede incluir datos clínicos de la paciente — compártelo únicamente por canales institucionales autorizados.</div>
+          <div class="section-label" style="margin-top:18px;">Compartir esta app (QR)</div>
+          <div class="share-row">
+            <button class="btn btn-ghost" onclick="printQR()">Ver / imprimir código QR</button>
+            <button class="btn btn-ghost" onclick="copyLink()">Copiar enlace</button>
+            <button class="btn btn-ghost" onclick="sharePage()">Compartir…</button>
+          </div>
+        </div>
+
+        <div class="card" id="regHistorial">
+          <h2>Historial de casos</h2>
+          <p class="sub">Guardado en este dispositivo (localStorage) y sincronizado con el servidor del hospital cuando hay conexión</p>
+          <div class="export-row" style="margin-bottom:10px;">
+            <button class="btn btn-primary" onclick="saveCaseLocal(false)">Guardar caso actual</button>
+            <span class="sync-pill" id="syncPill">—</span>
+          </div>
+          <div class="case-list" id="caseList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 4: DEBRIEFING ================= -->
+  <section class="tab-panel" id="tab-debrief">
+    <div class="card">
+      <h2>Debriefing post-simulación</h2>
+      <p class="sub">Registro de desempeño y retroalimentación del simulacro de Código Oro</p>
+      <div class="grid cols-3">
+        <div class="field"><label>Escenario(s) trabajado(s)</label><input type="text" id="db_escenario" oninput="saveDraft()"></div>
+        <div class="field"><label>Número de participantes</label><input type="number" id="db_participantes" min="0" oninput="saveDraft()"></div>
+        <div class="field"><label>Facilitador / instructor</label><input type="text" id="db_facilitador" oninput="saveDraft()"></div>
+      </div>
+      <div class="grid cols-3" style="margin-top:14px;">
+        <div class="field"><label>Duración total (minutos)</label><input type="number" id="db_duracion" min="0" oninput="saveDraft()"></div>
+        <div class="field"><label>Fecha</label><input type="date" id="db_fecha" oninput="saveDraft()"></div>
+      </div>
+
+      <div class="section-label" style="margin-top:20px;">Calificación global del equipo</div>
+      <div class="grid cols-3">
+        <div class="field"><label>Comunicación</label><div class="star-row" id="starComunicacion"></div></div>
+        <div class="field"><label>Liderazgo</label><div class="star-row" id="starLiderazgo"></div></div>
+        <div class="field"><label>Habilidades técnicas</label><div class="star-row" id="starHabilidades"></div></div>
+      </div>
+
+      <div class="section-label" style="margin-top:20px;">Áreas de evaluación</div>
+      <div class="debrief-tablewrap">
+        <table class="debrief-table" id="debriefTable">
+          <thead><tr><th>Área</th><th>Fortalezas observadas</th><th>Oportunidades de mejora</th><th>Responsable</th><th>Fecha compromiso</th></tr></thead>
+          <tbody id="debriefTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="grid cols-2" style="margin-top:20px;">
+        <div class="field"><label>Firma del instructor / facilitador</label><input type="text" id="db_firmaInstructor" placeholder="nombre" oninput="saveDraft()"></div>
+        <div class="field"><label>Firma del jefe de servicio / líder ERIO</label><input type="text" id="db_firmaJefe" placeholder="nombre" oninput="saveDraft()"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Código Oro — Hospital CIMA · Herramienta de apoyo clínico, no sustituye el juicio médico ni el expediente oficial · PR-ENF/GRL-018</footer>
+</main>
+
+<div id="toastHost"></div>
+<div id="modalHost"><div class="modal" id="modalBody"></div></div>
+
+<script>
+/* ======================= Estado global ======================= */
+const DRAFT_KEY = 'oro_draft_v1';
+const HISTORY_KEY = 'oro_history_v1';
+
+let caseId = null;
+let clockRunning = false;
+let clockStart = null;
+let clockElapsed = 0;
+let clockTimer = null;
+
+let mgRunning = false, mgStart = null, mgElapsed = 0, mgTimer = null;
+let rcpRunning = false, rcpStart = null, rcpElapsed = 0, rcpTimer = null;
+
+let triageState = {};
+let erioState = {};
+let eventLog = [];
+let milestoneState = {};
+
+/* ======================= Datos de referencia ======================= */
+
+const TRIAGE_DATA = [
+  { group: 'Observación', items: [
+    { key:'consciencia', name:'Estado de consciencia', rojo:'Inconsciente o Coma, Glasgow < 8', amarillo:'Somnolienta, obnubilada, estuporosa, Glasgow 9–14', verde:'Consciente, Glasgow 15' },
+    { key:'hemorragia', name:'Hemorragia', rojo:'> 1000 mL', amarillo:'500–1000 mL', verde:'< 500 mL' },
+    { key:'convulsiones_obs', name:'Crisis convulsivas', rojo:'Presentes', verde:'Ausentes' },
+    { key:'respiracion', name:'Respiración', rojo:'< 12 rpm ó > 27 rpm', amarillo:'20–26 rpm', verde:'12–19 rpm' },
+    { key:'colorpiel', name:'Color de piel', rojo:'Cianótica', amarillo:'Pálida', verde:'Normal' },
+    { key:'diuresis', name:'Diuresis', rojo:'Anuria o < 0.3 mL/kg/hr', amarillo:'Oliguria 0.3–0.5 mL/kg/hr', verde:'0.5–1 mL/kg/hr' },
+  ]},
+  { group: 'Interrogatorio', items: [
+    { key:'sangradotv', name:'Sangrado transvaginal', rojo:'Abundante', amarillo:'Escaso / Moderado', verde:'Ausente' },
+    { key:'convulsiones_int', name:'Crisis convulsivas', rojo:'Presentes', verde:'Negadas' },
+    { key:'cefalea', name:'Cefalea', rojo:'Presente, EVA 5–10/10 (pulsátil)', amarillo:'Presente, EVA 0–5/10 (pulsátil)', verde:'Ausente' },
+    { key:'acufenos', name:'Acúfenos *', rojo:'Presente', verde:'Ausente' },
+    { key:'fosfenos', name:'Fosfenos *', rojo:'Presente', verde:'Ausente' },
+    { key:'epigastralgia', name:'Epigastralgia *', rojo:'Presente, EVA 5–10/10', amarillo:'Presente, EVA 0–5/10 (pulsátil)', verde:'Ausente, EVA 0/10' },
+    { key:'amaurosis', name:'Amaurosis *', rojo:'Presente', verde:'Ausente' },
+    { key:'temp_interr', name:'Temperatura', rojo:'> 38.0 °C', amarillo:'37.4–37.9 °C', verde:'< 37.3 °C' },
+    { key:'liquidoamn', name:'Salida de líquido amniótico', rojo:'Abundante, verde/amarillo', amarillo:'Escaso, claro', verde:'Negado' },
+    { key:'actividadut', name:'Actividad uterina', rojo:'Presente', verde:'Ausente' },
+    { key:'motilidadfetal', name:'Motilidad fetal', rojo:'Ausente', amarillo:'Disminución de la motilidad fetal', verde:'Presente' },
+  ]},
+  { group: 'Signos vitales', items: [
+    { key:'pa_hiper', name:'Presión arterial (Hipertensión)', rojo:'≥ 160/110 mmHg', amarillo:'< 159/109 o > 131/90 mmHg', verde:'< 130/90 o > 100/60 mmHg' },
+    { key:'pa_hipo', name:'Presión arterial (Hipotensión)', rojo:'≤ 89/50 mmHg', amarillo:'< 90/51 o > 99/59 mmHg', verde:'< 130/90 o > 100/60 mmHg' },
+    { key:'fc', name:'Frecuencia cardiaca', rojo:'< 40 ó > 135 lpm', amarillo:'41–59 ó 100–134 lpm', verde:'60–99 lpm' },
+    { key:'indicechoque', name:'Índice de choque', rojo:'> 0.8', amarillo:'0.71–0.79', verde:'< 0.7' },
+    { key:'fr_sv', name:'Frecuencia respiratoria', rojo:'< 12 ó > 26/min', amarillo:'20–26/min', verde:'12–19/min' },
+    { key:'temp_sv', name:'Temperatura', rojo:'< 34.0 °C ó > 38.0 °C', amarillo:'34.1–34.9 °C ó 37.4–37.9 °C', verde:'> 35.0 °C ó < 37.3 °C' },
+  ]},
+];
+
+const ERIO_DATA = [
+  { key:'I', name:'Integrante I — Líder (Médico de Urgencias)', desc:'Coordina, organiza y dirige la actuación del ERIO. Evaluación inicial y revaloración. Registra actividades en el expediente clínico.' },
+  { key:'II', name:'Integrante II — Médico de Hospitalización / Anestesiólogo / Intensivista', desc:'Dirige valoración hemodinámica materno-fetal. Intubación oro/naso-traqueal si es necesario. Reanimación hemodinámica y analgesia/anestesia de urgencia.' },
+  { key:'III', name:'Integrante III — Enfermería asignada a la paciente', desc:'Identifica la alerta e inicia el sistema. Reporta con ISBAR. Permanece en la habitación. Lleva registro de eventos, control de medicamentos/hemoderivados y de tiempos.' },
+  { key:'IV', name:'Integrante IV — Enfermera Obstetrix (brazo izquierdo)', desc:'Asiste vía aérea y control de hemorragia (balón, pinzamiento). Instala sonda vesical/nasogástrica, apoya catéter venoso central, coloca medias de compresión, canaliza vena, toma muestras.' },
+  { key:'V', name:'Integrante V — Enfermera UTI (brazo derecho)', desc:'Signos vitales (PA, T°, FC, FR, oximetría, FCF). Glucometría y prueba multirreactiva. Administra medicamentos y hemoderivados. Comunica valores hemodinámicos al líder.' },
+  { key:'VI', name:'Integrante VI — Enfermería jefe / responsable del área', desc:'Detona la llamada al ERIO y al médico tratante. Enlace con servicios auxiliares (almacén, farmacia, laboratorio, imagenología).' },
+  { key:'VII', name:'Integrante VII — Supervisor(a) de Enfermería', desc:'Verifica llegada del equipo y cubre roles faltantes. Coordina comunicación con UCIN, Quirófano, UTI, Banco de Sangre, Laboratorio, Imagen. Llama a especialistas.' },
+  { key:'VIII', name:'Integrante VIII — Médico especialista en Gineco-Obstetricia', desc:'Valoración integral y determinación del estado gravídico. Toma el liderazgo para la resolución obstétrica.' },
+  { key:'IX', name:'Integrante IX — Médico especialista en Pediatría / Neonatología', desc:'Atiende al recién nacido en riesgo. Reanimación neonatal, evaluación y traslado a la unidad neonatal.' },
+];
+
+const ACTIVACION_ITEMS = [
+  { id:'act_triaje', label:'Triaje Obstétrico: ¿se aplicó escala validada?' },
+  { id:'act_clasif', label:'Clasificación: ¿paciente en Código Rojo o Amarillo?' },
+  { id:'act_tiempo', label:'Tiempo de respuesta: clasificación en < 3 min desde la llegada' },
+  { id:'act_alerta', label:'Activación de alerta: voceo claro del Código ORO (x3)' },
+  { id:'act_isbar', label:'Comunicación ISBAR realizada' },
+  { id:'act_roles', label:'Asignación de roles del ERIO completada' },
+];
+
+const HPP_DIAG = [
+  { id:'hpp_tono', label:'Tono: masaje uterino bimanual constante' },
+  { id:'hpp_trauma', label:'Trauma: revisión de canal de parto y cérvix' },
+  { id:'hpp_tejido', label:'Tejido: revisión manual de cavidad (restos placentarios)' },
+  { id:'hpp_trombina', label:'Trombina: pruebas de coagulación solicitadas' },
+];
+const HPP_FARM = [
+  { id:'hpp_oxi', label:'Oxitocina: 10 UI IM o 20 UI en 500 mL IV' },
+  { id:'hpp_txa', label:'Ácido tranexámico: 1 g IV (primeros 10 min)' },
+  { id:'hpp_ergo', label:'Ergometrina: 0.2 mg IM — confirmar: No HTA' },
+  { id:'hpp_miso', label:'Misoprostol: 800–1000 mcg (rectal/sublingual)' },
+];
+const HPP_AVANZ = [
+  { id:'hpp_transf', label:'Activación de protocolo de transfusión masiva' },
+  { id:'hpp_bakri', label:'Colocación de balón de Bakri / taponamiento uterino' },
+];
+
+const HTN_TA = [
+  { id:'htn_labeta', label:'Labetalol 20–40 mg IV o Hidralazina 5–10 mg IV' },
+  { id:'htn_nifed', label:'Nifedipino 10–20 mg VO (si no hay acceso IV)' },
+];
+const HTN_MG = [
+  { id:'htn_impreg', label:'Impregnación: 4–6 g IV para 15–20 min' },
+  { id:'htn_manten', label:'Mantenimiento: 1–2 g/hora por infusión continua' },
+];
+const HTN_SEG = [
+  { id:'htn_reflejo', label:'Verificación de reflejos patelares y FR > 12 rpm' },
+  { id:'htn_diuresis', label:'Diuresis controlada (> 25–30 mL/h)' },
+  { id:'htn_gluconato', label:'Gluconato de calcio 1 g IV disponible — antídoto' },
+];
+
+const RCP_MOD = [
+  { id:'rcp_dui', label:'Desplazamiento uterino izquierdo (DUI): manual' },
+  { id:'rcp_comp', label:'Compresiones en esternón medio (ligeramente altas)' },
+];
+const RCP_VIA = [
+  { id:'rcp_intub', label:'Intubación temprana (tubo 0.5–1.0 mm más pequeño)' },
+  { id:'rcp_difícil', label:'Verificación de material para vía aérea difícil disponible' },
+];
+const RCP_HIST = [
+  { id:'rcp_gest20', label:'¿Gestación ≥ 20 semanas confirmada?' },
+  { id:'rcp_regla4', label:'Regla de oro: iniciar histerotomía al minuto 4 si no hay RCE' },
+];
+
+const OTRAS_DATA = [
+  { key:'sepsis', name:'Sepsis obstétrica', clave:'¿qSOFA (+) o lactato solicitado? Antibiótico de amplio espectro en < 1 hora', nota:'Paquete de 1 hora: hemocultivos, lactato, antibiótico IV de amplio espectro y volumen. El retraso en el antibiótico aumenta la mortalidad 7% por hora.' },
+  { key:'inversion', name:'Inversión uterina', clave:'Reposición manual inmediata — Maniobra de Johnson sin demora', nota:'No retirar la placenta si está adherida. Maniobra de Johnson: reposición manual bajo analgesia. El útero debe reponerse antes del cierre cervical.' },
+  { key:'embolia', name:'Embolia de líquido amniótico', clave:'Soporte hemodinámico agresivo y control activo de coagulopatía', nota:'Diagnóstico de exclusión. Priorizar soporte cardiorrespiratorio agresivo, control de coagulopatía y movilizar al equipo multidisciplinario de inmediato.' },
+  { key:'trauma', name:'Trauma obstétrico', clave:'Desplazamiento uterino izquierdo + Evaluación primaria (ABCDE)', nota:'Aplicar ABCDE estándar con desplazamiento uterino izquierdo manual desde el primer contacto.' },
+  { key:'rhneg', name:'Paciente Rh (−)', clave:'Solicitud de pruebas', nota:'La prueba de Kleihauer-Betke determina el volumen de hemorragia fetomaterna para calcular la dosis de inmunoglobulina anti-D necesaria.' },
+];
+
+const MILESTONES = [
+  { id:'m_activacion', name:'Activación del Código Oro (voceo)', desc:'Inicio del reloj del código', target:null },
+  { id:'m_triaje', name:'Clasificación / triaje completado', desc:'Meta institucional', target:3 },
+  { id:'m_erio', name:'Llegada del equipo ERIO al área', desc:'Meta institucional', target:3 },
+  { id:'m_isbar', name:'Comunicación ISBAR realizada', desc:'Enfermería → líder del ERIO', target:null },
+  { id:'m_manejo', name:'Inicio de manejo dirigido', desc:'Según vertiente clínica identificada', target:null },
+  { id:'m_estab', name:'Estabilización hemodinámica', desc:'', target:null },
+  { id:'m_notif', name:'Notificación al médico especialista tratante', desc:'', target:null },
+  { id:'m_conclusion', name:'Conclusión del código', desc:'Voceo de término, retroalimentación con el equipo', target:null },
+];
+
+const DESENLACE_OPTS = ['Estabilizada — Quirófano','Estabilizada — UCI','Estabilizada — Piso','Traslado a otra unidad','Defunción materna'];
+
+const DEBRIEF_AREAS = ['Activación y Triaje','Comunicación ISBAR','Asignación de Roles','Manejo Farmacológico','Habilidades Técnicas','Trabajo en Equipo'];
+
+/* ======================= Utilidades ======================= */
+function toast(msg, kind){
+  const host = document.getElementById('toastHost');
+  const el = document.createElement('div');
+  el.className = 'toast' + (kind ? ' ' + kind : '');
+  el.textContent = msg;
+  host.appendChild(el);
+  setTimeout(()=>{ el.remove(); }, 3200);
+}
+function askConfirm(title, body, okLabel){
+  return new Promise((resolve)=>{
+    const host = document.getElementById('modalHost');
+    const box = document.getElementById('modalBody');
+    box.innerHTML = `<h3>${escapeHtml(title)}</h3><p>${escapeHtml(body)}</p>
+      <div class="acts">
+        <button class="btn btn-ghost" id="modalCancel">Cancelar</button>
+        <button class="btn btn-critical" id="modalOk">${escapeHtml(okLabel||'Confirmar')}</button>
+      </div>`;
+    host.classList.add('open');
+    document.getElementById('modalCancel').onclick = ()=>closeModal(false);
+    document.getElementById('modalOk').onclick = ()=>closeModal(true);
+    window._modalResolve = resolve;
+  });
+}
+function closeModal(answer){
+  document.getElementById('modalHost').classList.remove('open');
+  if (window._modalResolve) { window._modalResolve(answer); window._modalResolve = null; }
+}
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function val(id){ const el = document.getElementById(id); return el ? (el.value || '—') : '—'; }
+function horaAhora(){
+  const d = new Date();
+  return d.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false });
+}
+function fmtMMSS(sec){
+  sec = Math.max(0, Math.floor(sec));
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+}
+
+/* ======================= Tabs / navegación ======================= */
+function showTab(name){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.setAttribute('aria-selected','false'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('tabbtn-' + name).setAttribute('aria-selected','true');
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+function jumpToSection(id){
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function updateStickyOffset(){
+  const topbar = document.querySelector('.topbar');
+  const timerbar = document.querySelector('.timerbar');
+  if (!topbar || !timerbar) return;
+  const h1 = topbar.getBoundingClientRect().height;
+  timerbar.style.setProperty('--topbar-h', h1 + 'px');
+  timerbar.style.top = h1 + 'px';
+  const h2 = timerbar.getBoundingClientRect().height;
+  document.documentElement.style.setProperty('--sticky-offset', (h1 + h2 + 12) + 'px');
+}
+let lastScrollY = 0;
+function handleScrollCompact(){
+  const topbar = document.querySelector('.topbar');
+  const y = window.scrollY;
+  if (y > 40) topbar.classList.add('compact'); else topbar.classList.remove('compact');
+  lastScrollY = y;
+  updateStickyOffset();
+}
+window.addEventListener('scroll', handleScrollCompact, { passive:true });
+window.addEventListener('resize', updateStickyOffset);
+
+/* ======================= Reloj principal ======================= */
+function startClock(){
+  if (clockRunning) return;
+  clockRunning = true;
+  clockStart = Date.now() - clockElapsed*1000;
+  clockTimer = setInterval(updateClock, 250);
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('finishBtn').disabled = false;
+  if (!caseId) caseId = 'ORO-' + Date.now();
+  if (!document.getElementById('f_folio').value) document.getElementById('f_folio').value = caseId;
+  mark('m_activacion');
+  toast('Código Oro activado — reloj iniciado', 'ok');
+  saveDraft();
+}
+function updateClock(){
+  clockElapsed = (Date.now() - clockStart) / 1000;
+  document.getElementById('clockDisplay').textContent = fmtMMSS(clockElapsed);
+}
+function elapsedMinutes(){ return clockElapsed / 60; }
+
+/* ======================= Cronómetro MgSO4 ======================= */
+function toggleMgTimer(){
+  if (!mgRunning){
+    mgRunning = true;
+    mgStart = Date.now() - mgElapsed*1000;
+    mgTimer = setInterval(updateMgTimer, 250);
+    document.getElementById('mgTimerBtn').textContent = '⏸ Pausar cronómetro';
+  } else {
+    mgRunning = false;
+    clearInterval(mgTimer);
+    document.getElementById('mgTimerBtn').textContent = '▶ Reanudar cronómetro';
+  }
+}
+function updateMgTimer(){
+  mgElapsed = (Date.now() - mgStart) / 1000;
+  const disp = document.getElementById('mgTimerDisplay');
+  disp.textContent = fmtMMSS(mgElapsed);
+  disp.classList.toggle('warn', mgElapsed >= 20*60);
+}
+
+/* ======================= Cronómetro RCP (regla 4 min) ======================= */
+function toggleRcpTimer(){
+  if (!rcpRunning){
+    rcpRunning = true;
+    rcpStart = Date.now() - rcpElapsed*1000;
+    rcpTimer = setInterval(updateRcpTimer, 250);
+    document.getElementById('rcpTimerBtn').textContent = '⏸ Pausar cronómetro de paro';
+    if (!clockRunning) startClock();
+    toast('Cronómetro de paro cardiorrespiratorio materno iniciado', 'warn');
+  } else {
+    rcpRunning = false;
+    clearInterval(rcpTimer);
+    document.getElementById('rcpTimerBtn').textContent = '▶ Reanudar cronómetro';
+  }
+}
+function updateRcpTimer(){
+  rcpElapsed = (Date.now() - rcpStart) / 1000;
+  const disp = document.getElementById('rcpTimerDisplay');
+  disp.textContent = fmtMMSS(rcpElapsed);
+  disp.classList.toggle('warn', rcpElapsed >= 4*60);
+}
+
+/* ======================= Escala de triaje ======================= */
+function triageColorRank(c){ return c === 'rojo' ? 3 : c === 'amarillo' ? 2 : c === 'verde' ? 1 : 0; }
+function setTriage(key, color){
+  triageState[key] = triageState[key] === color ? null : color;
+  renderTriage();
+  saveDraft();
+}
+function classifyTriage(){
+  let worst = 0;
+  for (const g of TRIAGE_DATA) for (const it of g.items){
+    const c = triageState[it.key];
+    if (c) worst = Math.max(worst, triageColorRank(c));
+  }
+  if (worst === 3) return 'rojo';
+  if (worst === 2) return 'amarillo';
+  if (worst === 1) return 'verde';
+  return null;
+}
+function renderTriage(){
+  const c = document.getElementById('triageContainer');
+  let html = '';
+  for (const g of TRIAGE_DATA){
+    html += `<div class="triage-group"><h3>${escapeHtml(g.group)}</h3>`;
+    for (const it of g.items){
+      const sel = triageState[it.key];
+      const optsClass = it.amarillo ? 'triage-opts' : 'triage-opts two';
+      html += `<div class="triage-item"><div class="tname">${escapeHtml(it.name)}</div><div class="${optsClass}">`;
+      html += `<button type="button" class="triage-btn${sel==='rojo'?' active':''}" data-color="rojo" onclick="setTriage('${it.key}','rojo')"><span><b>Rojo</b>${escapeHtml(it.rojo)}</span></button>`;
+      if (it.amarillo) html += `<button type="button" class="triage-btn${sel==='amarillo'?' active':''}" data-color="amarillo" onclick="setTriage('${it.key}','amarillo')"><span><b>Amarillo</b>${escapeHtml(it.amarillo)}</span></button>`;
+      html += `<button type="button" class="triage-btn${sel==='verde'?' active':''}" data-color="verde" onclick="setTriage('${it.key}','verde')"><span><b>Verde</b>${escapeHtml(it.verde)}</span></button>`;
+      html += `</div></div>`;
+    }
+    html += `</div>`;
+  }
+  c.innerHTML = html;
+  const cls = classifyTriage();
+  const banner = document.getElementById('statusBannerTriage');
+  const dock = document.getElementById('dockClasif');
+  const dockT = document.getElementById('dockTriaje');
+  if (cls === 'rojo'){
+    banner.innerHTML = `<div class="status-banner rojo"><span>🔴 CÓDIGO ROJO — Activar Código ORO (voceo x3)</span></div>`;
+    dock.textContent = 'ROJO'; dockT.textContent = 'Rojo';
+  } else if (cls === 'amarillo'){
+    banner.innerHTML = `<div class="status-banner amarillo"><span>🟡 CÓDIGO AMARILLO — Alertar a ERIO (ext. 1401) y notificar a médico tratante</span></div>`;
+    dock.textContent = 'AMARILLO'; dockT.textContent = 'Amarillo';
+  } else if (cls === 'verde'){
+    banner.innerHTML = `<div class="status-banner verde"><span>🟢 CÓDIGO VERDE — Monitoreo y notificación al médico tratante</span></div>`;
+    dock.textContent = 'VERDE'; dockT.textContent = 'Verde';
+  } else {
+    banner.innerHTML = `<div class="status-banner neutral"><span>Sin datos — marca al menos un parámetro de la escala</span></div>`;
+    dock.textContent = '—'; dockT.textContent = 'Pendiente';
+  }
+}
+function clearTriage(){
+  askConfirm('Limpiar escala', '¿Borrar todas las marcas de la escala de valoración obstétrica?', 'Limpiar').then(ok=>{
+    if (!ok) return;
+    triageState = {};
+    renderTriage();
+    saveDraft();
+  });
+}
+
+/* ======================= Índice de choque ======================= */
+function calcShock(){
+  const fc = parseFloat(document.getElementById('shockFC').value);
+  const pas = parseFloat(document.getElementById('shockPAS').value);
+  const out = document.getElementById('shockResult');
+  if (!fc || !pas){ out.innerHTML = 'Ingresa FC y PAS para calcular'; return; }
+  const idx = fc / pas;
+  let cls = 'Normal', color = 'var(--success)';
+  if (idx > 0.8){ cls = 'Crítico (código Rojo)'; color = 'var(--critical)'; }
+  else if (idx >= 0.71){ cls = 'Alerta (código Amarillo)'; color = 'var(--warning)'; }
+  out.innerHTML = `Índice de choque: <b style="color:${color}">${idx.toFixed(2)}</b><br>${cls}`;
+  saveDraft();
+}
+
+/* ======================= Equipo ERIO ======================= */
+function stampErio(key){
+  if (!erioState[key]) erioState[key] = horaAhora();
+  else erioState[key] = null;
+  renderErio();
+  saveDraft();
+}
+function renderErio(){
+  const c = document.getElementById('erioContainer');
+  let html = '';
+  let count = 0;
+  for (const r of ERIO_DATA){
+    const stamped = erioState[r.key];
+    if (stamped) count++;
+    html += `<div class="init-row">
+      <div><div class="role-name">${escapeHtml(r.name)}</div><div class="role-desc">${escapeHtml(r.desc)}</div></div>
+      <div class="field"><label>Nombre</label><input type="text" id="erioNombre_${r.key}" oninput="saveDraft()" placeholder="nombre"></div>
+      <div>
+        <button class="btn ${stamped ? 'btn-ghost' : 'btn-primary'}" onclick="stampErio('${r.key}')">${stamped ? 'Deshacer llegada' : 'Marcar llegada'}</button>
+        <span class="stamp">${stamped ? escapeHtml(stamped) : ''}</span>
+      </div>
+    </div>`;
+  }
+  c.innerHTML = html;
+  document.getElementById('dockRoles').textContent = count + '/9';
+}
+
+/* ======================= Checklists genéricos ======================= */
+function buildCheckGrid(containerId, items){
+  const c = document.getElementById(containerId);
+  c.innerHTML = items.map(it => `
+    <label class="check-item">
+      <input type="checkbox" id="${it.id}" onchange="stampCheck('${it.id}')">
+      ${escapeHtml(it.label)}
+      <span class="stamp" id="stamp_${it.id}"></span>
+    </label>
+  `).join('');
+}
+const checkTimestamps = {};
+function stampCheck(id){
+  const checked = document.getElementById(id).checked;
+  checkTimestamps[id] = checked ? horaAhora() : null;
+  document.getElementById('stamp_' + id).textContent = checkTimestamps[id] || '';
+  saveDraft();
+}
+
+/* ======================= Otras causas ======================= */
+function renderOtras(){
+  const c = document.getElementById('otrasContainer');
+  c.innerHTML = OTRAS_DATA.map(o => `
+    <label class="check-item" style="align-items:flex-start; margin-bottom:10px;">
+      <input type="checkbox" id="otras_${o.key}" onchange="stampCheck('otras_${o.key}')" style="margin-top:3px;">
+      <span>
+        <b>${escapeHtml(o.name)}</b> — ${escapeHtml(o.clave)}
+        <span class="stamp" id="stamp_otras_${o.key}"></span>
+        <br><span style="font-size:0.78rem; color:var(--text-muted);">${escapeHtml(o.nota)}</span>
+      </span>
+    </label>
+  `).join('');
+}
+
+/* ======================= Milestones (línea de tiempo) ======================= */
+function mark(id){
+  milestoneState[id] = { t: horaAhora(), min: elapsedMinutes() };
+  renderMilestones();
+  saveDraft();
+}
+function unmark(id){
+  delete milestoneState[id];
+  renderMilestones();
+  saveDraft();
+}
+function renderMilestones(){
+  const list = document.getElementById('milestoneList');
+  if (!list) return;
+  let html = '';
+  MILESTONES.forEach((m, i) => {
+    const st = milestoneState[m.id];
+    let badge = '<span class="badge pending">Pendiente</span>';
+    if (st){
+      if (m.target != null){
+        badge = st.min <= m.target ? '<span class="badge ontime">A tiempo</span>' : '<span class="badge late">Fuera de meta</span>';
+      } else {
+        badge = '<span class="badge logged">Registrado</span>';
+      }
+    }
+    html += `<div class="milestone">
+      <div class="num">${i+1}</div>
+      <div class="info"><strong>${escapeHtml(m.name)}</strong>${m.desc ? '<span>' + escapeHtml(m.desc) + (m.target?` (meta ≤ ${m.target} min)`:'') + '</span>' : (m.target?`<span>Meta ≤ ${m.target} min</span>`:'')}</div>
+      <div class="status">
+        ${badge}
+        ${st ? `<span class="marked-time">${st.t} · min ${st.min.toFixed(1)}</span>` : ''}
+        <button class="btn ${st?'btn-ghost':'btn-primary'}" style="padding:6px 10px; font-size:0.74rem;" onclick="${st? 'unmark' : 'mark'}('${m.id}')">${st ? 'Deshacer' : 'Marcar ahora'}</button>
+      </div>
+    </div>`;
+  });
+  list.innerHTML = html;
+
+  const banner = document.getElementById('caseStatusBanner');
+  if (banner){
+    if (milestoneState['m_conclusion']){
+      banner.innerHTML = `<div class="status-banner verde"><span>✔ Código concluido</span><span class="t">${milestoneState['m_conclusion'].t}</span></div>`;
+    } else if (clockRunning){
+      banner.innerHTML = `<div class="status-banner rojo"><span>● Código Oro en curso</span><span class="t mono">${fmtMMSS(clockElapsed)}</span></div>`;
+    } else {
+      banner.innerHTML = `<div class="status-banner neutral"><span>Código no iniciado</span></div>`;
+    }
+  }
+}
+
+/* ======================= Eventos del caso ======================= */
+function logEvent(){
+  const tipo = document.getElementById('eventoTipoSelect').value;
+  const texto = document.getElementById('eventoTexto').value.trim();
+  if (!texto){ toast('Describe el evento antes de registrar'); return; }
+  eventLog.push({ t: horaAhora(), min: clockRunning ? elapsedMinutes() : null, tipo, texto });
+  document.getElementById('eventoTexto').value = '';
+  renderEventLog();
+  saveDraft();
+}
+function deleteEvent(idx){
+  eventLog.splice(idx,1);
+  renderEventLog();
+  saveDraft();
+}
+function renderEventLog(){
+  const list = document.getElementById('eventLogList');
+  list.innerHTML = eventLog.map((e,idx) => `
+    <div class="event-item">
+      <span class="et">${e.t}</span>
+      <span class="el"><b>${escapeHtml(e.tipo)}:</b> ${escapeHtml(e.texto)}</span>
+      <button onclick="deleteEvent(${idx})" title="Eliminar">✕</button>
+    </div>
+  `).join('');
+  document.getElementById('dockEventos').textContent = eventLog.length;
+}
+
+/* ======================= Radio rows genéricos ======================= */
+function buildRadioRow(containerId, items, name){
+  const c = document.getElementById(containerId);
+  c.innerHTML = items.map((label, i) => `
+    <div class="radio-pill">
+      <input type="radio" name="${name}" id="${name}_${i}" value="${escapeHtml(label)}" onchange="saveDraft()">
+      <label for="${name}_${i}">${escapeHtml(label)}</label>
+    </div>
+  `).join('');
+}
+function radioVal(name){
+  const el = document.querySelector(`input[name="${name}"]:checked`);
+  return el ? el.value : '—';
+}
+
+/* ======================= Debriefing ======================= */
+function buildDebriefTable(){
+  const tbody = document.getElementById('debriefTbody');
+  tbody.innerHTML = DEBRIEF_AREAS.map((area,i) => `
+    <tr>
+      <td><b>${escapeHtml(area)}</b></td>
+      <td><input type="text" id="db_fort_${i}" oninput="saveDraft()"></td>
+      <td><input type="text" id="db_mejora_${i}" oninput="saveDraft()"></td>
+      <td><input type="text" id="db_resp_${i}" oninput="saveDraft()"></td>
+      <td><input type="date" id="db_fechacomp_${i}" oninput="saveDraft()"></td>
+    </tr>
+  `).join('');
+}
+const starState = { starComunicacion:0, starLiderazgo:0, starHabilidades:0 };
+function buildStarRow(containerId, stateKey){
+  const c = document.getElementById(containerId);
+  const v = starState[stateKey] || 0;
+  c.innerHTML = [1,2,3,4,5].map(n => `<button type="button" class="star-btn${n<=v?' on':''}" onclick="setStar('${containerId}','${stateKey}',${n})">★</button>`).join('') +
+    `<span class="mono" style="margin-left:6px; color:var(--text-muted); font-size:0.8rem;">${v}/5</span>`;
+}
+function setStar(containerId, stateKey, n){
+  starState[stateKey] = (starState[stateKey] === n) ? n-1 : n;
+  buildStarRow(containerId, stateKey);
+  saveDraft();
+}
+
+/* ======================= Guardado / historial ======================= */
+function loadLocalHistory(){
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e){ return []; }
+}
+function persistLocalHistory(list){
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(list)); return true; } catch(e){ return false; }
+}
+function buildRecord(){
+  return {
+    id: caseId || ('ORO-' + Date.now()),
+    folio: val('f_folio') !== '—' ? val('f_folio') : (caseId||''),
+    fecha: val('f_fecha'),
+    estado: classifyTriage() || '—',
+    duracionMin: clockElapsed ? +(clockElapsed/60).toFixed(2) : null,
+    capturadoPor: val('capturadoPor'),
+    informe: buildReportText(),
+    horaActivacion: val('f_horaActivacion'),
+    nombrePac: val('f_nombrePac'),
+    edadGest: val('f_edadGest'),
+    lugar: val('f_lugar'),
+    lider: val('f_lider'),
+    activadoPor: val('f_activadoPor'),
+    motivo: val('f_motivo'),
+    triageState, erioState, checkTimestamps, eventLog, milestoneState,
+    desenlace: radioVal('desenlace'),
+    savedAt: new Date().toISOString(),
+  };
+}
+function saveCaseLocal(silent){
+  if (!caseId) caseId = 'ORO-' + Date.now();
+  const rec = buildRecord();
+  let list = loadLocalHistory();
+  const idx = list.findIndex(c => c.id === rec.id);
+  if (idx >= 0) list[idx] = rec; else list.push(rec);
+  persistLocalHistory(list);
+  syncToServer(rec);
+  if (!silent) toast('Caso guardado', 'ok');
+  renderCases();
+}
+async function syncToServer(rec){
+  setSyncPill('Sincronizando…', '');
+  try {
+    const res = await fetch('/api/casos', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(rec)
+    });
+    if (res.ok) setSyncPill('Sincronizado con el servidor', 'ok');
+    else setSyncPill('No se pudo sincronizar (guardado local)', 'warn');
+  } catch(e){
+    setSyncPill('Sin conexión — guardado solo local', 'warn');
+  }
+}
+function setSyncPill(text, cls){
+  const el = document.getElementById('syncPill');
+  el.textContent = text;
+  el.className = 'sync-pill' + (cls ? ' ' + cls : '');
+}
+async function refreshFromServer(){
+  try {
+    const res = await fetch('/api/casos');
+    if (!res.ok) return;
+    const serverCases = await res.json();
+    let local = loadLocalHistory();
+    const byId = {}; local.forEach(c => byId[c.id] = c);
+    serverCases.forEach(c => { byId[c.id] = c; });
+    persistLocalHistory(Object.values(byId));
+    renderCases();
+  } catch(e){ /* offline, ignore */ }
+}
+function allCases(){ return loadLocalHistory().sort((a,b) => (b.savedAt||'').localeCompare(a.savedAt||'')); }
+function renderCases(){
+  const list = allCases();
+  const el = document.getElementById('caseList');
+  if (!list.length){ el.innerHTML = '<p class="sub">Sin casos guardados todavía.</p>'; return; }
+  el.innerHTML = list.map(c => `
+    <div class="case-item">
+      <div class="meta">
+        <b>${escapeHtml(c.folio || c.id)} — ${escapeHtml(c.nombrePac||'sin nombre')}</b>
+        <span>${escapeHtml(c.fecha||'')} ${escapeHtml(c.horaActivacion||'')} · ${escapeHtml(c.motivo||'')} · Clasif: ${escapeHtml(c.estado||'—')}</span>
+      </div>
+      <div class="acts">
+        <button class="btn btn-ghost" onclick="viewCaseReport('${c.id}')">Ver reporte</button>
+      </div>
+    </div>
+  `).join('');
+}
+function viewCaseReport(id){
+  const c = allCases().find(x => x.id === id);
+  if (!c) return;
+  const pre = document.getElementById('summaryPre');
+  pre.style.display = 'block';
+  pre.textContent = c.informe || '(sin informe generado)';
+  jumpToSection('regReporte');
+}
+
+/* ======================= Reporte de texto ======================= */
+function checkedList(items, timestamps){
+  return items.filter(it => document.getElementById(it.id) && document.getElementById(it.id).checked)
+    .map(it => '  ✔ ' + it.label + (timestamps[it.id] ? ' (' + timestamps[it.id] + ')' : ''));
+}
+function buildReportText(){
+  const cls = classifyTriage();
+  const lines = [];
+  lines.push('REPORTE CÓDIGO ORO — Hospital CIMA');
+  lines.push('====================================');
+  lines.push('Folio: ' + val('f_folio'));
+  lines.push('Fecha: ' + val('f_fecha') + '   Hora de activación: ' + val('f_horaActivacion'));
+  lines.push('Paciente: ' + val('f_nombrePac') + '   Edad gestacional: ' + val('f_edadGest'));
+  lines.push('Lugar/servicio: ' + val('f_lugar'));
+  lines.push('Líder ERIO: ' + val('f_lider') + '   Activado por: ' + val('f_activadoPor'));
+  lines.push('Motivo principal: ' + val('f_motivo'));
+  lines.push('Clasificación del triaje: ' + (cls ? cls.toUpperCase() : '—'));
+  lines.push('Duración total: ' + (clockElapsed ? fmtMMSS(clockElapsed) : '—'));
+  lines.push('');
+  lines.push('--- Línea de tiempo ---');
+  MILESTONES.forEach(m => {
+    const st = milestoneState[m.id];
+    lines.push('  ' + m.name + ': ' + (st ? st.t + ' (min ' + st.min.toFixed(1) + ')' : 'no registrado'));
+  });
+  lines.push('');
+  lines.push('--- Equipo ERIO ---');
+  ERIO_DATA.forEach(r => {
+    const st = erioState[r.key];
+    const nombreEl = document.getElementById('erioNombre_' + r.key);
+    const nombre = nombreEl ? nombreEl.value : '';
+    lines.push('  ' + r.name + (nombre ? ' — ' + nombre : '') + (st ? ' — llegó ' + st : ' — sin registrar'));
+  });
+  lines.push('');
+  lines.push('--- Checklist de activación ---');
+  lines.push(...checkedList(ACTIVACION_ITEMS, checkTimestamps));
+  lines.push('');
+  lines.push('--- Hemorragia postparto ---');
+  lines.push(...checkedList(HPP_DIAG, checkTimestamps));
+  lines.push(...checkedList(HPP_FARM, checkTimestamps));
+  lines.push(...checkedList(HPP_AVANZ, checkTimestamps));
+  lines.push('');
+  lines.push('--- Crisis hipertensiva / eclampsia ---');
+  lines.push(...checkedList(HTN_TA, checkTimestamps));
+  lines.push(...checkedList(HTN_MG, checkTimestamps));
+  lines.push(...checkedList(HTN_SEG, checkTimestamps));
+  lines.push('');
+  lines.push('--- RCP obstétrica ---');
+  lines.push(...checkedList(RCP_MOD, checkTimestamps));
+  lines.push(...checkedList(RCP_VIA, checkTimestamps));
+  lines.push(...checkedList(RCP_HIST, checkTimestamps));
+  lines.push('');
+  lines.push('--- Otras causas ---');
+  OTRAS_DATA.forEach(o => {
+    const id = 'otras_' + o.key;
+    const el = document.getElementById(id);
+    if (el && el.checked) lines.push('  ✔ ' + o.name + (checkTimestamps[id] ? ' (' + checkTimestamps[id] + ')' : ''));
+  });
+  lines.push('');
+  lines.push('--- Eventos del caso ---');
+  eventLog.forEach(e => lines.push('  ' + e.t + ' — [' + e.tipo + '] ' + e.texto));
+  lines.push('');
+  lines.push('Desenlace: ' + radioVal('desenlace'));
+  lines.push('Capturado por: ' + val('capturadoPor'));
+  lines.push('');
+  lines.push('(Generado automáticamente — no sustituye el expediente clínico oficial)');
+  return lines.join('\n');
+}
+function generateSummary(){
+  const pre = document.getElementById('summaryPre');
+  pre.style.display = 'block';
+  pre.textContent = buildReportText();
+  document.getElementById('summaryPrintArea').innerHTML = '<pre style="white-space:pre-wrap; font-family:monospace;">' + escapeHtml(buildReportText()) + '</pre>';
+  toast('Reporte generado');
+}
+function copySummary(){
+  const text = buildReportText();
+  navigator.clipboard ? navigator.clipboard.writeText(text).then(()=>toast('Reporte copiado','ok')).catch(()=>toast('No se pudo copiar')) : toast('No se pudo copiar');
+}
+function printSummary(){
+  generateSummary();
+  document.body.classList.add('printing');
+  window.print();
+  setTimeout(()=>document.body.classList.remove('printing'), 500);
+}
+function downloadReport(){
+  const text = buildReportText();
+  const blob = new Blob([text], { type:'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (val('f_folio') !== '—' ? val('f_folio') : 'codigo-oro') + '.txt';
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function saveMailPrefs(){
+  try {
+    localStorage.setItem('oro_mail_to', document.getElementById('mailTo').value);
+    localStorage.setItem('oro_mail_cc', document.getElementById('mailCc').value);
+    localStorage.setItem('oro_captura', (document.getElementById('capturadoPor')||{}).value || '');
+  } catch(e){}
+}
+function loadMailPrefs(){
+  try {
+    const to = localStorage.getItem('oro_mail_to'); if (to) document.getElementById('mailTo').value = to;
+    const cc = localStorage.getItem('oro_mail_cc'); if (cc) document.getElementById('mailCc').value = cc;
+    document.getElementById('capturadoPor').value = localStorage.getItem('oro_captura') || '';
+  } catch(e){}
+}
+function buildMailUrl(){
+  const to = encodeURIComponent(document.getElementById('mailTo').value || '');
+  const cc = encodeURIComponent(document.getElementById('mailCc').value || '');
+  const subject = encodeURIComponent('Reporte Código Oro — ' + val('f_folio'));
+  const body = encodeURIComponent(buildReportText());
+  return `mailto:${to}?cc=${cc}&subject=${subject}&body=${body}`;
+}
+function sendReportByMail(){
+  generateSummary();
+  window.location.href = buildMailUrl();
+}
+function printQR(){
+  const w = window.open('/api/qr', '_blank');
+  if (!w) toast('Habilita ventanas emergentes para ver el QR');
+}
+function sharePage(){
+  const url = window.location.origin + '/';
+  if (navigator.share) navigator.share({ title:'Código Oro — CIMA', url }).catch(()=>{});
+  else copyLink();
+}
+function copyLink(){
+  const url = window.location.origin + '/';
+  navigator.clipboard ? navigator.clipboard.writeText(url).then(()=>toast('Enlace copiado','ok')) : toast(url);
+}
+
+/* ======================= Finalizar / nuevo caso ======================= */
+function finishCase(){
+  mark('m_conclusion');
+  clockRunning = false;
+  clearInterval(clockTimer);
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('finishBtn').disabled = true;
+  saveCaseLocal(false);
+  generateSummary();
+  showTab('registro');
+  toast('Código concluido — reporte y caso guardados', 'ok');
+}
+async function resetAll(){
+  const ok = await askConfirm('Nuevo caso', '¿Deseas iniciar un nuevo caso? Si no has guardado el actual, se perderá la información en pantalla (el historial guardado no se borra).', 'Iniciar nuevo caso');
+  if (!ok) return;
+  try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+  window.location.reload();
+}
+
+/* ======================= Guardado de borrador ======================= */
+let saveDraftTimer = null;
+function saveDraft(){
+  clearTimeout(saveDraftTimer);
+  saveDraftTimer = setTimeout(()=>{
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify(collectState())); } catch(e){}
+  }, 250);
+}
+function collectState(){
+  const fieldIds = ['f_fecha','f_horaActivacion','f_folio','f_nombrePac','f_edadGest','f_lugar','f_lider','f_activadoPor','f_motivo',
+    'shockFC','shockPAS','capturadoPor','db_escenario','db_participantes','db_facilitador','db_duracion','db_fecha','db_firmaInstructor','db_firmaJefe'];
+  const fields = {};
+  fieldIds.forEach(id => { const el = document.getElementById(id); if (el) fields[id] = el.value; });
+  ERIO_DATA.forEach(r => { const el = document.getElementById('erioNombre_' + r.key); if (el) fields['erioNombre_' + r.key] = el.value; });
+  for (let i=0;i<DEBRIEF_AREAS.length;i++){
+    ['db_fort_','db_mejora_','db_resp_','db_fechacomp_'].forEach(pref => {
+      const el = document.getElementById(pref + i); if (el) fields[pref+i] = el.value;
+    });
+  }
+  const checkedIds = {};
+  [...ACTIVACION_ITEMS, ...HPP_DIAG, ...HPP_FARM, ...HPP_AVANZ, ...HTN_TA, ...HTN_MG, ...HTN_SEG, ...RCP_MOD, ...RCP_VIA, ...RCP_HIST]
+    .forEach(it => { const el = document.getElementById(it.id); if (el) checkedIds[it.id] = el.checked; });
+  OTRAS_DATA.forEach(o => { const el = document.getElementById('otras_' + o.key); if (el) checkedIds['otras_' + o.key] = el.checked; });
+  return {
+    caseId, clockElapsed, clockRunning,
+    fields, checkedIds, checkTimestamps,
+    triageState, erioState, eventLog, milestoneState,
+    desenlace: radioVal('desenlace'),
+    starComunicacion: starState.starComunicacion, starLiderazgo: starState.starLiderazgo, starHabilidades: starState.starHabilidades,
+  };
+}
+function applyState(s){
+  if (!s) return;
+  caseId = s.caseId || null;
+  if (s.fields) Object.keys(s.fields).forEach(id => { const el = document.getElementById(id); if (el) el.value = s.fields[id]; });
+  if (s.checkedIds) Object.keys(s.checkedIds).forEach(id => { const el = document.getElementById(id); if (el) el.checked = s.checkedIds[id]; });
+  Object.assign(checkTimestamps, s.checkTimestamps || {});
+  Object.keys(checkTimestamps).forEach(id => { const el = document.getElementById('stamp_' + id); if (el) el.textContent = checkTimestamps[id] || ''; });
+  triageState = s.triageState || {};
+  erioState = s.erioState || {};
+  eventLog = s.eventLog || [];
+  milestoneState = s.milestoneState || {};
+  if (s.desenlace){ const el = document.querySelector(`input[name="desenlace"][value="${CSS.escape(s.desenlace)}"]`); if (el) el.checked = true; }
+  starState.starComunicacion = s.starComunicacion || 0;
+  starState.starLiderazgo = s.starLiderazgo || 0;
+  starState.starHabilidades = s.starHabilidades || 0;
+  clockElapsed = s.clockElapsed || 0;
+  document.getElementById('clockDisplay').textContent = fmtMMSS(clockElapsed);
+  if (s.clockRunning){
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('finishBtn').disabled = false;
+    clockStart = Date.now() - clockElapsed*1000;
+    clockRunning = true;
+    clockTimer = setInterval(updateClock, 250);
+  }
+}
+function loadDraft(){
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e){ return null; }
+}
+
+/* ======================= Tema ======================= */
+function setTheme(mode){
+  const root = document.documentElement;
+  if (mode === 'light') root.setAttribute('data-theme','light');
+  else if (mode === 'dark') root.setAttribute('data-theme','dark');
+  else root.removeAttribute('data-theme');
+  try { localStorage.setItem('oro_theme', mode); } catch(e){}
+  document.querySelectorAll('[data-theme-set]').forEach(b => b.setAttribute('aria-pressed', b.getAttribute('data-theme-set') === mode ? 'true' : 'false'));
+}
+function initTheme(){
+  let saved = 'auto';
+  try { saved = localStorage.getItem('oro_theme') || 'auto'; } catch(e){}
+  setTheme(saved);
+}
+
+/* ======================= Inicialización ======================= */
+function initSections(){
+  renderTriage();
+  renderErio();
+  buildCheckGrid('activacionCheckGrid', ACTIVACION_ITEMS);
+  buildCheckGrid('hppDiagGrid', HPP_DIAG);
+  buildCheckGrid('hppFarmGrid', HPP_FARM);
+  buildCheckGrid('hppAvanzGrid', HPP_AVANZ);
+  buildCheckGrid('htnTaGrid', HTN_TA);
+  buildCheckGrid('htnMgGrid', HTN_MG);
+  buildCheckGrid('htnSegGrid', HTN_SEG);
+  buildCheckGrid('rcpModGrid', RCP_MOD);
+  buildCheckGrid('rcpViaGrid', RCP_VIA);
+  buildCheckGrid('rcpHistGrid', RCP_HIST);
+  renderOtras();
+  buildRadioRow('desenlaceRow', DESENLACE_OPTS, 'desenlace');
+  renderMilestones();
+  renderEventLog();
+  buildDebriefTable();
+  buildStarRow('starComunicacion', 'starComunicacion');
+  buildStarRow('starLiderazgo', 'starLiderazgo');
+  buildStarRow('starHabilidades', 'starHabilidades');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  initSections();
+  const draft = loadDraft();
+  if (draft) applyState(draft);
+  renderTriage();
+  renderErio();
+  renderMilestones();
+  renderEventLog();
+  buildStarRow('starComunicacion', 'starComunicacion');
+  buildStarRow('starLiderazgo', 'starLiderazgo');
+  buildStarRow('starHabilidades', 'starHabilidades');
+  loadMailPrefs();
+  renderCases();
+  updateStickyOffset();
+  refreshFromServer();
+  window.addEventListener('beforeunload', saveDraft);
+  setInterval(saveDraft, 10000);
+});
+</script>
+</body>
+</html>

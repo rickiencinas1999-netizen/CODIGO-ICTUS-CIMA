@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: codigo-oro-cima
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 22

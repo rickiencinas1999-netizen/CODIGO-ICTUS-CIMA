@@ -1,0 +1,29 @@
+{
+  "name": "codigo-oro-cima",
+  "version": "1.0.0",
+  "description": "Código Oro",
+  "main": "server/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rickiencinas1999-netizen/codigo-ictus-cima.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rickiencinas1999-netizen/codigo-ictus-cima/issues"
+  },
+  "homepage": "https://github.com/rickiencinas1999-netizen/codigo-ictus-cima#readme",
+  "dependencies": {
+    "better-sqlite3": "^13.0.3",
+    "express": "^5.2.1",
+    "qrcode": "^1.5.4"
+  }
+}
