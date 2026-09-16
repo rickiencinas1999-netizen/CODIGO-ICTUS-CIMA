@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Subcomité de Trasplante Renal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap');
+
+:root{
+  --bg:#f3f5f2;
+  --surface:#ffffff;
+  --surface-2:#eaf0ec;
+  --border:#d5ded9;
+  --text:#182420;
+  --text-muted:#5d6d67;
+  --teal:#0f5f57;
+  --teal-dark:#0a423c;
+  --teal-tint:#e3f0ee;
+  --navy:#1c3144;
+  --accent:#dd5138;
+  --accent-tint:#fbe7e2;
+  --success:#2f8f5b;
+  --success-bg:#e4f3ea;
+  --warning:#b1780f;
+  --warning-bg:#faf1de;
+  --critical:#c1443a;
+  --critical-bg:#fbe8e5;
+  --neutral-chip:#8a978f;
+  --neutral-chip-bg:#eef1ee;
+  --shadow: 0 1px 2px rgba(20,35,30,.06), 0 6px 16px -8px rgba(20,35,30,.15);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111a17;
+    --surface:#182420;
+    --surface-2:#1d2b26;
+    --border:#2d3d37;
+    --text:#eaf2ee;
+    --text-muted:#9fb3ac;
+    --teal:#4bab9d;
+    --teal-dark:#3a8f83;
+    --teal-tint:#1b322e;
+    --navy:#9fb6c9;
+    --accent:#ef8168;
+    --accent-tint:#3a231c;
+    --success:#63c68b;
+    --success-bg:#173325;
+    --warning:#e0ad4d;
+    --warning-bg:#332b16;
+    --critical:#e78a80;
+    --critical-bg:#3a201d;
+    --neutral-chip:#8ba098;
+    --neutral-chip-bg:#22302b;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px -8px rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111a17;
+  --surface:#182420;
+  --surface-2:#1d2b26;
+  --border:#2d3d37;
+  --text:#eaf2ee;
+  --text-muted:#9fb3ac;
+  --teal:#4bab9d;
+  --teal-dark:#3a8f83;
+  --teal-tint:#1b322e;
+  --navy:#9fb6c9;
+  --accent:#ef8168;
+  --accent-tint:#3a231c;
+  --success:#63c68b;
+  --success-bg:#173325;
+  --warning:#e0ad4d;
+  --warning-bg:#332b16;
+  --critical:#e78a80;
+  --critical-bg:#3a201d;
+  --neutral-chip:#8ba098;
+  --neutral-chip-bg:#22302b;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 20px -8px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  font-size:14.5px;
+  line-height:1.45;
+  padding-inline:16px;
+}
+h1,h2,h3{
+  font-family:'Barlow Semi Condensed', 'Segoe UI', system-ui, sans-serif;
+  letter-spacing:.2px;
+  margin:0;
+  text-wrap:balance;
+}
+.wrap{max-width:840px; margin:0 auto; padding-block:18px 64px;}
+
+/* ---------- Header ---------- */
+.masthead{
+  display:flex; align-items:center; gap:16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px 20px;
+  box-shadow:var(--shadow);
+  position:sticky; top:env(safe-area-inset-top, 0px);
+  z-index:5;
+  flex-wrap:wrap;
+}
+.masthead img{height:40px; width:auto; display:block; flex-shrink:0;}
+.masthead .titles{flex:1; min-width:220px;}
+.masthead h1{font-size:1.5rem; font-weight:700; color:var(--teal-dark);}
+.masthead .sub{font-size:.82rem; color:var(--text-muted); margin-top:2px;}
+.masthead .draftbadge{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.68rem; color:var(--text-muted);
+  white-space:nowrap;
+}
+
+/* ---------- Banner (draft restore) ---------- */
+.banner{
+  margin-top:14px; padding:10px 14px; border-radius:10px;
+  background:var(--teal-tint); border:1px solid var(--teal);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  font-size:.85rem;
+}
+.banner button{margin-left:auto;}
+.hide{display:none !important;}
+
+/* ---------- Sections ---------- */
+section.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 20px 20px;
+  margin-top:16px;
+  box-shadow:var(--shadow);
+}
+section.card > h2{
+  font-size:1.05rem; font-weight:700; color:var(--teal-dark);
+  display:flex; align-items:center; gap:8px;
+  padding-bottom:10px; margin-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+section.card > h2 .num{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.72rem; color:var(--surface);
+  background:var(--teal);
+  border-radius:6px; padding:2px 7px;
+}
+.hint{font-size:.78rem; color:var(--text-muted); margin:-8px 0 12px;}
+
+/* ---------- Field grid ---------- */
+.grid{display:grid; grid-template-columns:repeat(3, 1fr); gap:12px 16px;}
+.grid.two{grid-template-columns:repeat(2, 1fr);}
+@media (max-width:640px){ .grid, .grid.two{grid-template-columns:1fr;} }
+.field label{
+  display:block; font-size:.72rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:.04em; color:var(--text-muted); margin-bottom:4px;
+}
+.field input[type=text], .field input[type=date], .field input[type=number],
+.field input[type=time], .field select, .field textarea{
+  width:100%; padding:8px 10px; border-radius:8px;
+  border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text); font:inherit; font-size:.88rem;
+}
+.field textarea{resize:vertical; min-height:64px; font-family:inherit;}
+.field input:focus, .field select:focus, .field textarea:focus{
+  outline:2px solid var(--teal); outline-offset:1px;
+}
+.field.readout input{font-family:'IBM Plex Mono', monospace; font-weight:500;}
+.field .derived{
+  font-family:'IBM Plex Mono', monospace; font-size:.95rem; font-weight:600;
+  padding:8px 10px; border-radius:8px; background:var(--surface-2);
+  border:1px dashed var(--border); color:var(--teal-dark);
+}
+.bmi-tag{
+  display:inline-block; margin-left:8px; font-family:'IBM Plex Sans';
+  font-size:.68rem; font-weight:600; padding:2px 8px; border-radius:99px;
+  vertical-align:middle;
+}
+
+/* ---------- Checklist rows ---------- */
+details.group{
+  border:1px solid var(--border); border-radius:10px; margin-bottom:10px;
+  background:var(--surface-2); overflow:hidden;
+}
+details.group summary{
+  list-style:none; cursor:pointer; padding:10px 14px;
+  font-weight:600; font-size:.88rem; color:var(--teal-dark);
+  display:flex; align-items:center; gap:8px;
+}
+details.group summary::-webkit-details-marker{display:none;}
+details.group summary::before{
+  content:'▸'; font-size:.75rem; color:var(--teal); transition:transform .15s;
+}
+details.group[open] summary::before{transform:rotate(90deg);}
+details.group summary .count{
+  margin-left:auto; font-family:'IBM Plex Mono', monospace; font-size:.7rem;
+  color:var(--text-muted); font-weight:500;
+}
+.group-body{padding:2px 12px 10px;}
+
+.row{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  padding:8px 4px; border-bottom:1px solid var(--border);
+}
+.row:last-child{border-bottom:none;}
+.row .label{flex:1 1 240px; font-size:.87rem; min-width:180px;}
+.row .status{display:flex; gap:4px; flex-shrink:0;}
+.row .status input{position:absolute; opacity:0; width:1px; height:1px;}
+.row .status label{
+  font-size:.72rem; font-weight:600; padding:5px 10px; border-radius:7px;
+  border:1px solid var(--border); color:var(--text-muted); cursor:pointer;
+  background:var(--surface); user-select:none; white-space:nowrap;
+}
+.row .status input:focus-visible + label{outline:2px solid var(--teal); outline-offset:1px;}
+.row .status input[value="completo"]:checked + label{background:var(--success-bg); border-color:var(--success); color:var(--success);}
+.row .status input[value="incompleto"]:checked + label{background:var(--critical-bg); border-color:var(--critical); color:var(--critical);}
+.row .status input[value="na"]:checked + label{background:var(--neutral-chip-bg); border-color:var(--neutral-chip); color:var(--neutral-chip);}
+.row .comment{
+  flex:1 1 100%; margin-top:2px;
+}
+.row .comment input{
+  width:100%; padding:6px 9px; border-radius:7px; border:1px solid var(--border);
+  background:var(--surface); font-size:.8rem; color:var(--text);
+}
+.row.custom .label input{
+  width:100%; padding:6px 9px; border-radius:7px; border:1px solid var(--border);
+  background:var(--surface); font-size:.85rem; color:var(--text);
+}
+.row .remove{
+  flex-shrink:0; border:none; background:none; color:var(--critical);
+  cursor:pointer; font-size:.95rem; padding:4px 6px; line-height:1;
+}
+
+.addrow-btn{
+  margin-top:8px; border:1px dashed var(--teal); background:transparent;
+  color:var(--teal-dark); font-weight:600; font-size:.8rem;
+  padding:7px 12px; border-radius:8px; cursor:pointer;
+}
+.addrow-btn:hover{background:var(--teal-tint);}
+
+/* ---------- Acuerdos ---------- */
+.acuerdo-row{display:flex; gap:8px; align-items:flex-start; margin-bottom:8px;}
+.acuerdo-row .idx{
+  font-family:'IBM Plex Mono', monospace; font-size:.78rem; color:var(--teal);
+  padding-top:9px; width:20px; flex-shrink:0; text-align:right;
+}
+.acuerdo-row textarea{flex:1; min-height:42px;}
+
+/* ---------- Resolution ---------- */
+.resolution{
+  border-radius:12px; border:2px solid var(--border); padding:16px;
+  transition:border-color .15s, background-color .15s;
+  background:var(--surface-2);
+}
+.resolution.state-aprobado{border-color:var(--success); background:var(--success-bg);}
+.resolution.state-condicionado{border-color:var(--warning); background:var(--warning-bg);}
+.resolution.state-no{border-color:var(--critical); background:var(--critical-bg);}
+.reso-options{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:14px;}
+.reso-options input{position:absolute; opacity:0; width:1px; height:1px;}
+.reso-options label{
+  flex:1 1 160px; text-align:center; padding:12px 10px; border-radius:10px;
+  border:1px solid var(--border); background:var(--surface); cursor:pointer;
+  font-weight:700; font-size:.92rem; color:var(--text-muted);
+}
+.reso-options input:focus-visible + label{outline:2px solid var(--teal); outline-offset:2px;}
+#res-aprobado:checked + label{background:var(--success-bg); border-color:var(--success); color:var(--success);}
+#res-condicionado:checked + label{background:var(--warning-bg); border-color:var(--warning); color:var(--warning);}
+#res-no:checked + label{background:var(--critical-bg); border-color:var(--critical); color:var(--critical);}
+
+/* ---------- Actions ---------- */
+.actionbar{
+  display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;
+}
+button.btn{
+  font:inherit; font-weight:600; font-size:.85rem; padding:10px 16px;
+  border-radius:9px; cursor:pointer; border:1px solid var(--border);
+  background:var(--surface); color:var(--text);
+}
+button.btn.primary{background:var(--teal); border-color:var(--teal); color:#fff;}
+button.btn.ghost{background:transparent;}
+button.btn.danger{color:var(--critical); border-color:var(--critical);}
+button.btn:hover{filter:brightness(0.97);}
+
+.summary-box{margin-top:14px;}
+.summary-box textarea{
+  width:100%; min-height:260px; font-family:'IBM Plex Mono', monospace;
+  font-size:.76rem; padding:12px; border-radius:9px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); line-height:1.5;
+}
+.copyline{font-size:.78rem; color:var(--text-muted); margin-top:6px;}
+
+footer.foot{
+  text-align:center; font-size:.72rem; color:var(--text-muted);
+  margin-top:28px; padding-top:14px; border-top:1px solid var(--border);
+}
+
+/* ---------- Print ---------- */
+@media print{
+  body{background:#fff; font-size:11.5px; padding-inline:0;}
+  .wrap{max-width:100%; padding-block:0;}
+  .masthead{position:static; box-shadow:none;}
+  section.card, .masthead{box-shadow:none; border:1px solid #ccc;}
+  .actionbar, .banner, .addrow-btn, .row .remove, .summary-box{display:none !important;}
+  details.group{border:1px solid #ccc;}
+  details.group > *:not(summary){display:block !important;}
+  details.group summary::before{display:none;}
+  .row .status input{position:absolute;}
+  .row .status label{border:1px solid #999; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+  a[href]::after{content:none;}
+  footer.foot{margin-top:12px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <img src="data:image/png;base64,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" alt="Logo CIMA - Hospital Privado de Hermosillo">
+    <div class="titles">
+      <h1>Subcomité de Trasplante Renal</h1>
+      <div class="sub">Lista de verificación para presentación y dictamen de casos · CIMA</div>
+    </div>
+    <div class="draftbadge" id="draft-status"></div>
+  </header>
+
+  <div class="banner hide" id="restore-banner">
+    <span id="restore-text">Se encontró un borrador guardado en este navegador.</span>
+    <button class="btn ghost" id="btn-discard-draft" type="button">Descartar</button>
+    <button class="btn primary" id="btn-restore-draft" type="button">Continuar borrador</button>
+  </div>
+
+  <!-- 1. Datos de la sesión -->
+  <section class="card">
+    <h2><span class="num">1</span> Datos de la sesión</h2>
+    <div class="grid">
+      <div class="field"><label for="f-fecha">Fecha de la sesión</label><input type="date" id="f-fecha" data-field="fecha_sesion"></div>
+      <div class="field"><label for="f-hora-inicio">Hora de inicio</label><input type="time" id="f-hora-inicio" data-field="hora_inicio"></div>
+      <div class="field"><label for="f-hora-fin">Hora de término</label><input type="time" id="f-hora-fin" data-field="hora_fin"></div>
+      <div class="field"><label for="f-folio">Folio / No. de acta</label><input type="text" id="f-folio" data-field="folio" placeholder="STR-2026-00"></div>
+      <div class="field"><label for="f-modalidad">Modalidad</label>
+        <select id="f-modalidad" data-field="modalidad">
+          <option value="">Seleccionar…</option>
+          <option value="presencial">Presencial</option>
+          <option value="hibrida">Híbrida</option>
+          <option value="virtual">Virtual</option>
+        </select>
+      </div>
+      <div class="field"><label for="f-presenta">Médico que presenta el caso</label><input type="text" id="f-presenta" data-field="medico_presenta"></div>
+    </div>
+    <div class="field" style="margin-top:12px;">
+      <label for="f-asistentes">Integrantes / asistentes presentes</label>
+      <textarea id="f-asistentes" data-field="asistentes" placeholder="Director Médico, Subdirector Médico, Jefe de Trasplantes, Responsable del programa de T. Renal, vocales, coordinación de trasplante, invitados…"></textarea>
+    </div>
+  </section>
+
+  <!-- 2. Identificación del paciente -->
+  <section class="card">
+    <h2><span class="num">2</span> Datos de identificación del paciente</h2>
+    <div class="grid">
+      <div class="field"><label for="f-nombre">Nombre completo</label><input type="text" id="f-nombre" data-field="nombre"></div>
+      <div class="field"><label for="f-nac">Fecha de nacimiento</label><input type="date" id="f-nac" data-field="fecha_nacimiento"></div>
+      <div class="field readout"><label for="f-edad">Edad</label><input type="text" id="f-edad" data-field="edad_calc" readonly placeholder="—"></div>
+      <div class="field"><label for="f-sexo">Sexo</label>
+        <select id="f-sexo" data-field="sexo">
+          <option value="">Seleccionar…</option>
+          <option value="femenino">Femenino</option>
+          <option value="masculino">Masculino</option>
+        </select>
+      </div>
+      <div class="field"><label for="f-expediente">No. de expediente</label><input type="text" id="f-expediente" data-field="expediente"></div>
+      <div class="field"><label for="f-origen">Origen / residencia</label><input type="text" id="f-origen" data-field="origen"></div>
+    </div>
+    <div class="grid two" style="margin-top:12px;">
+      <div class="field"><label for="f-diagnostico">Diagnóstico / etiología de ERC</label><input type="text" id="f-diagnostico" data-field="diagnostico" placeholder="Enfermedad renal crónica estadio 5, secundaria a…"></div>
+      <div class="field"><label for="f-trsustitutiva">Terapia renal sustitutiva</label><input type="text" id="f-trsustitutiva" data-field="terapia_sustitutiva" placeholder="Hemodiálisis / diálisis peritoneal, tiempo de tratamiento"></div>
+    </div>
+    <div class="field" style="margin-top:12px;">
+      <label for="f-tipotx">Tipo de trasplante candidato</label>
+      <select id="f-tipotx" data-field="tipo_trasplante">
+        <option value="">Seleccionar…</option>
+        <option value="vivo-relacionado">Donante vivo relacionado</option>
+        <option value="vivo-no-relacionado">Donante vivo no relacionado</option>
+        <option value="fallecido">Donante fallecido (muerte encefálica)</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- 3. Antropometría y grupo sanguíneo -->
+  <section class="card">
+    <h2><span class="num">3</span> Datos antropométricos y grupo sanguíneo</h2>
+    <div class="grid">
+      <div class="field"><label for="f-peso">Peso (kg)</label><input type="number" step="0.1" min="0" id="f-peso" data-field="peso"></div>
+      <div class="field"><label for="f-talla">Talla (cm)</label><input type="number" step="0.1" min="0" id="f-talla" data-field="talla"></div>
+      <div class="field readout">
+        <label for="f-imc">IMC calculado</label>
+        <input type="text" id="f-imc" data-field="imc_calc" readonly placeholder="—">
+      </div>
+      <div class="field"><label for="f-grupo">Grupo sanguíneo</label>
+        <select id="f-grupo" data-field="grupo_sanguineo">
+          <option value="">Seleccionar…</option>
+          <option>O</option><option>A</option><option>B</option><option>AB</option>
+        </select>
+      </div>
+      <div class="field"><label for="f-rh">Factor Rh</label>
+        <select id="f-rh" data-field="rh">
+          <option value="">Seleccionar…</option>
+          <option value="positivo">Positivo</option>
+          <option value="negativo">Negativo</option>
+        </select>
+      </div>
+      <div class="field"><label for="f-imc-clas">Clasificación IMC</label><input type="text" id="f-imc-clas" data-field="imc_clasificacion" readonly placeholder="—"></div>
+    </div>
+  </section>
+
+  <!-- 4. Laboratorios -->
+  <section class="card">
+    <h2><span class="num">4</span> Estudios de laboratorio</h2>
+    <div class="hint">Marca el estatus de cada estudio revisado por el subcomité. Puedes agregar estudios adicionales al final de cada grupo.</div>
+    <div id="lab-groups"></div>
+  </section>
+
+  <!-- 5. Imagen -->
+  <section class="card">
+    <h2><span class="num">5</span> Estudios de imagen</h2>
+    <div id="img-rows"></div>
+    <button type="button" class="addrow-btn" data-add="img">+ Agregar estudio de imagen</button>
+  </section>
+
+  <!-- 6. Valoraciones por especialistas -->
+  <section class="card">
+    <h2><span class="num">6</span> Valoraciones por especialistas</h2>
+    <div id="esp-rows"></div>
+    <button type="button" class="addrow-btn" data-add="esp">+ Agregar valoración</button>
+  </section>
+
+  <!-- 7. Resumen clínico -->
+  <section class="card">
+    <h2><span class="num">7</span> Resumen clínico</h2>
+    <div class="field"><label for="f-resumen">Resumen clínico presentado al subcomité</label>
+      <textarea id="f-resumen" data-field="resumen_clinico" style="min-height:90px" placeholder="Síntesis del caso, protocolo cumplido, hallazgos relevantes…"></textarea>
+    </div>
+  </section>
+
+  <!-- 8. Acuerdos -->
+  <section class="card">
+    <h2><span class="num">8</span> Acuerdos y pendientes</h2>
+    <div class="hint">Estudios por repetir, valoraciones por integrar o correcciones solicitadas por el subcomité.</div>
+    <div id="acuerdos-list"></div>
+    <button type="button" class="addrow-btn" id="btn-add-acuerdo">+ Agregar acuerdo</button>
+  </section>
+
+  <!-- 9. Comentarios generales -->
+  <section class="card">
+    <h2><span class="num">9</span> Comentarios generales</h2>
+    <div class="field">
+      <textarea id="f-comentarios" data-field="comentarios_generales" style="min-height:90px" placeholder="Comentarios adicionales del subcomité, si los hay…"></textarea>
+    </div>
+  </section>
+
+  <!-- 10. Resolución -->
+  <section class="card">
+    <h2><span class="num">10</span> Resolución del subcomité</h2>
+    <div class="resolution" id="resolution-box">
+      <div class="reso-options">
+        <input type="radio" name="resolucion" id="res-aprobado" value="aprobado" data-field="resolucion">
+        <label for="res-aprobado">✔ Aprobado</label>
+        <input type="radio" name="resolucion" id="res-condicionado" value="condicionado" data-field="resolucion">
+        <label for="res-condicionado">◐ Aprobado condicionado</label>
+        <input type="radio" name="resolucion" id="res-no" value="no-aprobado" data-field="resolucion">
+        <label for="res-no">✘ No aprobado</label>
+      </div>
+      <div class="field">
+        <label for="f-justificacion">Justificación / condiciones a cumplir</label>
+        <textarea id="f-justificacion" data-field="justificacion" style="min-height:80px" placeholder="Motivo del dictamen, condiciones a cumplir para reevaluación, fecha sugerida de nueva presentación…"></textarea>
+      </div>
+    </div>
+    <div class="grid two" style="margin-top:14px;">
+      <div class="field"><label for="f-preside">Preside / valida</label><input type="text" id="f-preside" data-field="preside"></div>
+      <div class="field"><label for="f-secretario">Elabora acta</label><input type="text" id="f-secretario" data-field="secretario"></div>
+    </div>
+  </section>
+
+  <!-- Actions -->
+  <div class="actionbar">
+    <button class="btn primary" id="btn-print" type="button">Imprimir / guardar PDF</button>
+    <button class="btn" id="btn-summary" type="button">Generar resumen de acta</button>
+    <button class="btn danger" id="btn-clear" type="button">Limpiar formulario</button>
+  </div>
+
+  <div class="summary-box hide" id="summary-wrap">
+    <textarea id="summary-text" readonly></textarea>
+    <div class="copyline" id="copy-status">Selecciona el texto y cópialo, o usa el botón para copiarlo al portapapeles.</div>
+    <div class="actionbar" style="margin-top:8px;">
+      <button class="btn" id="btn-copy" type="button">Copiar al portapapeles</button>
+      <button class="btn ghost" id="btn-hide-summary" type="button">Cerrar</button>
+    </div>
+  </div>
+
+  <footer class="foot">CIMA · El corazón médico de Sonora — Herramienta interna de apoyo al Subcomité de Trasplante Renal. Los datos capturados se guardan únicamente en este navegador (borrador local); no se transmiten a ningún servidor.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var STORAGE_KEY = "cima_renal_subcomite_draft_v1";
+
+var checklistData = {
+  lab: [
+    { group:"Biometría y química", items:[
+      {id:"bh", label:"Biometría hemática completa"},
+      {id:"qs", label:"Química sanguínea (glucosa, urea, creatinina, ácido úrico, electrólitos séricos)"},
+      {id:"pfh", label:"Pruebas de función hepática (PFH)"},
+      {id:"lip", label:"Perfil de lípidos"},
+      {id:"coag", label:"Tiempos de coagulación (TP / TTP / INR)"},
+      {id:"ego", label:"Examen general de orina"},
+      {id:"depcr", label:"Depuración de creatinina 24 h / TFG estimada"},
+      {id:"tiro", label:"Perfil tiroideo (TSH / T4 libre)"},
+      {id:"pth", label:"Hormona paratiroidea (PTH)"}
+    ]},
+    { group:"Panel viral y serologías", items:[
+      {id:"vih", label:"VIH"},
+      {id:"hepb", label:"Hepatitis B (AgsHB, Anti-HBc, Anti-HBs)"},
+      {id:"hepc", label:"Hepatitis C (Anti-VHC)"},
+      {id:"vdrl", label:"VDRL / RPR (sífilis)"},
+      {id:"chagas", label:"Chagas"},
+      {id:"cmv", label:"Citomegalovirus (CMV IgG / IgM)"},
+      {id:"ebv", label:"Virus de Epstein-Barr (EBV)"},
+      {id:"toxo", label:"Toxoplasma (IgG / IgM)"},
+      {id:"cocci", label:"Anticuerpos anti-coccidioidomicosis"}
+    ]},
+    { group:"Inmunología y compatibilidad", items:[
+      {id:"histo", label:"Estudio de histocompatibilidad (tipificación HLA)"},
+      {id:"pra", label:"Panel reactivo de anticuerpos (PRA)"},
+      {id:"cruce", label:"Prueba cruzada donador–receptor (cross-match)"},
+      {id:"gruposc", label:"Grupo sanguíneo y Rh (confirmatorio)"},
+      {id:"tumor", label:"Marcadores tumorales según edad y sexo"}
+    ]}
+  ],
+  img: [
+    {id:"rxtorax", label:"Radiografía de tórax"},
+    {id:"usgrenal", label:"Ultrasonido renal y de vías urinarias"},
+    {id:"eco", label:"Ecocardiograma"},
+    {id:"angiotac", label:"Angio-TAC / angiografía de vasos ilíacos"},
+    {id:"doppler", label:"Doppler vascular"}
+  ],
+  esp: [
+    {id:"psiquiatria", label:"Psiquiatría"},
+    {id:"psicologia", label:"Psicología"},
+    {id:"cardiologia", label:"Cardiología"},
+    {id:"nefrologia", label:"Nefrología"},
+    {id:"urologia", label:"Urología"},
+    {id:"angiologia", label:"Angiología / cirugía vascular"},
+    {id:"orl", label:"Otorrinolaringología"},
+    {id:"odontologia", label:"Odontología"},
+    {id:"infectologia", label:"Infectología"},
+    {id:"nutricion", label:"Nutrición"},
+    {id:"trabajosocial", label:"Trabajo social"},
+    {id:"anestesiologia", label:"Anestesiología"}
+  ]
+};
+
+var STATUS_LABELS = {completo:"Completo", incompleto:"Incompleto", na:"N/A"};
+
+function el(tag, cls, html){
+  var e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+function buildStatusRow(id, label){
+  var row = el("div","row");
+  var lab = el("div","label", label);
+  var status = el("div","status");
+  ["completo","incompleto","na"].forEach(function(v){
+    var inputId = id + "-" + v;
+    var input = el("input");
+    input.type = "radio"; input.name = "status-" + id; input.id = inputId;
+    input.value = v; input.setAttribute("data-field","status-" + id);
+    var lbl = el("label", null, STATUS_LABELS[v]);
+    lbl.setAttribute("for", inputId);
+    status.appendChild(input); status.appendChild(lbl);
+  });
+  var comment = el("div","comment");
+  var cinput = el("input");
+  cinput.type="text"; cinput.placeholder="Comentario (opcional)"; cinput.id="comment-"+id;
+  cinput.setAttribute("data-field","comment-"+id);
+  comment.appendChild(cinput);
+  row.appendChild(lab); row.appendChild(status); row.appendChild(comment);
+  return row;
+}
+
+function renderFixedList(container, items){
+  items.forEach(function(item){
+    container.appendChild(buildStatusRow(item.id, item.label));
+  });
+}
+
+// --- Section 4: laboratorios (grouped, collapsible) ---
+var labGroupsEl = document.getElementById("lab-groups");
+checklistData.lab.forEach(function(g, gi){
+  var det = el("details","group");
+  if(gi===0) det.open = true;
+  var summary = el("summary", null, g.group + '<span class="count">' + g.items.length + ' estudios</span>');
+  det.appendChild(summary);
+  var body = el("div","group-body");
+  renderFixedList(body, g.items);
+  var addBtn = el("button","addrow-btn","+ Agregar estudio a este grupo");
+  addBtn.type="button";
+  var customWrap = el("div");
+  customWrap.className = "custom-lab-wrap";
+  body.appendChild(customWrap);
+  body.appendChild(addBtn);
+  det.appendChild(body);
+  labGroupsEl.appendChild(det);
+
+  addBtn.addEventListener("click", function(){ addCustomRow(customWrap, "lab-" + gi); });
+});
+
+// --- Section 5 & 6: fixed simple lists + custom rows ---
+var imgRowsEl = document.getElementById("img-rows");
+renderFixedList(imgRowsEl, checklistData.img);
+var imgCustomWrap = el("div"); imgCustomWrap.className="custom-img-wrap";
+imgRowsEl.appendChild(imgCustomWrap);
+
+var espRowsEl = document.getElementById("esp-rows");
+renderFixedList(espRowsEl, checklistData.esp);
+var espCustomWrap = el("div"); espCustomWrap.className="custom-esp-wrap";
+espRowsEl.appendChild(espCustomWrap);
+
+document.querySelectorAll('[data-add]').forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var target = btn.getAttribute("data-add");
+    var wrap = target === "img" ? imgCustomWrap : espCustomWrap;
+    addCustomRow(wrap, target);
+  });
+});
+
+function addCustomRow(container, keyPrefix){
+  var row = el("div","row custom");
+  var lab = el("div","label");
+  var nameInput = el("input");
+  nameInput.type="text"; nameInput.placeholder="Nombre del estudio o valoración";
+  nameInput.className = "custom-name";
+  lab.appendChild(nameInput);
+
+  var status = el("div","status");
+  var uid = keyPrefix + "-c" + Math.random().toString(36).slice(2,8);
+  ["completo","incompleto","na"].forEach(function(v){
+    var inputId = uid + "-" + v;
+    var input = el("input");
+    input.type="radio"; input.name="status-"+uid; input.id=inputId; input.value=v;
+    var lbl = el("label", null, STATUS_LABELS[v]);
+    lbl.setAttribute("for", inputId);
+    status.appendChild(input); status.appendChild(lbl);
+  });
+
+  var comment = el("div","comment");
+  var cinput = el("input");
+  cinput.type="text"; cinput.placeholder="Comentario (opcional)"; cinput.className="custom-comment";
+  comment.appendChild(cinput);
+
+  var removeBtn = el("button","remove","✕");
+  removeBtn.type="button";
+  removeBtn.title="Quitar fila";
+  removeBtn.addEventListener("click", function(){ row.remove(); });
+
+  row.appendChild(lab); row.appendChild(status); row.appendChild(comment); row.appendChild(removeBtn);
+  container.appendChild(row);
+  return row;
+}
+
+// --- Acuerdos ---
+var acuerdosList = document.getElementById("acuerdos-list");
+var acuerdoCounter = 0;
+function addAcuerdo(){
+  acuerdoCounter++;
+  var row = el("div","acuerdo-row");
+  var idx = el("div","idx", acuerdoCounter + ".");
+  var ta = el("textarea");
+  ta.placeholder = "Ej. Integrar valoración de infectología; repetir anticuerpos de coccidioidomicosis…";
+  var removeBtn = el("button","remove","✕");
+  removeBtn.type="button";
+  removeBtn.addEventListener("click", function(){ row.remove(); renumberAcuerdos(); });
+  row.appendChild(idx); row.appendChild(ta); row.appendChild(removeBtn);
+  acuerdosList.appendChild(row);
+  return row;
+}
+function renumberAcuerdos(){
+  var rows = acuerdosList.querySelectorAll(".acuerdo-row .idx");
+  rows.forEach(function(r,i){ r.textContent = (i+1) + "."; });
+  acuerdoCounter = rows.length;
+}
+document.getElementById("btn-add-acuerdo").addEventListener("click", function(){ addAcuerdo(); });
+addAcuerdo(); // primera fila lista para usarse
+
+// --- Edad y IMC derivados ---
+function calcEdad(fechaStr){
+  if(!fechaStr) return "";
+  var nac = new Date(fechaStr + "T00:00:00");
+  if(isNaN(nac.getTime())) return "";
+  var hoy = new Date();
+  var edad = hoy.getFullYear() - nac.getFullYear();
+  var m = hoy.getMonth() - nac.getMonth();
+  if(m < 0 || (m === 0 && hoy.getDate() < nac.getDate())) edad--;
+  return edad >= 0 ? edad + " años" : "";
+}
+document.getElementById("f-nac").addEventListener("input", function(){
+  document.getElementById("f-edad").value = calcEdad(this.value);
+});
+
+function clasificaIMC(imc){
+  if(imc < 18.5) return {txt:"Bajo peso", color:"warning"};
+  if(imc < 25) return {txt:"Normal", color:"success"};
+  if(imc < 30) return {txt:"Sobrepeso", color:"warning"};
+  if(imc < 35) return {txt:"Obesidad I", color:"critical"};
+  if(imc < 40) return {txt:"Obesidad II", color:"critical"};
+  return {txt:"Obesidad III", color:"critical"};
+}
+function recalcIMC(){
+  var peso = parseFloat(document.getElementById("f-peso").value);
+  var talla = parseFloat(document.getElementById("f-talla").value);
+  var imcOut = document.getElementById("f-imc");
+  var clasOut = document.getElementById("f-imc-clas");
+  if(peso > 0 && talla > 0){
+    var tallaM = talla / 100;
+    var imc = peso / (tallaM * tallaM);
+    imcOut.value = imc.toFixed(2);
+    var c = clasificaIMC(imc);
+    clasOut.value = c.txt;
+  } else {
+    imcOut.value = ""; clasOut.value = "";
+  }
+}
+document.getElementById("f-peso").addEventListener("input", recalcIMC);
+document.getElementById("f-talla").addEventListener("input", recalcIMC);
+
+// --- Resolución: color de fondo dinámico ---
+var resolutionBox = document.getElementById("resolution-box");
+document.querySelectorAll('input[name="resolucion"]').forEach(function(r){
+  r.addEventListener("change", updateResolutionVisual);
+});
+function updateResolutionVisual(){
+  resolutionBox.classList.remove("state-aprobado","state-condicionado","state-no");
+  var checked = document.querySelector('input[name="resolucion"]:checked');
+  if(!checked) return;
+  if(checked.value === "aprobado") resolutionBox.classList.add("state-aprobado");
+  else if(checked.value === "condicionado") resolutionBox.classList.add("state-condicionado");
+  else if(checked.value === "no-aprobado") resolutionBox.classList.add("state-no");
+}
+
+// --- Autosave (localStorage, solo en este navegador) ---
+var draftStatusEl = document.getElementById("draft-status");
+var saveTimer = null;
+
+function collectState(){
+  var values = {};
+  document.querySelectorAll("[data-field]").forEach(function(node){
+    if(node.type === "radio"){
+      if(node.checked) values[node.getAttribute("data-field")] = node.value;
+    } else {
+      values[node.getAttribute("data-field")] = node.value;
+    }
+  });
+  var dynamic = { lab:[], img:[], esp:[], acuerdos:[] };
+  document.querySelectorAll(".custom-lab-wrap").forEach(function(wrap, gi){
+    Array.prototype.forEach.call(wrap.querySelectorAll(".row.custom"), function(row){
+      dynamic.lab.push({ group: gi, name: row.querySelector(".custom-name").value,
+        status: (row.querySelector("input[type=radio]:checked")||{}).value || "",
+        comment: row.querySelector(".custom-comment").value });
+    });
+  });
+  ["img","esp"].forEach(function(sec){
+    Array.prototype.forEach.call(document.querySelectorAll(".custom-" + sec + "-wrap .row.custom"), function(row){
+      dynamic[sec].push({ name: row.querySelector(".custom-name").value,
+        status: (row.querySelector("input[type=radio]:checked")||{}).value || "",
+        comment: row.querySelector(".custom-comment").value });
+    });
+  });
+  document.querySelectorAll("#acuerdos-list .acuerdo-row textarea").forEach(function(ta){
+    dynamic.acuerdos.push(ta.value);
+  });
+  return { savedAt: new Date().toISOString(), values: values, dynamic: dynamic };
+}
+
+function applyState(state){
+  try{
+    (state.dynamic.lab || []).forEach(function(item){
+      var wraps = document.querySelectorAll(".custom-lab-wrap");
+      var wrap = wraps[item.group] || wraps[0];
+      if(!wrap) return;
+      var row = addCustomRow(wrap, "lab-" + item.group);
+      row.querySelector(".custom-name").value = item.name || "";
+      if(item.status){ var r = row.querySelector('input[type=radio][value="'+item.status+'"]'); if(r) r.checked = true; }
+      row.querySelector(".custom-comment").value = item.comment || "";
+    });
+    ["img","esp"].forEach(function(sec){
+      var wrap = document.querySelector(".custom-" + sec + "-wrap");
+      (state.dynamic[sec] || []).forEach(function(item){
+        var row = addCustomRow(wrap, sec);
+        row.querySelector(".custom-name").value = item.name || "";
+        if(item.status){ var r = row.querySelector('input[type=radio][value="'+item.status+'"]'); if(r) r.checked = true; }
+        row.querySelector(".custom-comment").value = item.comment || "";
+      });
+    });
+    if(state.dynamic.acuerdos && state.dynamic.acuerdos.length){
+      acuerdosList.innerHTML = ""; acuerdoCounter = 0;
+      state.dynamic.acuerdos.forEach(function(text){
+        var row = addAcuerdo();
+        row.querySelector("textarea").value = text;
+      });
+    }
+    Object.keys(state.values || {}).forEach(function(field){
+      var val = state.values[field];
+      var radio = document.querySelector('input[type=radio][data-field="'+field+'"][value="'+CSS.escape(val)+'"]');
+      if(radio){ radio.checked = true; return; }
+      var target = document.querySelector('[data-field="'+field+'"]:not([type=radio])');
+      if(target) target.value = val;
+    });
+    recalcIMC();
+    document.getElementById("f-edad").value = calcEdad(document.getElementById("f-nac").value);
+    updateResolutionVisual();
+  } catch(e){ /* borrador corrupto: se ignora silenciosamente */ }
+}
+
+function saveDraft(){
+  try{
+    var state = collectState();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    draftStatusEl.textContent = "Borrador guardado " + new Date(state.savedAt).toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  } catch(e){ /* almacenamiento no disponible */ }
+}
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveDraft, 600);
+}
+document.addEventListener("input", scheduleSave);
+document.addEventListener("change", scheduleSave);
+
+function tryLoadDraftBanner(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    var state = JSON.parse(raw);
+    var when = state.savedAt ? new Date(state.savedAt).toLocaleString('es-MX') : "";
+    document.getElementById("restore-text").textContent = "Se encontró un borrador guardado en este navegador (" + when + ").";
+    var banner = document.getElementById("restore-banner");
+    banner.classList.remove("hide");
+    document.getElementById("btn-restore-draft").addEventListener("click", function(){
+      applyState(state);
+      banner.classList.add("hide");
+      draftStatusEl.textContent = "Borrador restaurado";
+    });
+    document.getElementById("btn-discard-draft").addEventListener("click", function(){
+      try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+      banner.classList.add("hide");
+    });
+  } catch(e){ /* almacenamiento no disponible */ }
+}
+tryLoadDraftBanner();
+
+// --- Limpiar formulario ---
+document.getElementById("btn-clear").addEventListener("click", function(){
+  if(!confirm("¿Limpiar todo el formulario? Esta acción no se puede deshacer.")) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  location.reload();
+});
+
+// --- Imprimir (expande todos los grupos colapsados para que salgan completos) ---
+var detailsBeforePrint = [];
+window.addEventListener("beforeprint", function(){
+  detailsBeforePrint = [];
+  document.querySelectorAll("details.group").forEach(function(d){
+    detailsBeforePrint.push([d, d.open]);
+    d.open = true;
+  });
+});
+window.addEventListener("afterprint", function(){
+  detailsBeforePrint.forEach(function(pair){ pair[0].open = pair[1]; });
+});
+document.getElementById("btn-print").addEventListener("click", function(){ window.print(); });
+
+// --- Resumen de acta ---
+function statusText(id){
+  var checked = document.querySelector('input[name="status-'+id+'"]:checked');
+  return checked ? STATUS_LABELS[checked.value] : "Sin marcar";
+}
+function commentText(id){
+  var input = document.getElementById("comment-" + id);
+  return input && input.value ? input.value.trim() : "";
+}
+function line(label, value){ return "  - " + label + ": " + (value || "—"); }
+
+function buildSummary(){
+  var v = function(id){ var e=document.getElementById(id); return e ? e.value : ""; };
+  var out = [];
+  out.push("MINUTA · SUBCOMITÉ DE TRASPLANTE RENAL — CIMA");
+  out.push("=".repeat(48));
+  out.push("");
+  out.push("1. DATOS DE LA SESIÓN");
+  out.push(line("Fecha", v("f-fecha")));
+  out.push(line("Horario", (v("f-hora-inicio")||"—") + " a " + (v("f-hora-fin")||"—")));
+  out.push(line("Folio", v("f-folio")));
+  out.push(line("Modalidad", v("f-modalidad")));
+  out.push(line("Médico que presenta", v("f-presenta")));
+  out.push(line("Asistentes", v("f-asistentes")));
+  out.push("");
+  out.push("2. IDENTIFICACIÓN DEL PACIENTE");
+  out.push(line("Nombre", v("f-nombre")));
+  out.push(line("Fecha de nacimiento", v("f-nac")));
+  out.push(line("Edad", v("f-edad")));
+  out.push(line("Sexo", v("f-sexo")));
+  out.push(line("Expediente", v("f-expediente")));
+  out.push(line("Origen / residencia", v("f-origen")));
+  out.push(line("Diagnóstico", v("f-diagnostico")));
+  out.push(line("Terapia renal sustitutiva", v("f-trsustitutiva")));
+  out.push(line("Tipo de trasplante candidato", v("f-tipotx")));
+  out.push("");
+  out.push("3. ANTROPOMETRÍA Y GRUPO SANGUÍNEO");
+  out.push(line("Peso", v("f-peso") ? v("f-peso") + " kg" : ""));
+  out.push(line("Talla", v("f-talla") ? v("f-talla") + " cm" : ""));
+  out.push(line("IMC", v("f-imc") ? v("f-imc") + " (" + v("f-imc-clas") + ")" : ""));
+  out.push(line("Grupo sanguíneo / Rh", [v("f-grupo"), v("f-rh")].filter(Boolean).join(" ")));
+  out.push("");
+  out.push("4. ESTUDIOS DE LABORATORIO");
+  checklistData.lab.forEach(function(g){
+    out.push("  " + g.group + ":");
+    g.items.forEach(function(item){
+      var c = commentText(item.id);
+      out.push("    · " + item.label + " — " + statusText(item.id) + (c ? " (" + c + ")" : ""));
+    });
+  });
+  document.querySelectorAll(".custom-lab-wrap .row.custom").forEach(function(row){
+    var name = row.querySelector(".custom-name").value;
+    if(!name) return;
+    var st = row.querySelector("input[type=radio]:checked");
+    var cm = row.querySelector(".custom-comment").value;
+    out.push("    · " + name + " — " + (st ? STATUS_LABELS[st.value] : "Sin marcar") + (cm ? " (" + cm + ")" : ""));
+  });
+  out.push("");
+  out.push("5. ESTUDIOS DE IMAGEN");
+  checklistData.img.forEach(function(item){
+    var c = commentText(item.id);
+    out.push("  · " + item.label + " — " + statusText(item.id) + (c ? " (" + c + ")" : ""));
+  });
+  document.querySelectorAll(".custom-img-wrap .row.custom").forEach(function(row){
+    var name = row.querySelector(".custom-name").value;
+    if(!name) return;
+    var st = row.querySelector("input[type=radio]:checked");
+    var cm = row.querySelector(".custom-comment").value;
+    out.push("  · " + name + " — " + (st ? STATUS_LABELS[st.value] : "Sin marcar") + (cm ? " (" + cm + ")" : ""));
+  });
+  out.push("");
+  out.push("6. VALORACIONES POR ESPECIALISTAS");
+  checklistData.esp.forEach(function(item){
+    var c = commentText(item.id);
+    out.push("  · " + item.label + " — " + statusText(item.id) + (c ? " (" + c + ")" : ""));
+  });
+  document.querySelectorAll(".custom-esp-wrap .row.custom").forEach(function(row){
+    var name = row.querySelector(".custom-name").value;
+    if(!name) return;
+    var st = row.querySelector("input[type=radio]:checked");
+    var cm = row.querySelector(".custom-comment").value;
+    out.push("  · " + name + " — " + (st ? STATUS_LABELS[st.value] : "Sin marcar") + (cm ? " (" + cm + ")" : ""));
+  });
+  out.push("");
+  out.push("7. RESUMEN CLÍNICO");
+  out.push(v("f-resumen") || "  (sin capturar)");
+  out.push("");
+  out.push("8. ACUERDOS Y PENDIENTES");
+  var acuerdos = Array.prototype.map.call(document.querySelectorAll("#acuerdos-list .acuerdo-row textarea"), function(t){ return t.value.trim(); }).filter(Boolean);
+  if(acuerdos.length){ acuerdos.forEach(function(a,i){ out.push("  " + (i+1) + ". " + a); }); }
+  else out.push("  (sin acuerdos registrados)");
+  out.push("");
+  out.push("9. COMENTARIOS GENERALES");
+  out.push(v("f-comentarios") || "  (sin comentarios)");
+  out.push("");
+  out.push("10. RESOLUCIÓN DEL SUBCOMITÉ");
+  var reso = document.querySelector('input[name="resolucion"]:checked');
+  var resoText = reso ? {aprobado:"APROBADO", condicionado:"APROBADO CONDICIONADO", "no-aprobado":"NO APROBADO"}[reso.value] : "SIN DICTAMEN";
+  out.push("  Dictamen: " + resoText);
+  out.push("  Justificación / condiciones: " + (v("f-justificacion") || "—"));
+  out.push(line("Preside / valida", v("f-preside")));
+  out.push(line("Elabora acta", v("f-secretario")));
+  return out.join("\n");
+}
+
+var summaryWrap = document.getElementById("summary-wrap");
+document.getElementById("btn-summary").addEventListener("click", function(){
+  document.getElementById("summary-text").value = buildSummary();
+  summaryWrap.classList.remove("hide");
+  summaryWrap.scrollIntoView({behavior:"smooth", block:"start"});
+});
+document.getElementById("btn-hide-summary").addEventListener("click", function(){ summaryWrap.classList.add("hide"); });
+document.getElementById("btn-copy").addEventListener("click", function(){
+  var ta = document.getElementById("summary-text");
+  ta.select();
+  var status = document.getElementById("copy-status");
+  try{
+    navigator.clipboard.writeText(ta.value).then(function(){
+      status.textContent = "Copiado al portapapeles.";
+    }, function(){
+      status.textContent = "No se pudo copiar automáticamente: el texto quedó seleccionado, usa Ctrl/Cmd+C.";
+    });
+  } catch(e){
+    status.textContent = "No se pudo copiar automáticamente: el texto quedó seleccionado, usa Ctrl/Cmd+C.";
+  }
+});
+
+})();
+</script>
+</body>
+</html>
