@@ -1,2 +1,1 @@
-# CODIGO-ICTUS-CIMA
-Código Ictus
+# CIMA
