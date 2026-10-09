@@ -121,6 +121,7 @@
           <button id="btnStop" type="button" title="Detener">⏹</button>
           <label><input type="checkbox" id="chkRepetir"> Repetir</label>
         </div>
+        <p class="aviso" id="avisoEsc" role="status" hidden></p>
         <div class="progreso">
           <div id="txtProgreso">Detenido</div>
           <div class="barra"><div id="barraProgreso"></div></div>
@@ -140,6 +141,16 @@
             <button id="btnExportar" type="button">⬇ Exportar archivo</button>
             <label class="boton-archivo">⬆ Importar archivo<input type="file" id="fileImportar" accept=".json,application/json" hidden></label>
             <button id="btnVaciar" type="button">Vaciar pasos</button>
+          </div>
+          <div class="fila-linea">
+            <button id="btnMostrarJson" type="button">Pegar o copiar como texto</button>
+          </div>
+          <div class="caja-json" id="cajaJson" hidden>
+            <textarea id="txtJson" rows="6" spellcheck="false" aria-label="Escenario en formato de texto"></textarea>
+            <div class="fila-linea">
+              <button id="btnCopiarJson" type="button">Copiar</button>
+              <button id="btnPegarJson" type="button">Cargar este texto</button>
+            </div>
           </div>
           <p class="nota">Los escenarios guardados se quedan en este navegador. Usa «Exportar» para compartirlos con otros instructores.</p>
         </details>

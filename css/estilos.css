@@ -198,6 +198,9 @@ details summary { cursor: pointer; color: var(--texto-2); margin: 4px 0 8px; }
 .paso-det details { width: 100%; }
 .paso-det details summary { margin: 0; }
 .paso-det .rejilla-signos { margin: 6px 0 0; }
+.aviso { margin: 10px 0 0; padding: 6px 10px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--borde); font-size: 13px; }
+.caja-json { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+.caja-json textarea { width: 100%; background: var(--fondo); border: 1px solid var(--borde); border-radius: 8px; padding: 6px 8px; font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace; resize: vertical; }
 .vacio { color: var(--texto-2); font-size: 13px; margin: 0 0 10px; }
 
 .progreso { margin-top: 10px; font-size: 13px; color: var(--texto-2); }
@@ -225,7 +228,7 @@ body.solo-monitor .btn-sonido-flotante:not([hidden]) {
   .panel { overflow: visible; }
 }
 @media (max-width: 600px) {
-  .app { padding: 8px; }
+  .app { padding: 8px 16px; }
   .cabecera { padding: 10px 16px; }
   .pantalla { grid-template-columns: minmax(0, 1fr) 96px; }
   .valor { font-size: 26px; }

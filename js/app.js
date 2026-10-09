@@ -310,6 +310,32 @@
     dibujarPasos();
   }
 
+  // Mensajes en la propia página (algunos visores bloquean alert/confirm).
+  let tAviso = null;
+  function aviso(texto) {
+    const el = $('avisoEsc');
+    el.textContent = texto;
+    el.hidden = false;
+    clearTimeout(tAviso);
+    tAviso = setTimeout(() => { el.hidden = true; }, 6000);
+  }
+
+  // Confirmación con un segundo clic sobre el mismo botón.
+  function confirmarConClic(btn, accion) {
+    if (btn.dataset.confirmar) {
+      delete btn.dataset.confirmar;
+      btn.textContent = btn.dataset.texto;
+      accion();
+      return;
+    }
+    btn.dataset.texto = btn.textContent;
+    btn.dataset.confirmar = '1';
+    btn.textContent = '¿Seguro? Pulsa otra vez';
+    setTimeout(() => {
+      if (btn.dataset.confirmar) { delete btn.dataset.confirmar; btn.textContent = btn.dataset.texto; }
+    }, 3000);
+  }
+
   // Guardar / abrir
   function dibujarGuardados() {
     const sel = $('selGuardados');
@@ -321,34 +347,54 @@
   $('btnGuardar').addEventListener('click', () => {
     const nombre = $('txtNombreEsc').value.trim();
     if (!nombre) { $('txtNombreEsc').focus(); return; }
-    if (!rep.pasos.length) { alert('El escenario no tiene pasos.'); return; }
-    if (!Almacen.guardar(nombre, rep.pasos)) alert('No se pudo guardar en este navegador. Usa «Exportar archivo».');
+    if (!rep.pasos.length) { aviso('El escenario no tiene pasos.'); return; }
+    if (!Almacen.guardar(nombre, rep.pasos)) { aviso('No se pudo guardar en este navegador. Usa «Exportar».'); return; }
     dibujarGuardados();
     $('selGuardados').value = nombre;
+    aviso(`Escenario «${nombre}» guardado en este navegador.`);
   });
   $('btnAbrir').addEventListener('click', () => {
     const n = $('selGuardados').value;
     const pasos = Almacen.leer()[n];
     if (!n || !pasos) return;
-    try { cargarPasos(validarPasos(pasos), n); } catch (err) { alert(err.message); }
+    try { cargarPasos(validarPasos(pasos), n); } catch (err) { aviso(err.message); }
   });
-  $('btnBorrarGuardado').addEventListener('click', () => {
+  $('btnBorrarGuardado').addEventListener('click', (e) => {
     const n = $('selGuardados').value;
-    if (n && confirm(`¿Borrar el escenario «${n}»?`)) { Almacen.borrar(n); dibujarGuardados(); }
+    if (n) confirmarConClic(e.currentTarget, () => { Almacen.borrar(n); dibujarGuardados(); aviso(`Escenario «${n}» borrado.`); });
   });
-  $('btnVaciar').addEventListener('click', () => {
-    if (rep.pasos.length && confirm('¿Quitar todos los pasos del escenario?')) cargarPasos([]);
+  $('btnVaciar').addEventListener('click', (e) => {
+    if (rep.pasos.length) confirmarConClic(e.currentTarget, () => cargarPasos([]));
   });
   $('btnExportar').addEventListener('click', () => {
-    if (!rep.pasos.length) { alert('El escenario no tiene pasos.'); return; }
+    if (!rep.pasos.length) { aviso('El escenario no tiene pasos.'); return; }
     const nombre = $('txtNombreEsc').value.trim() || 'escenario';
-    const blob = new Blob([JSON.stringify({ nombre, pasos: rep.pasos }, null, 2)], { type: 'application/json' });
+    const json = JSON.stringify({ nombre, pasos: rep.pasos }, null, 2);
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
+    a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
     a.download = nombre.replace(/[^\p{L}\p{N}_-]+/gu, '_') + '.json';
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    // Si el navegador bloquea la descarga, el texto queda disponible para copiarlo.
+    $('txtJson').value = json;
+    $('cajaJson').hidden = false;
   });
+  $('btnCopiarJson').addEventListener('click', () => {
+    const t = $('txtJson');
+    const seleccionar = () => { t.focus(); t.select(); aviso('Texto seleccionado: cópialo con Ctrl+C.'); };
+    if (navigator.clipboard) navigator.clipboard.writeText(t.value).then(() => aviso('Escenario copiado al portapapeles.'), seleccionar);
+    else seleccionar();
+  });
+  $('btnPegarJson').addEventListener('click', () => {
+    try {
+      const datos = JSON.parse($('txtJson').value);
+      cargarPasos(validarPasos(Array.isArray(datos) ? datos : datos.pasos), datos.nombre);
+      aviso('Escenario cargado.');
+    } catch (err) {
+      aviso('No se pudo cargar el texto: ' + err.message);
+    }
+  });
+  $('btnMostrarJson').addEventListener('click', () => { $('cajaJson').hidden = !$('cajaJson').hidden; });
   $('fileImportar').addEventListener('change', async (e) => {
     const f = e.target.files[0];
     e.target.value = '';
@@ -357,7 +403,7 @@
       const datos = JSON.parse(await f.text());
       cargarPasos(validarPasos(Array.isArray(datos) ? datos : datos.pasos), datos.nombre);
     } catch (err) {
-      alert('No se pudo importar: ' + err.message);
+      aviso('No se pudo importar: ' + err.message);
     }
   });
 
@@ -379,6 +425,10 @@
     url.search = '?vista=monitor';
     url.hash = '';
     ventanaMonitor = window.open(url.href, 'monitorArritmias', 'width=1200,height=720');
+    if (!ventanaMonitor) {
+      $('btnVentana').hidden = true;
+      $('btnCompleta').textContent = '⛶ Pantalla completa (para proyectar)';
+    }
   });
 
   window.addEventListener('message', (e) => {
