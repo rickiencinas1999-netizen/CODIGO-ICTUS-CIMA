@@ -480,6 +480,11 @@
   actualizarBotonesSonido();
   if (soloMonitor && window.opener) window.opener.postMessage({ tipo: 'listo' }, '*');
 
+  // Funcionamiento sin conexión cuando se sirve desde un sitio web (no aplica a file://).
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
   let ultimo = performance.now();
   let tProgreso = 0;
   function cuadro(ahora) {

@@ -1,6 +1,6 @@
 # Simulador de Arritmias
 
-Aplicación web para simular arritmias cardiacas en un monitor de signos vitales, pensada para pláticas y prácticas con el equipo de medicina y enfermería.
+Aplicación web para simular arritmias cardiacas en un monitor de signos vitales, para pláticas y prácticas con el equipo.
 
 ## Cómo usarlo
 
@@ -9,6 +9,16 @@ No necesita instalación ni conexión a internet: abre `index.html` en un navega
 1. **Ritmo:** elige una arritmia, ajusta la FC y, si quieres, los signos vitales. Pulsa **Aplicar ahora** para que el monitor la muestre de inmediato (modo «una sola arritmia»).
 2. **Escenario programado:** pulsa **Añadir al escenario** para encadenar varios ritmos. Cada paso tiene su duración en segundos; con duración **0** el paso espera hasta que el instructor pulse **Siguiente**. Puedes reordenar los pasos, repetir el escenario en bucle, guardarlo en el navegador o exportarlo a un archivo para compartirlo.
 3. **Proyección:** **Monitor en otra ventana** abre solo el monitor (para el proyector o una segunda pantalla) mientras controlas todo desde la ventana principal. Con **Pantalla completa** (o doble clic en el monitor) lo amplías.
+
+### Instalarla en el celular (app web)
+
+1. Publica el sitio con GitHub Pages: en el repositorio, **Settings → Pages → Build and deployment**, elige **Deploy from a branch**, la rama con la app y la carpeta **/(root)**, y guarda. En uno o dos minutos queda en `https://rickiencinas1999-netizen.github.io/CODIGO-ICTUS-CIMA/`.
+2. Abre esa dirección en el celular.
+   - **Android (Chrome):** menú ⋮ → **Instalar aplicación** (o **Añadir a pantalla de inicio**).
+   - **iPhone (Safari):** botón Compartir → **Añadir a pantalla de inicio**.
+3. Se abre como una app, con su icono y a pantalla completa. Después de la primera apertura también funciona sin conexión.
+
+Al publicar cambios, sube el número de `VERSION` en `sw.js` para que los celulares descarguen la versión nueva.
 
 ### Intervenciones y opciones
 
@@ -48,6 +58,7 @@ Escenarios de ejemplo: paro desfibrilable, paro no desfibrilable, bradiarritmias
 
 ```
 index.html          Página principal (y vista de proyección con ?vista=monitor)
+manifest.webmanifest, sw.js, iconos/   Instalación como app y uso sin conexión
 css/estilos.css     Estilos
 js/ritmos.js        Catálogo de ritmos y morfologías de onda
 js/motor.js         Reloj de simulación y señales (ECG, pletismografía, capnografía)
